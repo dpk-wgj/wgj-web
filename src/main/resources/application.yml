@@ -1,0 +1,34 @@
+server:
+  port: 8000
+
+spring:
+  datasource:
+    url: jdbc:mysql://47.106.99.73:3306/wgj?useUnicode=true&characterEncoding=utf8
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: 123456
+
+  thymeleaf:
+    cache: false
+    check-template: false
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.dpk.wgj.bean
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    cache-enabled: true             #二级缓存的全局开关
+
+com:
+  dpk:
+    wgj:
+      windows-path: d:/wgj/
+      linux-path: /wgj
+      images-path: file:d:/wgj/
+
+jwt:
+  secret: zhoulinSecret             #加密
+  header: token
+  validity-time: 43200000              #token有效时间
+
+
