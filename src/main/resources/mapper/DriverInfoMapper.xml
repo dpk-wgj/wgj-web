@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dpk.wgj.mapper.DriverInfoMapper">
+    <resultMap id="DriverInfoMap" type="com.dpk.wgj.bean.DriverInfo">
+        <id column="driver_id" property="driverId"/>
+        <result column="driver_wx_id" property="driverWxId"/>
+        <result column="driver_name" property="driverName"/>
+        <result column="driver_phone_number" property="driverPhoneNumber"/>
+        <result column="driver_identity" property="driverIdentity"/>
+        <result column="driver_location" property="driverLocation"/>
+        <result column="driver_level_star" property="driverLevelStar"/>
+        <result column="driver_licence" property="driverLicence"/>
+        <result column="driver_status" property="driverStatus"/>
+        <result column="flag" property="flag"/>
+        <result column="car_id" property="carId"/>
+    </resultMap>
+
+    <select id="getDriverInfoByCarId" resultMap="DriverInfoMap">
+        SELECT driver_name, driver_phone_number, driver_location, driver_level_star, driver_status  FROM car_info
+        WHERE car_id = #{carId}
+        AND driver_status = 1
+    </select>
+
+</mapper>

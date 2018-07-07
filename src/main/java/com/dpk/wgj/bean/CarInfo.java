@@ -14,6 +14,16 @@ public class CarInfo implements Serializable {
 
     private String catType;
 
+    private DriverInfo driverInfo;
+
+    public DriverInfo getDriverInfo() {
+        return driverInfo;
+    }
+
+    public void setDriverInfo(DriverInfo driverInfo) {
+        this.driverInfo = driverInfo;
+    }
+
     public int getCarId() {
         return carId;
     }
@@ -44,6 +54,7 @@ public class CarInfo implements Serializable {
                 "carId=" + carId +
                 ", carNumber='" + carNumber + '\'' +
                 ", catType='" + catType + '\'' +
+                ", driverInfo=" + driverInfo +
                 '}';
     }
 
