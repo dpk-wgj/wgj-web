@@ -17,18 +17,18 @@ mybatis:
   type-aliases-package: com.dpk.wgj.bean
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    cache-enabled: true             #¶ş¼¶»º´æµÄÈ«¾Ö¿ª¹Ø
+    cache-enabled: true             #äºŒçº§ç¼“å­˜çš„å…¨å±€å¼€å…³
 
 com:
   dpk:
     wgj:
       windows-path: d:/wgj/
       linux-path: /wgj
-      images-path: file:d:/wgj/
+      images-path: file:d:/wgj/     #è®¿é—®å¤–éƒ¨é™æ€æ–‡ä»¶çš„è·¯å¾„
 
 jwt:
-  secret: zhoulinSecret             #¼ÓÃÜ
+  secret: zhoulinSecret             #ç­¾ååŠ å¯†
   header: token
-  validity-time: 43200000              #tokenÓĞĞ§Ê±¼ä
+  validity-time: 43200000           #tokenæœ‰æ•ˆæ—¶é—´
 
 
