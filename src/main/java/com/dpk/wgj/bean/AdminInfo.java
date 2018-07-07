@@ -2,6 +2,10 @@ package com.dpk.wgj.bean;
 
 import java.io.Serializable;
 
+/**
+ * Created by zhoulin on 2018/7/7.
+ * 管理人员信息
+ */
 public class AdminInfo implements Serializable {
 
     private int userId;
