@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dpk.wgj.mapper.CarInfoMapper">
+    <resultMap id="CarInfoMap" type="com.dpk.wgj.bean.CarInfo">
+        <id column="car_id" property="carId"/>
+        <result column="car_number" property="carNumber"/>
+        <result column="car_type" property="carType"/>
+    </resultMap>
+
+    <select id="getCarInfoByCarNumber" resultMap="CarInfoMap">
+        SELECT car_id, car_number, car_type FROM car_info
+        WHERE car_number = #{carNumber}
+    </select>
+
+</mapper>

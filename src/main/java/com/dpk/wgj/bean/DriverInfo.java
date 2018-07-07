@@ -22,6 +22,8 @@ public class DriverInfo implements Serializable {
 
     private String driverLicence;
 
+    private String driverName;
+
     private int driverStatus;
 
     private int flag;
@@ -98,6 +100,14 @@ public class DriverInfo implements Serializable {
         this.flag = flag;
     }
 
+    public String getDriverName() {
+        return driverName;
+    }
+
+    public void setDriverName(String driverName) {
+        this.driverName = driverName;
+    }
+
     @Override
     public String toString() {
         return "DriverInfo{" +
@@ -108,6 +118,7 @@ public class DriverInfo implements Serializable {
                 ", driverLocation='" + driverLocation + '\'' +
                 ", driverLevelStar=" + driverLevelStar +
                 ", driverLicence='" + driverLicence + '\'' +
+                ", driverName='" + driverName + '\'' +
                 ", driverStatus=" + driverStatus +
                 ", flag=" + flag +
                 '}';
