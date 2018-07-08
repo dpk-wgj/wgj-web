@@ -18,7 +18,7 @@
     </resultMap>
 
     <select id="getDriverInfoByCarId" resultMap="DriverInfoMap">
-        SELECT driverId, driver_name, driver_phone_number, driver_location, driver_level_star, driver_status  FROM driver_info
+        SELECT driver_id, driver_name, driver_phone_number, driver_location, driver_level_star, driver_status  FROM driver_info
         WHERE car_id = #{carId}
         AND driver_status = 1
     </select>
@@ -48,7 +48,7 @@
 
 
     <select id="getAllCarLocation" resultMap="DriverInfoMap">
-        SELECT driverId, driver_name, driver_location, driver_status, car_id  FROM driver_info
+        SELECT driver_id, driver_name, driver_location, driver_status, car_id  FROM driver_info
         WHERE driver_status = 1
     </select>
 </mapper>

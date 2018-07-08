@@ -30,16 +30,6 @@ public class DriverInfo implements Serializable {
 
     private int carId;
 
-    private CarInfo carInfo;
-
-    public CarInfo getCarInfo() {
-        return carInfo;
-    }
-
-    public void setCarInfo(CarInfo carInfo) {
-        this.carInfo = carInfo;
-    }
-
     public int getCarId() {
         return carId;
     }
