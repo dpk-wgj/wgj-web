@@ -1,6 +1,7 @@
 package com.dpk.wgj.service.impl;
 
 import com.dpk.wgj.bean.CarInfo;
+import com.dpk.wgj.bean.DTO.CarInfoDTO;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.tableInfo.CarInfoTableMessage;
 import com.dpk.wgj.mapper.CarInfoMapper;
@@ -19,22 +20,15 @@ public class CarInfoServiceImpl implements CarInfoService{
     @Autowired
     private CarInfoMapper carInfoMapper;
 
-    @Autowired
-    private DriverInfoMapper driverInfoMapper;
-
     private final Logger logger = LoggerFactory.getLogger(CarInfoServiceImpl.class);
 
     @Override
     public CarInfo getCarInfoByCarNumber(String carNumber) {
 
         CarInfo carInfo;
-        DriverInfo driverInfo;
 
         try {
             carInfo = carInfoMapper.getCarInfoByCarNumber(carNumber);
-            driverInfo = driverInfoMapper.getDriverInfoByCarId(carInfo.getCarId());
-
-            carInfo.setDriverInfo(driverInfo);
 
             return carInfo;
         } catch (Exception e) {
@@ -75,14 +69,9 @@ public class CarInfoServiceImpl implements CarInfoService{
     public CarInfo getCarInfoByCarId(int carId) {
 
         CarInfo carInfo;
-        DriverInfo driverInfo;
 
         try {
             carInfo = carInfoMapper.getCarInfoByCarId(carId);
-            driverInfo = driverInfoMapper.getDriverInfoByCarId(carInfo.getCarId());
-
-            carInfo.setDriverInfo(driverInfo);
-
             return carInfo;
         } catch (Exception e) {
             logger.error(e.getMessage());
