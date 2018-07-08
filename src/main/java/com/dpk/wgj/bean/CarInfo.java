@@ -12,9 +12,27 @@ public class CarInfo implements Serializable {
 
     private String carNumber;
 
-    private String catType;
+    private String carType;
 
     private DriverInfo driverInfo;
+
+    private int carSeat;
+
+    public String getCarType() {
+        return carType;
+    }
+
+    public void setCarType(String carType) {
+        this.carType = carType;
+    }
+
+    public int getCarSeat() {
+        return carSeat;
+    }
+
+    public void setCarSeat(int carSeat) {
+        this.carSeat = carSeat;
+    }
 
     public DriverInfo getDriverInfo() {
         return driverInfo;
@@ -40,21 +58,14 @@ public class CarInfo implements Serializable {
         this.carNumber = carNumber;
     }
 
-    public String getCatType() {
-        return catType;
-    }
-
-    public void setCatType(String catType) {
-        this.catType = catType;
-    }
-
     @Override
     public String toString() {
         return "CarInfo{" +
                 "carId=" + carId +
                 ", carNumber='" + carNumber + '\'' +
-                ", catType='" + catType + '\'' +
+                ", carType='" + carType + '\'' +
                 ", driverInfo=" + driverInfo +
+                ", carSeat=" + carSeat +
                 '}';
     }
 
