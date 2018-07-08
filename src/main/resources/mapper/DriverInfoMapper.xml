@@ -22,5 +22,12 @@
         WHERE car_id = #{carId}
         AND driver_status = 1
     </select>
+    <select id="getDriverInfo" resultMap="DriverInfoMap">
+        SELECT driver_name, driver_wx_id,driver_identity,driver_phone_number, driver_location, driver_level_star,driver_licence, driver_status,flag FROM driver_info
+        WHERE driver_name = #{arg0},
+        driver_phone_number = #{arg1},
+        driver_level_star = #{arg2}
+
+    </select>
 
 </mapper>

@@ -54,7 +54,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>3.17</version>
+            </dependency>
     </dependencies>
+
 
     <build>
         <plugins>
@@ -64,6 +71,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>
