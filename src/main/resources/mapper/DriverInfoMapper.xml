@@ -35,6 +35,18 @@
         SELECT driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence,driver_status FROM driver_info
         WHERE driver_level_star = #{driverLevelStar}
     </select>
+
+    <select id="getDriveInfoByDriverIdentity" resultMap="DriverInfoMap">
+        SELECT driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence,driver_status FROM driver_info
+        WHERE driver_identity = #{arg0}
+    </select>
+    <insert id="insertDriverInfo" parameterType="DriverInfo" >
+        INSERT INTO driver_info (driver_name,driver_wx_id, driver_phone_number,driver_identity,driver_licence)
+        VALUES (#{driverName}, #{driverWxId}, #{driverPhoneNumber},#{driverIdentity},#{driverLicence})
+    </insert>
+
+
+
     <select id="getAllCarLocation" resultMap="DriverInfoMap">
         SELECT driverId, driver_name, driver_location, driver_status, car_id  FROM driver_info
         WHERE driver_status = 1

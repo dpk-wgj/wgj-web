@@ -9,7 +9,6 @@ import java.io.Serializable;
 public class DriverInfo implements Serializable {
 
     private int driverId;
-    private int carId;
 
     private String driverWxId;
 

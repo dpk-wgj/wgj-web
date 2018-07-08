@@ -12,10 +12,14 @@ public interface DriverInfoMapper {
 
     public DriverInfo getDriverInfoByDriverName(String driverName) throws Exception;
 
-
     public DriverInfo getDriverInfoByDriverPhoneNumber(String driverPhoneNumber) throws Exception;
 
     public DriverInfo getDriveInfoByDriverLevelStar(int driverLevelStar) throws Exception;
+
+    public DriverInfo getDriveInfoByDriverIdentity(String driverIdentity) throws Exception;
+
+    public void insertDriverInfo(DriverInfo driverInfo) throws Exception;
+
     public List<DriverInfo> getAllCarLocation() throws Exception;
 
 }

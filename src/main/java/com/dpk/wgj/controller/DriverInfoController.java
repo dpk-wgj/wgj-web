@@ -5,21 +5,18 @@ import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-import com.dpk.wgj.bean.DriverInfo;
-import com.dpk.wgj.bean.Message;
-import com.dpk.wgj.service.DriverInfoService;
-import org.apache.commons.lang.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,7 +26,7 @@ public class DriverInfoController {
 
     @Autowired
     private DriverInfoService driverInfoService;
-
+    private final Logger logger = LoggerFactory.getLogger(DriverInfoController.class);
     /**
      * 根据司机名字查找司机信息，同时可以关联上司机的车辆信息
      */
@@ -87,35 +84,34 @@ public class DriverInfoController {
     }
 
 
-
+    /**
+     * 导入Excel表中司机的信息
+     */
     @RequestMapping(value="importExcel", method=RequestMethod.POST)
     @ResponseBody
     public Message importExcel(@RequestParam(value = "sourceRiskFile", required = false) MultipartFile sourceRiskFile,
                                   HttpServletRequest request, Model model) {
         String fileName = sourceRiskFile.getOriginalFilename();
-        System.out.println(fileName);
-//        Message result = new Message(0,null,null);
-//        if (sourceRiskFile != null) {
-//            //判断该文件是否为Excel文件
-//            if (fileName.matches("^.+\\.(?i)((xls)|(xlsx))$")) {
-//                try {
-//                    int res = sourceRiskService.importExcel(sourceRiskFile, sourceRiskFile.getOriginalFilename());
-//                    result.setMessage("成功添加" + res + "条记录");
-//                    result.setStatusCode(200);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    result.setStatusCode(500);
-//                    result.setMessage("添加失败，请检查文件是否符合要求");
-//                }
-//            } else {
-//                result.setStatusCode(500);
-//                result.setMessage("添加失败，请检查文件是否为Excel文件");
-//            }
-//        }
-//        return result;
+        logger.info(fileName);
+        //判断文件是否为空
+        if (sourceRiskFile != null) {
+            //判断该文件是否为Excel文件
+            if (fileName.matches("^.+\\.(?i)((xls)|(xlsx))$")) {
+                try {
+                    int res = driverInfoService.importExcel(sourceRiskFile, sourceRiskFile.getOriginalFilename());
+                    return  new Message(Message.SUCCESS,"导入信息 >> 成功","成功添加" + res + "条记录");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return  new Message(Message.FAILURE,"导入信息 >> 失败","添加失败，请检查文件是否符合要求");
+                }
+            } else {
+                return  new Message(Message.FAILURE,"导入信息 >> 失败","添加失败，请检查文件是否为Excel文件");
+            }
+        }
         return null;
+
     }
-    }
+
     @Autowired
     private CarInfoService carInfoService;
 

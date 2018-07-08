@@ -3,12 +3,19 @@ package com.dpk.wgj.service.impl;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.mapper.DriverInfoMapper;
 import com.dpk.wgj.service.DriverInfoService;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -50,7 +57,7 @@ public class DriverInfoServiceImpl implements DriverInfoService {
         }
         return null;
     }
-
+    @Override
     @Transactional
     public DriverInfo getDriveInfoByDriverLevelStar(int driverLevelStar){
         DriverInfo driverInfo;
@@ -62,8 +69,71 @@ public class DriverInfoServiceImpl implements DriverInfoService {
         }
         return null;
     }
+    @Override
+    @Transactional()
+    public int importExcel(MultipartFile file, String fileName){
+        //记录成功添加的记录数
+        int res = 0;
+        logger.info("000000");
+        try {
+            InputStream fileInputStream = file.getInputStream();
+//            //判断是否是03版本的Excel(还是07的)
+//            boolean is03Excel = fileName.matches("^.+\\.(?i)(xls)$");
+//            //1、读取工作簿
+//            Workbook workbook = is03Excel ? new HSSFWorkbook(fileInputStream)
+//                    : new XSSFWorkbook(fileInputStream);
+            Workbook workbook =new HSSFWorkbook(fileInputStream);
+            //2、读取工作表
+            Sheet sheet=workbook.getSheetAt(0);
+            //3、读取行
+            System.out.println(sheet.getPhysicalNumberOfRows());
+            if(sheet.getPhysicalNumberOfRows()>1){
+               DriverInfo driverInfo= null;
+                for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+                    //4、读取单元格
+                    Row row=sheet.getRow(i);
+                    driverInfo = new DriverInfo();
+                    if(row==null || row.getCell(0) == null){
+                        continue;
+                    }
 
-/**
+                    row.getCell(0).setCellType(Cell.CELL_TYPE_STRING);
+                    driverInfo.setDriverName(row.getCell(0).getStringCellValue());
+
+                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
+                    driverInfo.setDriverWxId(row.getCell(1).getStringCellValue());
+
+                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
+                    driverInfo.setDriverPhoneNumber(row.getCell(1).getStringCellValue());
+
+                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
+                    driverInfo.setDriverIdentity(row.getCell(1).getStringCellValue());
+
+                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
+                    driverInfo.setDriverLicence(row.getCell(1).getStringCellValue());
+                    //风险源
+                    try {
+                        //先查询是否存在，然后再添加
+                        DriverInfo temp = driverInfoMapper.getDriveInfoByDriverIdentity(driverInfo.getDriverIdentity());
+                        if(temp == null){
+                            driverInfoMapper.insertDriverInfo(driverInfo);
+                            res++;
+                        }
+                    } catch (Exception e) {
+                        logger.error(e.getMessage());
+
+                    }
+                }
+            }
+            fileInputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+
+    /**
  * Created by zhoulin on 2018/7/8.
  * 说明:
  */

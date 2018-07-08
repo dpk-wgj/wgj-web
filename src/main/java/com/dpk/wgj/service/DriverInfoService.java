@@ -1,6 +1,7 @@
 package com.dpk.wgj.service;
 
 import com.dpk.wgj.bean.DriverInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -38,5 +39,12 @@ public interface DriverInfoService {
      */
     public List<DriverInfo> getAllCarLocation() throws Exception;
 
+
+    /**
+     * Excel表导入数据库
+     * @return
+     */
+
+    public int importExcel(MultipartFile file, String fileName)throws Exception;
 
 }
