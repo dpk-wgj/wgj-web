@@ -116,4 +116,18 @@ public class CarInfoServiceImpl implements CarInfoService{
         }
         return null;
     }
+
+    @Override
+    public int findCarInfoByMultiConditionCount(CarInfoTableMessage carInfoTableMessage) {
+
+        int count = 0;
+
+        try {
+            count = carInfoMapper.findCarInfoByMultiConditionCount(carInfoTableMessage);
+            return count;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 }

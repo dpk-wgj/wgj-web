@@ -21,4 +21,6 @@ public interface CarInfoMapper {
 
     public List<CarInfo> findCarInfoByMultiCondition(CarInfoTableMessage carInfoTableMessage) throws Exception;
 
+    public int findCarInfoByMultiConditionCount(CarInfoTableMessage carInfoTableMessage) throws Exception;
+
 }
