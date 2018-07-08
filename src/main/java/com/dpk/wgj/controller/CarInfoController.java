@@ -25,8 +25,8 @@ public class CarInfoController {
     /**
      * 根据车牌查找车辆信息(关联司机信息)
      */
-    @RequestMapping(value = "/getCarInfoByCarNumber/{catNumber}", method = RequestMethod.GET)
-    public Message getCarInfoByCarNumber(@PathVariable(value = "catNumber") String carNumber){
+    @RequestMapping(value = "/getCarInfoByCarNumber/{carNumber}", method = RequestMethod.GET)
+    public Message getCarInfoByCarNumber(@PathVariable(value = "carNumber") String carNumber){
         CarInfo carInfo;
         try {
             carInfo = carInfoService.getCarInfoByCarNumber(carNumber);
