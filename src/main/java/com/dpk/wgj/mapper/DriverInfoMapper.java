@@ -3,6 +3,8 @@ package com.dpk.wgj.mapper;
 import com.dpk.wgj.bean.DriverInfo;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 @Mapper
 public interface DriverInfoMapper {
 
@@ -14,4 +16,6 @@ public interface DriverInfoMapper {
     public DriverInfo getDriverInfoByDriverPhoneNumber(String driverPhoneNumber) throws Exception;
 
     public DriverInfo getDriveInfoByDriverLevelStar(int driverLevelStar) throws Exception;
+    public List<DriverInfo> getAllCarLocation() throws Exception;
+
 }

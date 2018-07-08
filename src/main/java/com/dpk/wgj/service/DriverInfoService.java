@@ -2,6 +2,8 @@ package com.dpk.wgj.service;
 
 import com.dpk.wgj.bean.DriverInfo;
 
+import java.util.List;
+
 public interface DriverInfoService {
 
     /**
@@ -28,6 +30,13 @@ public interface DriverInfoService {
      * @param driverLevelStar
      */
     public DriverInfo getDriveInfoByDriverLevelStar(int driverLevelStar) throws Exception;
+
+
+    /**
+     * 获取所有当前上岗司机位置
+     * @return
+     */
+    public List<DriverInfo> getAllCarLocation() throws Exception;
 
 
 }
