@@ -2,6 +2,7 @@ package com.dpk.wgj.service.impl;
 
 import com.dpk.wgj.bean.CarInfo;
 import com.dpk.wgj.bean.DriverInfo;
+import com.dpk.wgj.bean.tableInfo.CarInfoTableMessage;
 import com.dpk.wgj.mapper.CarInfoMapper;
 import com.dpk.wgj.mapper.DriverInfoMapper;
 import com.dpk.wgj.service.CarInfoService;
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class CarInfoServiceImpl implements CarInfoService{
@@ -36,6 +39,80 @@ public class CarInfoServiceImpl implements CarInfoService{
             return carInfo;
         } catch (Exception e) {
             logger.error(e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public int addCarInfo(CarInfo carInfo) {
+
+        int addStatus = 0;
+
+        try {
+            addStatus = carInfoMapper.addCarInfo(carInfo);
+            return addStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return addStatus;
+    }
+
+    @Override
+    public int deleteCarInfoByCarId(int carId) {
+
+        int delStatus = 0;
+
+        try {
+            delStatus = carInfoMapper.deleteCarInfoByCarId(carId);
+            return delStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return delStatus;
+    }
+
+    @Override
+    public CarInfo getCarInfoByCarId(int carId) {
+
+        CarInfo carInfo;
+        DriverInfo driverInfo;
+
+        try {
+            carInfo = carInfoMapper.getCarInfoByCarId(carId);
+            driverInfo = driverInfoMapper.getDriverInfoByCarId(carInfo.getCarId());
+
+            carInfo.setDriverInfo(driverInfo);
+
+            return carInfo;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public int updateCarInfoByCarId(CarInfo carInfo) {
+        int upStatus = 0;
+
+        try {
+            upStatus = carInfoMapper.updateCarInfoByCarId(carInfo);
+            return upStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return upStatus;
+    }
+
+    @Override
+    public List<CarInfo> findCarInfoByMultiCondition(CarInfoTableMessage carInfoTableMessage) {
+
+        List<CarInfo> carInfos;
+
+        try {
+            carInfos = carInfoMapper.findCarInfoByMultiCondition(carInfoTableMessage);
+            return carInfos;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
