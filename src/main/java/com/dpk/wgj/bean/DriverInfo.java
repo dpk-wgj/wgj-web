@@ -28,6 +28,26 @@ public class DriverInfo implements Serializable {
 
     private int flag;
 
+    private int carId;
+
+    private CarInfo carInfo;
+
+    public CarInfo getCarInfo() {
+        return carInfo;
+    }
+
+    public void setCarInfo(CarInfo carInfo) {
+        this.carInfo = carInfo;
+    }
+
+    public int getCarId() {
+        return carId;
+    }
+
+    public void setCarId(int carId) {
+        this.carId = carId;
+    }
+
     public int getDriverId() {
         return driverId;
     }
@@ -121,6 +141,7 @@ public class DriverInfo implements Serializable {
                 ", driverName='" + driverName + '\'' +
                 ", driverStatus=" + driverStatus +
                 ", flag=" + flag +
+                ", carId=" + carId +
                 '}';
     }
 }

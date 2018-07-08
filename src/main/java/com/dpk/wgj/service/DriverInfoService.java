@@ -2,6 +2,8 @@ package com.dpk.wgj.service;
 
 import com.dpk.wgj.bean.DriverInfo;
 
+import java.util.List;
+
 public interface DriverInfoService {
 
     /**
@@ -9,5 +11,12 @@ public interface DriverInfoService {
      * @param carId
      */
     public DriverInfo getDriverInfoByCarId(int carId) throws Exception;
+
+    /**
+     * 获取所有当前上岗司机位置
+     * @return
+     */
+    public List<DriverInfo> getAllCarLocation() throws Exception;
+
 
 }
