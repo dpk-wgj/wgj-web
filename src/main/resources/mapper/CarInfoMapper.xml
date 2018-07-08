@@ -7,11 +7,62 @@
         <id column="car_id" property="carId"/>
         <result column="car_number" property="carNumber"/>
         <result column="car_type" property="carType"/>
+        <result column="car_seat" property="carSeat"/>
     </resultMap>
 
     <select id="getCarInfoByCarNumber" resultMap="CarInfoMap">
-        SELECT car_id, car_number, car_type FROM car_info
+        SELECT car_id, car_number, car_type, car_seat FROM car_info
         WHERE car_number = #{carNumber}
+    </select>
+
+    <select id="getCarInfoByCarId" resultMap="CarInfoMap">
+        SELECT * FROM car_info
+        WHERE car_id = #{carId}
+    </select>
+
+
+    <insert id="addCarInfo" parameterType="CarInfo" useGeneratedKeys="true" keyProperty="carId">
+        INSERT INTO car_info (car_number, car_type, car_seat)
+        VALUES (#{carNumber}, #{carType}, #{carSeat})
+    </insert>
+
+    <delete id="deleteCarInfoByCarId" parameterType="int">
+        DELETE from car_info WHERE car_id = #{carId}
+    </delete>
+
+    <update id="updateCarInfoByCarId" parameterType="CarInfo">
+        update car_info
+        <set>
+            <if test="carNumber != null">
+                car_number = #{carNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="carType != null">
+                car_type = #{carType,jdbcType=VARCHAR},
+            </if>
+            <if test="carSeat != null">
+                car_seat = #{carSeat,jdbcType=INTEGER},
+            </if>
+        </set>
+        where car_id = #{carId,jdbcType=INTEGER}
+    </update>
+
+    <select id="findCarInfoByMultiCondition" resultMap="CarInfoMap">
+        SELECT car_id, car_number, car_type, car_seat FROM car_info
+        <where>
+            1 = 1
+            <if test="carInfo != null">
+                <if test="carInfo.carNumber != null">
+                    AND car_number = #{carInfo.carNumber,jdbcType=VARCHAR}
+                </if>
+                <if test="carInfo.carType != null">
+                    AND car_type LIKE #{carInfo.carType,jdbcType=VARCHAR}
+                </if>
+                <if test="carInfo.carSeat != 0">
+                    AND car_seat = #{carInfo.carSeat,jdbcType=INTEGER}
+                </if>
+            </if>
+        </where>
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
     </select>
 
 </mapper>

@@ -4,5 +4,11 @@ import com.dpk.wgj.bean.DriverInfo;
 
 public interface DriverInfoService {
 
+    /**
+     * 根据司机绑定的车辆Id进行司机信息查询
+     * @param carId
+     */
+    public DriverInfo getDriverInfoByCarId(int carId) throws Exception;
+
     public DriverInfo getDriverInfo(String driverName,String driverPhoneNumber,int driverLevelStar) throws Exception;
 }
