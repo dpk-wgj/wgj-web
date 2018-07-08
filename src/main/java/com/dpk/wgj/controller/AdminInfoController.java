@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-//@RequestMapping(value = "/admin")
+@RequestMapping(value = "/api")
 public class AdminInfoController {
 
     @Autowired
