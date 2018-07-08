@@ -4,7 +4,6 @@ import com.dpk.wgj.bean.CarInfo;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.bean.tableInfo.CarInfoTableMessage;
-import com.dpk.wgj.bean.tableInfo.TableMessage;
 import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
 import org.springframework.beans.factory.annotation.Autowired;

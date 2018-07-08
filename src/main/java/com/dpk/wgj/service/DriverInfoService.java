@@ -10,5 +10,24 @@ public interface DriverInfoService {
      */
     public DriverInfo getDriverInfoByCarId(int carId) throws Exception;
 
-    public DriverInfo getDriverInfo(String driverName,String driverPhoneNumber,int driverLevelStar) throws Exception;
+
+    /**
+     * 根据司机的名字进行司机全部信息查询
+     * @param driverName
+     */
+    public DriverInfo getDriverInfoByDriverName(String driverName) throws Exception;
+
+    /**
+     * 根据司机的手机号进行司机全部信息查询
+     * @param driverPhoneNumber
+     */
+    public DriverInfo getDriverInfoByDriverPhoneNumber(String driverPhoneNumber) throws Exception;
+
+    /**
+     * 根据司机的星级进行司机全部信息查询
+     * @param driverLevelStar
+     */
+    public DriverInfo getDriveInfoByDriverLevelStar(int driverLevelStar) throws Exception;
+
+
 }

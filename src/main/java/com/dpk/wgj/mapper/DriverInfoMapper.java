@@ -8,6 +8,10 @@ public interface DriverInfoMapper {
 
     public DriverInfo getDriverInfoByCarId(int carId) throws Exception;
 
-    public DriverInfo getDriverInfo(String driverName, String driverPhoneNumber, int driverLevelStar) throws Exception;
+    public DriverInfo getDriverInfoByDriverName(String driverName) throws Exception;
 
+
+    public DriverInfo getDriverInfoByDriverPhoneNumber(String driverPhoneNumber) throws Exception;
+
+    public DriverInfo getDriveInfoByDriverLevelStar(int driverLevelStar) throws Exception;
 }
