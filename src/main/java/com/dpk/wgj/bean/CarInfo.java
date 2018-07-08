@@ -14,8 +14,6 @@ public class CarInfo implements Serializable {
 
     private String carType;
 
-    private DriverInfo driverInfo;
-
     private int carSeat;
 
     public String getCarType() {
@@ -32,14 +30,6 @@ public class CarInfo implements Serializable {
 
     public void setCarSeat(int carSeat) {
         this.carSeat = carSeat;
-    }
-
-    public DriverInfo getDriverInfo() {
-        return driverInfo;
-    }
-
-    public void setDriverInfo(DriverInfo driverInfo) {
-        this.driverInfo = driverInfo;
     }
 
     public int getCarId() {
@@ -64,7 +54,6 @@ public class CarInfo implements Serializable {
                 "carId=" + carId +
                 ", carNumber='" + carNumber + '\'' +
                 ", carType='" + carType + '\'' +
-                ", driverInfo=" + driverInfo +
                 ", carSeat=" + carSeat +
                 '}';
     }
