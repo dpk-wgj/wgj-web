@@ -8,9 +8,12 @@ import com.dpk.wgj.bean.tableInfo.TableMessage;
 import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/admin/car")
@@ -102,16 +105,20 @@ public class CarInfoController {
     public Message findCarInfoByMultiCondition(@RequestBody CarInfoTableMessage tableMessage){
         List<CarInfo> carInfos;
         DriverInfo driverInfo;
+        int count = 0;
+        Map<String, Object> map = new HashMap<>();
         tableMessage.getCarInfo().setCarType("%" + tableMessage.getCarInfo().getCarType() + "%");
         try {
             carInfos = carInfoService.findCarInfoByMultiCondition(tableMessage);
-
+            count = carInfoService.findCarInfoByMultiConditionCount(tableMessage);
             if (carInfos != null){
                 for (CarInfo carInfo : carInfos){
                     driverInfo = driverInfoService.getDriverInfoByCarId(carInfo.getCarId());
                     carInfo.setDriverInfo(driverInfo);
                 }
-                return new Message(Message.SUCCESS, "查询车辆信息 >> 成功", carInfos);
+                map.put("count", count);
+                map.put("carInfos", carInfos);
+                return new Message(Message.SUCCESS, "查询车辆信息 >> 成功", map);
             }
             return new Message(Message.FAILURE, "查询车辆信息 >> 失败", "无符合条件车辆");
         } catch (Exception e) {

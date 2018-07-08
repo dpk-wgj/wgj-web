@@ -23,4 +23,9 @@
         AND driver_status = 1
     </select>
 
+    <select id="getAllCarLocation" resultMap="DriverInfoMap">
+        SELECT driver_name, driver_phone_number, driver_location, driver_level_star, driver_status  FROM driver_info
+        WHERE car_id = #{carId}
+        AND driver_status = 1
+    </select>
 </mapper>

@@ -51,6 +51,25 @@
         <where>
             1 = 1
             <if test="carInfo != null">
+                <if test="carInfo.carNumber != null and carInfo.carNumber !=''">
+                    AND car_number = #{carInfo.carNumber,jdbcType=VARCHAR}
+                </if>
+                <if test="carInfo.carType != null and carInfo.carType !=''">
+                    AND car_type LIKE #{carInfo.carType,jdbcType=VARCHAR}
+                </if>
+                <if test="carInfo.carSeat != 0 and carInfo.carSeat !=''">
+                    AND car_seat = #{carInfo.carSeat,jdbcType=INTEGER}
+                </if>
+            </if>
+        </where>
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="findCarInfoByMultiConditionCount" resultType="int">
+        SELECT COUNT(*) FROM car_info
+        <where>
+            1 = 1
+            <if test="carInfo != null">
                 <if test="carInfo.carNumber != null">
                     AND car_number = #{carInfo.carNumber,jdbcType=VARCHAR}
                 </if>
@@ -62,7 +81,7 @@
                 </if>
             </if>
         </where>
-        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
     </select>
+
 
 </mapper>
