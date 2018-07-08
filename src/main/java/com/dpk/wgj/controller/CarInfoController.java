@@ -36,7 +36,9 @@ public class CarInfoController {
         try {
             carInfo = carInfoService.getCarInfoByCarNumber(carNumber);
             if (carInfo != null){
-                return new Message(Message.SUCCESS, "查询车辆信息 >> 成功", carInfo);
+                DriverInfo driverInfo = driverInfoService.getDriverInfoByCarId(carInfo.getCarId());
+                CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfo);
+                return new Message(Message.SUCCESS, "查询车辆信息 >> 成功", carInfoDTO);
             }
             return new Message(Message.FAILURE, "查询车辆信息 >> 失败", "未查询到车牌号 [" + carNumber + "] 信息");
         } catch (Exception e) {
