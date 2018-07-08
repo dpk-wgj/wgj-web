@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dpk.wgj.mapper.OrderInfoMapper">
+    <resultMap id="OrderInfoMap" type="com.dpk.wgj.bean.OrderInfo">
+        <id column="order_id" property="orderId"/>
+        <result column="passenger_id" property="passengerId"/>
+        <result column="driver_id" property="driverId"/>
+        <result column="location_info" property="locationInfo"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+    </resultMap>
+
+    <select id="getLocationInfoByDate" resultMap="OrderInfoMap">
+        SELECT location_info, driver_id  FROM order_info
+        <where>
+            1 = 1
+            <if test="startTime != null and startTime != ''">
+                <![CDATA[
+                    AND start_time >= #{startTime}
+                ]]>
+            </if>
+            <if test="endTime != null and endTime != ''">
+                <![CDATA[
+                    AND end_time <= #{endTime}
+                ]]>
+            </if>
+        </where>
+    </select>
+
+</mapper>
