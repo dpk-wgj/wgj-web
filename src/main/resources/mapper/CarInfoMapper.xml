@@ -70,13 +70,13 @@
         <where>
             1 = 1
             <if test="carInfo != null">
-                <if test="carInfo.carNumber != null">
+                <if test="carInfo.carNumber != null and carInfo.carNumber !=''">
                     AND car_number = #{carInfo.carNumber,jdbcType=VARCHAR}
                 </if>
-                <if test="carInfo.carType != null">
+                <if test="carInfo.carType != null and carInfo.carType !=''">
                     AND car_type LIKE #{carInfo.carType,jdbcType=VARCHAR}
                 </if>
-                <if test="carInfo.carSeat != 0">
+                <if test="carInfo.carSeat != 0 and carInfo.carSeat !=''">
                     AND car_seat = #{carInfo.carSeat,jdbcType=INTEGER}
                 </if>
             </if>
