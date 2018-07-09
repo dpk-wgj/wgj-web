@@ -9,22 +9,25 @@
         <result column="driver_id" property="driverId"/>
         <result column="location_info" property="locationInfo"/>
         <result column="order_status" property="orderStatus"/>
-        <result column="start_time" property="startTime"/>
-        <result column="end_time" property="endTime"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <select id="getLocationInfoByDate" resultMap="OrderInfoMap">
-        SELECT location_info, driver_id  FROM order_info
+    <select id="getLocationInfoByDate" resultMap="OrderInfoMap" parameterType="LocationMessage">
+        SELECT o.location_info, o.driver_id FROM order_info o, car_info c
         <where>
-            1 = 1
-            <if test="startTime != null and startTime != ''">
+            (o.driver_id = c.car_driver_id_a OR o.driver_id = c.car_driver_id_b)
+            <if test="carNumber != null and carNumber != ''">
+                AND c.car_number = #{carNumber}
+            </if>
+            <if test="startTime != null">
                 <![CDATA[
-                    AND start_time >= #{startTime}
+                    AND o.start_time >= #{startTime,jdbcType=TIMESTAMP}
                 ]]>
             </if>
-            <if test="endTime != null and endTime != ''">
+            <if test="endTime != null">
                 <![CDATA[
-                    AND end_time <= #{endTime}
+                    AND o.end_time <= #{endTime,jdbcType=TIMESTAMP}
                 ]]>
             </if>
         </where>
