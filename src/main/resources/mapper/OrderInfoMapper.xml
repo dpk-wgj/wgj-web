@@ -14,7 +14,7 @@
     </resultMap>
 
     <select id="getLocationInfoByDate" resultMap="OrderInfoMap" parameterType="LocationMessage">
-        SELECT o.location_info, o.driver_id FROM order_info o, car_info c
+        SELECT o.order_id, o.location_info, o.driver_id FROM order_info o, car_info c
         <where>
             (o.driver_id = c.car_driver_id_a OR o.driver_id = c.car_driver_id_b)
             <if test="carNumber != null and carNumber != ''">
