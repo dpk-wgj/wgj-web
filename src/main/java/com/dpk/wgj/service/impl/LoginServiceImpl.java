@@ -36,9 +36,18 @@ public class LoginServiceImpl implements LoginService {
     public Message loginForDriver(UserDTO userInfo, HttpServletResponse response) {
         UserDTO user = new UserDTO();
         DriverInfo driverInfo = new DriverInfo();
+        DriverInfo driverInfo1 = new DriverInfo();
         try {
             driverInfo = driverInfoMapper.getDriverInfoByWxId(userInfo.getDriverInfo().getDriverWxId());
-            user.setDriverInfo(driverInfo);
+
+            // 用户不存在则自动添加
+            if (driverInfo == null){
+                driverInfo1.setDriverWxId(userInfo.getDriverInfo().getDriverWxId());
+                driverInfo1.setUserGroupId(2);
+                driverInfoMapper.addDriverInfo(driverInfo1);
+            }
+
+            user.setDriverInfo(driverInfo1);
             if(user != null){
 //                if(userInfo.getPassword().equals(user.getPassword())&&userInfo.getUsername().equals(user.getUsername())){
                   if (true){
@@ -71,8 +80,17 @@ public class LoginServiceImpl implements LoginService {
     public Message loginForPassenger(UserDTO userInfo, HttpServletResponse response) {
         UserDTO user = new UserDTO();
         Passenger passenger = new Passenger();
+        Passenger passenger1 = new Passenger();
         try {
             passenger = passengerMapper.getPassengerByWxId(userInfo.getPassenger().getPassengerWxId());
+
+            // 用户不存在则自动添加
+            if (passenger == null){
+                passenger1.setPassengerWxId(userInfo.getPassenger().getPassengerWxId());
+                passenger1.setUserGroupId(2);
+                passengerMapper.addPassenger(passenger1);
+            }
+
             user.setPassenger(passenger);
             if(user != null){
 //                if(userInfo.getPassword().equals(user.getPassword())&&userInfo.getUsername().equals(user.getUsername())){
