@@ -22,7 +22,6 @@ public class AdminInfoController {
 
     @RequestMapping(value = "/getUserInfoById/{userId}", method = RequestMethod.GET)
     public Message getUserInfoById(@PathVariable(value = "userId") int userId){
-
         try {
             AdminInfo adminInfo = adminInfoService.getUserInfoById(userId);
             if (adminInfo != null){
