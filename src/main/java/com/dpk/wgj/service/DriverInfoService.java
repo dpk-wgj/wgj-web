@@ -1,6 +1,7 @@
 package com.dpk.wgj.service;
 
 import com.dpk.wgj.bean.DriverInfo;
+import com.dpk.wgj.bean.tableInfo.DriverInfoTableMessage;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -19,6 +20,13 @@ public interface DriverInfoService {
      * @param driverName
      */
     public DriverInfo getDriverInfoByDriverName(String driverName) throws Exception;
+
+    /**
+     * 全部司机信息查询
+     * @param
+     */
+    public List<DriverInfo> getAllDriverInfo( ) throws Exception;
+
 
     /**
      * 根据司机的手机号进行司机全部信息查询
@@ -46,5 +54,9 @@ public interface DriverInfoService {
      */
 
     public int importExcel(MultipartFile file, String fileName)throws Exception;
+
+    public List<DriverInfo> getDriverByMultiCondition(DriverInfoTableMessage carInfoTableMessage) throws Exception;
+
+    public int getDriverByMultiConditionCount(DriverInfoTableMessage carInfoTableMessage) throws Exception;
 
 }

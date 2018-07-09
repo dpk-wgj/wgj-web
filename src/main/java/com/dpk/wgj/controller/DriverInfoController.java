@@ -4,6 +4,7 @@ import com.dpk.wgj.bean.CarInfo;
 import com.dpk.wgj.bean.DTO.CarInfoDTO;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.Message;
+import com.dpk.wgj.bean.tableInfo.DriverInfoTableMessage;
 import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
 import org.slf4j.Logger;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,9 +32,39 @@ public class DriverInfoController {
 
     @Autowired
     private DriverInfoService driverInfoService;
+    @Autowired
+    private CarInfoService carInfoService;
+
     private final Logger logger = LoggerFactory.getLogger(DriverInfoController.class);
+
     /**
-     * 根据司机名字查找司机信息，同时可以关联上司机的车辆信息
+     * 获取全部信息
+     */
+
+    @RequestMapping(value = "/getAllDriverInfo/",method = RequestMethod.GET)
+    public Message getAllDriverInfo()  {
+      List<CarInfoDTO> carInfoDTO = new ArrayList<CarInfoDTO>();
+        try {
+            List<DriverInfo> driverInfo = driverInfoService.getAllDriverInfo();
+
+            if (driverInfo != null){
+                for(DriverInfo driverInfo1 : driverInfo) {
+                    CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo1.getCarId());
+                    carInfoDTO.add(new CarInfoDTO(carInfo, driverInfo1));
+                }
+                return new Message(Message.SUCCESS, "查询全部司机信息 >> 成功", carInfoDTO);
+            }
+            else{
+                return new Message(Message.FAILURE, "查询司机信息 >> 失败", "未查询到司机信息");
+            }
+
+        } catch (Exception e) {
+            return new Message(Message.ERROR, "查询司机信息 >> 异常", e.getMessage());
+        }
+
+    }
+    /**
+     * 根据司机名字查找司机信息，同时可以关联上车辆信息
      */
 
     @RequestMapping(value = "/getDriveInfoByDriverName/{driverName}", method = RequestMethod.GET)
@@ -38,8 +72,11 @@ public class DriverInfoController {
         DriverInfo driverInfo;
         try {
             driverInfo = driverInfoService.getDriverInfoByDriverName(driverName);
+
             if (driverInfo != null){
-                return new Message(Message.SUCCESS, "查询司机信息 >> 成功", driverInfo);
+                CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
+                CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfo);
+                return new Message(Message.SUCCESS, "查询司机信息 >> 成功", carInfoDTO);
             }
             return new Message(Message.FAILURE, "查询司机信息 >> 失败", "未查询到司机姓名为 [" + driverName + "] 的信息");
         } catch (Exception e) {
@@ -57,6 +94,8 @@ public class DriverInfoController {
         try {
             driverInfo = driverInfoService.getDriverInfoByDriverPhoneNumber(driverPhoneNumber);
             if (driverInfo != null){
+                CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
+                CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfo);
                 return new Message(Message.SUCCESS, "查询司机信息 >> 成功", driverInfo);
             }
             return new Message(Message.FAILURE, "查询司机信息 >> 失败", "未查询到司机手机号码为 [" + driverPhoneNumber + "] 的信息");
@@ -76,6 +115,8 @@ public class DriverInfoController {
         try {
             driverInfo = driverInfoService.getDriveInfoByDriverLevelStar(driverLevelStar);
             if (driverInfo != null){
+                CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
+                CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfo);
                 return new Message(Message.SUCCESS, "查询司机信息 >> 成功", driverInfo);
             }
             return new Message(Message.FAILURE, "查询司机信息 >> 失败", "未查询到司机星级为 [" + driverLevelStar + "] 的信息");
@@ -83,6 +124,37 @@ public class DriverInfoController {
             return new Message(Message.ERROR, "查询司机信息 >> 异常", e.getMessage());
         }
 
+    }
+    /**
+     * 多条件查询司机信息
+     * @param tableMessage
+     * @return
+     */
+    @RequestMapping(value = "/getDriverInfoByMultiCondition", method = RequestMethod.POST)
+    public Message getDriverByMultiCondition(@RequestBody DriverInfoTableMessage tableMessage){
+        List<DriverInfo> driverInfo;
+        CarInfo carInfo;
+        List<CarInfoDTO> carInfoDTOList = new ArrayList<>();
+        int count = 0;
+        Map<String, Object> map = new HashMap<>();
+        tableMessage.getDriverInfo().setDriverName("%" + tableMessage.getDriverInfo().getDriverName() + "%");
+        try {
+            driverInfo = driverInfoService.getDriverByMultiCondition(tableMessage);
+            count = driverInfoService.getDriverByMultiConditionCount(tableMessage);
+            if (driverInfo != null){
+                for (DriverInfo driverInfos : driverInfo){
+                    carInfo = carInfoService.getCarInfoByCarId(driverInfos.getCarId());
+                    CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfos);
+                    carInfoDTOList.add(carInfoDTO);
+                }
+                map.put("count", count);
+                map.put("driverInfos", carInfoDTOList);
+                return new Message(Message.SUCCESS, "查询车辆信息 >> 成功", map);
+            }
+            return new Message(Message.FAILURE, "查询车辆信息 >> 失败", "无符合条件车辆");
+        } catch (Exception e) {
+            return new Message(Message.ERROR, "查询车辆信息 >> 异常",  e.getMessage());
+        }
     }
 
 
@@ -114,8 +186,6 @@ public class DriverInfoController {
 
     }
 
-    @Autowired
-    private CarInfoService carInfoService;
 
     /**
      * 获取所有当前上岗司机位置

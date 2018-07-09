@@ -1,6 +1,7 @@
 package com.dpk.wgj.service.impl;
 
 import com.dpk.wgj.bean.DriverInfo;
+import com.dpk.wgj.bean.tableInfo.DriverInfoTableMessage;
 import com.dpk.wgj.mapper.DriverInfoMapper;
 import com.dpk.wgj.service.DriverInfoService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -45,6 +46,7 @@ public class DriverInfoServiceImpl implements DriverInfoService {
         }
         return null;
     }
+
     @Override
     @Transactional
     public DriverInfo getDriverInfoByDriverPhoneNumber(String driverPhoneNumber){
@@ -68,6 +70,34 @@ public class DriverInfoServiceImpl implements DriverInfoService {
             logger.error(e.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public List<DriverInfo> getDriverByMultiCondition(DriverInfoTableMessage driverInfoTableMessage) {
+
+        List<DriverInfo> driverInfos;
+
+        try {
+            driverInfos = driverInfoMapper.getDriverByMultiCondition(driverInfoTableMessage);
+            return driverInfos;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public int getDriverByMultiConditionCount(DriverInfoTableMessage driverInfoTableMessage) {
+
+        int count = 0;
+
+        try {
+            count = driverInfoMapper.getDriverByMultiConditionCount(driverInfoTableMessage);
+            return count;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
     }
     @Override
     @Transactional()
@@ -131,8 +161,21 @@ public class DriverInfoServiceImpl implements DriverInfoService {
         }
         return res;
     }
-
-
+    /**
+     * Created by hlx on 2018/7/9.
+     * 说明:用于查询所有司机信息
+     */
+    @Override
+    public List<DriverInfo> getAllDriverInfo() {
+        List<DriverInfo> driverInfo;
+        try {
+            driverInfo = driverInfoMapper.getAllDriverInfo();
+            return driverInfo;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return null;
+    }
     /**
  * Created by zhoulin on 2018/7/8.
  * 说明:
