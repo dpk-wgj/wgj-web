@@ -17,6 +17,16 @@
         <result column="car_id" property="carId"/>
     </resultMap>
 
+    <select id="getDriverInfoByWxId" resultMap="DriverInfoMap">
+        SELECT driver_wx_id, driver_id, user_group_id  FROM driver_info
+        WHERE driver_wx_id = #{driverWxId}
+    </select>
+
+    <insert id="addDriverInfo" parameterType="DriverInfo" useGeneratedKeys="true" keyProperty="driverId">
+        INSERT INTO driver_info (driver_wx_id, user_group_id)
+        VALUES (#{driverWxId}, #{userGroupId})
+    </insert>
+
     <select id="getDriverInfoByCarId" resultMap="DriverInfoMap">
         SELECT driver_id, driver_name, driver_phone_number, driver_location, driver_level_star, driver_status  FROM driver_info
         WHERE car_id = #{carId}

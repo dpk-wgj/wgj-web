@@ -47,6 +47,10 @@ public interface DriverInfoService {
      */
     public List<DriverInfo> getAllCarLocation() throws Exception;
 
+    public DriverInfo getDriverInfoByWxId(String driverWxId) throws Exception;
+
+    public int addDriverInfo(DriverInfo driverInfo) throws Exception;
+
 
     /**
      * Excel表导入数据库
