@@ -12,4 +12,9 @@ public interface DriverInfoMapper {
 
     public List<DriverInfo> getAllCarLocation() throws Exception;
 
+    public DriverInfo getDriverInfoByWxId(String driverWxId) throws Exception;
+
+    public int addDriverInfo(DriverInfo driverInfo) throws Exception;
+
+
 }
