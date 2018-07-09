@@ -44,4 +44,32 @@ public class DriverInfoServiceImpl implements DriverInfoService {
         return null;
     }
 
+    @Override
+    public DriverInfo getDriverInfoByWxId(String driverWxId) {
+
+        DriverInfo driverInfo;
+
+        try {
+            driverInfo = driverInfoMapper.getDriverInfoByWxId(driverWxId);
+            return driverInfo;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public int addDriverInfo(DriverInfo driverInfo) {
+
+        int addStatus = 0;
+
+        try {
+            addStatus = driverInfoMapper.addDriverInfo(driverInfo);
+            return addStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  0;
+    }
+
 }
