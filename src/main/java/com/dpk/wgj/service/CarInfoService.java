@@ -1,9 +1,12 @@
 package com.dpk.wgj.service;
 
 import com.dpk.wgj.bean.CarInfo;
+import com.dpk.wgj.bean.Location;
 import com.dpk.wgj.bean.tableInfo.CarInfoTableMessage;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface CarInfoService {
 
@@ -20,6 +23,5 @@ public interface CarInfoService {
     public List<CarInfo> findCarInfoByMultiCondition(CarInfoTableMessage carInfoTableMessage) throws Exception;
 
     public int findCarInfoByMultiConditionCount(CarInfoTableMessage carInfoTableMessage) throws Exception;
-
 
 }
