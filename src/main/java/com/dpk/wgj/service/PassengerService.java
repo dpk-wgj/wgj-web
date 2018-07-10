@@ -8,4 +8,6 @@ public interface PassengerService {
 
     public int addPassenger(Passenger passenger) throws Exception;
 
+    public int updatePassengerStatus(Passenger passenger) throws Exception;
+
 }

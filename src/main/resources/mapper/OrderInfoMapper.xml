@@ -33,4 +33,55 @@
         </where>
     </select>
 
+    <insert id="addOrderInfo" parameterType="OrderInfo" useGeneratedKeys="true" keyProperty="orderId">
+        INSERT INTO order_info (passenger_id, driver_id, location_info, order_status, start_time)
+        VALUES (#{passengerId}, #{driverId}, #{locationInfo}, #{orderStatus}, #{startTime})
+    </insert>
+
+    <select id="getOrderInfoByPassengerId" resultMap="OrderInfoMap" parameterType="int">
+        SELECT * FROM order_info
+        WHERE passenger_id = #{passengerId}
+    </select>
+
+    <select id="getOrderInfoByDriverId" resultMap="OrderInfoMap" parameterType="int">
+        SELECT * FROM order_info
+        WHERE driver_id = #{driverId}
+    </select>
+
+    <update id="updateOrderInfoByOrderId" parameterType="OrderInfo">
+        update order_info
+        <set>
+            <if test="passengerId != null">
+                passenger_id = #{passengerId,jdbcType=INTEGER},
+            </if>
+            <if test="driverId != null">
+                driver_id = #{driverId,jdbcType=INTEGER},
+            </if>
+            <if test="locationInfo != null">
+                location_info = #{locationInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="orderStatus != null">
+                order_status = #{orderStatus,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE order_id = #{orderId,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteOrderInfoByOrderId" parameterType="int">
+        DELETE FORM order_info
+        WHERE order_id = #{orderId,jdbcType=INTEGER}
+    </delete>
+
+    <select id="getOrderInfoByOrderId" resultMap="OrderInfoMap" parameterType="int">
+        SELECT * FROM order_info
+        WHERE order_id = #{orderId}
+    </select>
+
+
 </mapper>
