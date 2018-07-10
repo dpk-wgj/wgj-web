@@ -168,7 +168,15 @@ public class OrderInfoController {
                 upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
                 if (upStatus == 1){
                     // 重新匹配新的司机
-                    return new Message(Message.SUCCESS, "司机端 >> 申请改派 >> 成功", upStatus);
+
+                    DriverInfo driverInfo = new DriverInfo();
+                    driverInfo.setDriverId(driverId);
+                    // 用时切换司机状态 至 服务前
+                    driverInfo.setDriverStatus(1);
+                    int upDriverStatus = driverInfoService.updateDriverStatus(driverInfo);
+                    if(upDriverStatus == 1){
+                        return new Message(Message.SUCCESS, "司机端 >> 申请改派 && 司机状态切换至 服务前 >> 成功", upStatus);
+                    }
                 }
             }
             return new Message(Message.FAILURE, "司机端 >> 申请改派 >> 失败", "错误请求");
@@ -182,7 +190,7 @@ public class OrderInfoController {
     /**
      * 司机端 >> 接到乘客后确认时 调用
      */
-    @RequestMapping(value = "/api/driver/updateOrderInfoByOrderId", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/driver/accessToServiceForDriver", method = RequestMethod.POST)
     public Message accessToServiceForDriver(@RequestBody AccessDriverDTO accessDriverDTO){
         int upStatus = 0;
 
@@ -231,7 +239,7 @@ public class OrderInfoController {
                 if (upStatus == 1){
                     Passenger passenger = new Passenger();
                     passenger.setPassengerId(passengerId);
-                    //乘客状态切换至 服务后
+                    //乘客状态切换至 服务后 同时也要修改司机状态
                     passenger.setPassengerStatus(2);
                     int upPassengerStatus = passengerService.updatePassengerStatus(passenger);
                     if (upPassengerStatus == 1){
