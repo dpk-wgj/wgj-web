@@ -53,7 +53,6 @@ public class OrderInfoController {
     /**
      * 乘客端 一键呼车 功能
      * @param locationInfo
-     * @return
      */
     @RequestMapping(value = "/api/passenger/addOrderInfo", method = RequestMethod.POST)
     public Message addOrderInfo(@RequestBody String locationInfo){
