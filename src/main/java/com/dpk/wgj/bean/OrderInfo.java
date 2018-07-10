@@ -17,6 +17,10 @@ public class OrderInfo implements Serializable {
 
     private String locationInfo;
 
+    private String startLocation;
+
+    private String endLocation;
+
     private int orderStatus;
 
     private Date startTime;
@@ -79,6 +83,22 @@ public class OrderInfo implements Serializable {
         this.endTime = endTime;
     }
 
+    public String getStartLocation() {
+        return startLocation;
+    }
+
+    public void setStartLocation(String startLocation) {
+        this.startLocation = startLocation;
+    }
+
+    public String getEndLocation() {
+        return endLocation;
+    }
+
+    public void setEndLocation(String endLocation) {
+        this.endLocation = endLocation;
+    }
+
     @Override
     public String toString() {
         return "OrderInfo{" +
@@ -86,6 +106,8 @@ public class OrderInfo implements Serializable {
                 ", passengerId=" + passengerId +
                 ", driverId=" + driverId +
                 ", locationInfo='" + locationInfo + '\'' +
+                ", startLocation='" + startLocation + '\'' +
+                ", endLocation='" + endLocation + '\'' +
                 ", orderStatus=" + orderStatus +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +

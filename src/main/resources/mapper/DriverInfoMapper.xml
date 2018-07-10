@@ -42,7 +42,7 @@
     <update id="updateDriverStatus" parameterType="DriverInfo">
         update driver_info
         <set>
-            <if test="passengerStatus != null">
+            <if test="driverStatus != null">
                 driver_status = #{driverStatus,jdbcType=INTEGER},
             </if>
         </set>
