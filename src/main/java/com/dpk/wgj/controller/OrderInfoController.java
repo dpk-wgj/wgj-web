@@ -7,11 +7,13 @@ import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.bean.OrderInfo;
 import com.dpk.wgj.bean.Passenger;
 import com.dpk.wgj.bean.tableInfo.LocationMessage;
+import com.dpk.wgj.bean.tableInfo.OrderMessage;
 import com.dpk.wgj.service.DriverInfoService;
 import com.dpk.wgj.service.OrderInfoService;
 import com.dpk.wgj.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
@@ -58,10 +60,10 @@ public class OrderInfoController {
 
     /**
      * 乘客端 一键呼车 功能
-     * @param locationInfo
      */
     @RequestMapping(value = "/api/passenger/addOrderInfo", method = RequestMethod.POST)
-    public Message addOrderInfo(@RequestBody String locationInfo){
+    @Transactional
+    public Message addOrderInfo(@RequestBody OrderMessage orderMessage){
 
         OrderInfo orderInfo = new OrderInfo();
         int addStatus = 0;
@@ -69,8 +71,10 @@ public class OrderInfoController {
         UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int passengerId = userInfo.getUserId();
 
+        orderInfo.setStartLocation(orderMessage.getStartLocation());
+        orderInfo.setEndLocation(orderMessage.getEndLocation());
         orderInfo.setPassengerId(passengerId);
-        orderInfo.setLocationInfo(locationInfo);
+        orderInfo.setLocationInfo(orderMessage.getLocationInfo());
         orderInfo.setStartTime(new Date());
 
         // 订单切换至 下单状态
@@ -153,6 +157,7 @@ public class OrderInfoController {
      * 司机端 >> 申请改派
      */
     @RequestMapping(value = "/api/driver/updateOrderInfoByOrderId", method = RequestMethod.POST)
+    @Transactional
     public Message updateOrderInfoByOrderId(@RequestBody int orderInfoId){
         int upStatus = 0;
 
@@ -191,6 +196,7 @@ public class OrderInfoController {
      * 司机端 >> 接到乘客后确认时 调用
      */
     @RequestMapping(value = "/api/driver/accessToServiceForDriver", method = RequestMethod.POST)
+    @Transactional
     public Message accessToServiceForDriver(@RequestBody AccessDriverDTO accessDriverDTO){
         int upStatus = 0;
 
@@ -224,6 +230,7 @@ public class OrderInfoController {
      * 乘客端 >> 取消订单
      */
     @RequestMapping(value = "/api/passenger/updateOrderInfoByOrderId", method = RequestMethod.POST)
+    @Transactional
     public Message cancelOfOrderForPassenger (@RequestBody int orderInfoId){
         int upStatus = 0;
 
@@ -268,6 +275,7 @@ public class OrderInfoController {
      * @return
      */
     @RequestMapping(value = "/api/driver/arrivedTargetLocation", method = RequestMethod.POST)
+    @Transactional
     public Message arrivedTargetLocation (@RequestBody AccessDriverDTO accessDriverDTO){
         int upStatus = 0;
 
