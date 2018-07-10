@@ -117,6 +117,90 @@ public class OrderInfoController {
 
     }
 
+    /**
+     * 司机端 >> 获取订单列表
+     * @return
+     */
+    @RequestMapping(value = "/api/driver/getOrderInfoByDriverId", method = RequestMethod.GET)
+    public Message getOrderInfoByDriverId(){
+
+        List<OrderInfo> orderInfos;
+
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        int driverId = userInfo.getUserId();
+
+        try {
+            orderInfos = orderInfoService.getOrderInfoByDriverId(driverId);
+            if (orderInfos != null){
+                return new Message(Message.SUCCESS, "司机端 >> 获取订单列表 >> 成功", orderInfos);
+            } else {
+                return new Message(Message.FAILURE, "司机端 >> 获取订单列表 >> 失败", orderInfos);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "司机端 >> 获取订单列表 >> 异常", e.getMessage());
+        }
+
+    }
+
+    /**
+     * 司机端 >> 申请改派
+     */
+    @RequestMapping(value = "/api/driver/updateOrderInfoByOrderId", method = RequestMethod.POST)
+    public Message updateOrderInfoByOrderId(@RequestBody int orderInfoId){
+        int upStatus = 0;
+
+        // 防止恶意注入
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        int driverId = userInfo.getUserId();
+
+        try {
+            OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(orderInfoId);
+            if (orderInfo != null && driverId == orderInfo.getDriverId()){
+                orderInfo.setDriverId(0);
+                orderInfo.setOrderStatus(0);
+                upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
+                if (upStatus == 1){
+                    // 重新匹配新的司机
+                    return new Message(Message.SUCCESS, "司机端 >> 申请改派 >> 成功", upStatus);
+                }
+            }
+            return new Message(Message.FAILURE, "司机端 >> 申请改派 >> 失败", "错误请求");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "司机端 >> 申请改派 >> 异常", e.getMessage());
+        }
+
+    }
+
+    /**
+     * 乘客端 >> 取消订单
+     */
+    @RequestMapping(value = "/api/passenger/updateOrderInfoByOrderId", method = RequestMethod.POST)
+    public Message cancelOfOrderForPassenger (@RequestBody int orderInfoId){
+        int upStatus = 0;
+
+        // 防止恶意注入
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        int passengerId = userInfo.getUserId();
+
+        try {
+            OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(orderInfoId);
+            if (orderInfo != null && passengerId == orderInfo.getPassengerId()){
+                orderInfo.setOrderStatus(4);
+                upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
+                if (upStatus == 1){
+                    return new Message(Message.SUCCESS, "乘客端 >> 取消订单 >> 成功", upStatus);
+                }
+            }
+            return new Message(Message.FAILURE, "乘客端 >> 取消订单 >> 失败", "错误请求");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "乘客端 >> 取消订单 >> 异常", e.getMessage());
+        }
+
+    }
+
 
 
 }
