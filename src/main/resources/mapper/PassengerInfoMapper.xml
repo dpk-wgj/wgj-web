@@ -23,5 +23,15 @@
         VALUES (#{passengerWxId}, #{userGroupId})
     </insert>
 
+    <update id="updatePassengerStatus" parameterType="Passenger">
+        update passenger_info
+        <set>
+            <if test="passengerStatus != null">
+                passenger_status = #{passengerStatus,jdbcType=INTEGER},
+            </if>
+        </set>
+        WHERE passenger_id = #{passengerId,jdbcType=INTEGER}
+    </update>
+
 
 </mapper>

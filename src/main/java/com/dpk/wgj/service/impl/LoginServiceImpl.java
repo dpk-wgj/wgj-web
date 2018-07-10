@@ -91,6 +91,9 @@ public class LoginServiceImpl implements LoginService {
                 passenger1.setPassengerWxId(userInfo.getPassenger().getPassengerWxId());
                 passenger1.setUserGroupId(2);
                 passengerMapper.addPassenger(passenger1);
+                user.setPassenger(passenger1);
+            } else {
+                user.setPassenger(passenger);
             }
 
             user.setPassenger(passenger);
