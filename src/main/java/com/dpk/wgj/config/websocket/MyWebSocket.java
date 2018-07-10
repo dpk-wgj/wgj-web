@@ -1,15 +1,17 @@
 package com.dpk.wgj.config.webSocket;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
+import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@ServerEndpoint("/my-websocket")
+@ServerEndpoint("/public/my-websocket")
 @Component
 public class MyWebSocket {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -24,8 +26,8 @@ public class MyWebSocket {
         this.session = session;
         webSocketSet.add(this);
         incrOnlineCount();
-        for (MyWebSocket item : webSocketSet) {
-            if (!item.equals(this)) { //send to others only.
+        for(MyWebSocket item : webSocketSet){
+            if(!item.equals(this)) { //send to others only.
                 item.sendMessage("someone just joined in.");
             }
         }
@@ -33,10 +35,10 @@ public class MyWebSocket {
     }
 
     @OnClose
-    public void onClose() throws IOException {
+    public void onClose() throws IOException{
         webSocketSet.remove(this);
         decOnlineCount();
-        for (MyWebSocket item : webSocketSet) {
+        for(MyWebSocket item : webSocketSet){
             item.sendMessage("someone just closed a connection.");
         }
         logger.info("one connection closed...current online count: {}", getOnlineCount());
@@ -46,7 +48,7 @@ public class MyWebSocket {
     public void onMessage(String message, Session session) throws IOException {
         logger.info("message received: {}", message);
         // broadcast received message
-        for (MyWebSocket item : webSocketSet) {
+        for(MyWebSocket item : webSocketSet){
             item.sendMessage(message);
         }
     }
@@ -55,15 +57,16 @@ public class MyWebSocket {
         this.session.getBasicRemote().sendText(message);
     }
 
-    public static synchronized int getOnlineCount() {
+    public static synchronized int getOnlineCount(){
         return MyWebSocket.onlineCount;
     }
 
-    public static synchronized void incrOnlineCount() {
+    public static synchronized void incrOnlineCount(){
         MyWebSocket.onlineCount++;
     }
 
-    public static synchronized void decOnlineCount() {
+    public static synchronized void decOnlineCount(){
         MyWebSocket.onlineCount--;
     }
 }
+
