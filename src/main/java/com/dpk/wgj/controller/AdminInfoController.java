@@ -1,6 +1,7 @@
 package com.dpk.wgj.controller;
 
 import com.dpk.wgj.bean.AdminInfo;
+import com.dpk.wgj.bean.DTO.UserDTO;
 import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.service.AdminInfoService;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ public class AdminInfoController {
 
     @RequestMapping(value = "/getUserInfoById/{userId}", method = RequestMethod.GET)
     public Message getUserInfoById(@PathVariable(value = "userId") int userId){
+
         try {
             AdminInfo adminInfo = adminInfoService.getUserInfoById(userId);
             if (adminInfo != null){
