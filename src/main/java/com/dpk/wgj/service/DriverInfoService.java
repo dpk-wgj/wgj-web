@@ -22,5 +22,7 @@ public interface DriverInfoService {
 
     public int addDriverInfo(DriverInfo driverInfo) throws Exception;
 
+    public int updateDriverStatus(DriverInfo driverInfo) throws Exception;
+
 
 }
