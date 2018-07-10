@@ -76,7 +76,7 @@ public class OrderInfoServiceImpl implements OrderInfoService{
         List<OrderInfo> orderInfos;
 
         try {
-            orderInfos = orderInfoMapper.getOrderInfoByPassengerId(driverId);
+            orderInfos = orderInfoMapper.getOrderInfoByDriverId(driverId);
             return orderInfos;
         } catch (Exception e) {
             e.printStackTrace();
