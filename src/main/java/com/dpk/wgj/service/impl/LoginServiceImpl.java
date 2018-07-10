@@ -45,9 +45,11 @@ public class LoginServiceImpl implements LoginService {
                 driverInfo1.setDriverWxId(userInfo.getDriverInfo().getDriverWxId());
                 driverInfo1.setUserGroupId(2);
                 driverInfoMapper.addDriverInfo(driverInfo1);
+                user.setDriverInfo(driverInfo1);
+            } else {
+                user.setDriverInfo(driverInfo);
             }
 
-            user.setDriverInfo(driverInfo1);
             if(user != null){
 //                if(userInfo.getPassword().equals(user.getPassword())&&userInfo.getUsername().equals(user.getUsername())){
                   if (true){
