@@ -233,17 +233,25 @@ public class OrderInfoController {
 
         try {
             OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(orderInfoId);
+            int driverId = orderInfo.getDriverId();
             if (orderInfo != null && passengerId == orderInfo.getPassengerId()){
                 orderInfo.setOrderStatus(4);
                 upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
                 if (upStatus == 1){
+
+                    //乘客状态切换至 服务后 同时也要修改司机状态为 接单前
+                    DriverInfo driverInfo = new DriverInfo();
+                    driverInfo.setDriverId(driverId);
+                    driverInfo.setDriverStatus(0);
+
                     Passenger passenger = new Passenger();
                     passenger.setPassengerId(passengerId);
-                    //乘客状态切换至 服务后 同时也要修改司机状态
                     passenger.setPassengerStatus(2);
+
                     int upPassengerStatus = passengerService.updatePassengerStatus(passenger);
-                    if (upPassengerStatus == 1){
-                        return new Message(Message.SUCCESS, "乘客端 >> 取消订单 && 乘客状态切换至 服务后 >> 成功", upStatus + upPassengerStatus);
+                    int upDriverStatus = driverInfoService.updateDriverStatus(driverInfo);
+                    if (upPassengerStatus == 1 && upDriverStatus == 1){
+                        return new Message(Message.SUCCESS, "乘客端 >> 取消订单 && 乘客/司机状态切换 >> 成功", upStatus + upPassengerStatus + upDriverStatus);
                     }
                 }
             }
@@ -278,16 +286,23 @@ public class OrderInfoController {
                 orderInfo.setOrderStatus(3);
                 upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
                 if (upStatus == 1){
+
+                    //乘客状态切换至 服务后 同时也要修改司机状态为 接单前
                     int passengerId = orderInfo.getPassengerId();
                     Passenger passenger = new Passenger();
                     passenger.setPassengerId(passengerId);
+                    passenger.setPassengerStatus(2);
+                    driverInfo.setDriverStatus(0);
+
+                    int upDriverStatus = driverInfoService.updateDriverStatus(driverInfo);
                     int upPassengerStatus = passengerService.updatePassengerStatus(passenger);
-                    if (upPassengerStatus == 1){
-                        return new Message(Message.SUCCESS, "司机端 >> 完成订单 && 乘客状态切换至 服务后 >> 成功", upStatus + upPassengerStatus);
+
+                    if (upPassengerStatus == 1 && upDriverStatus == 1){
+                        return new Message(Message.SUCCESS, "司机端 >> 完成订单 && 乘客/用户 状态切换 >> 成功", upStatus + upPassengerStatus);
                     }
                 }
             }
-            return new Message(Message.FAILURE, "司机端 >> 完成订单 && 乘客状态切换至 服务后 >> 失败 ", "错误请求");
+            return new Message(Message.FAILURE, "司机端 >> 完成订单 && 乘客/用户 状态切换 >> 失败 ", "错误请求");
         } catch (Exception e) {
             e.printStackTrace();
             return new Message(Message.ERROR, "司机端 >> 申请改派 >> 异常", e.getMessage());
