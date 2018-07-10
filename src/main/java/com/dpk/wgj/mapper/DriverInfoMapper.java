@@ -25,14 +25,12 @@ public interface DriverInfoMapper {
 
     public int getDriverByMultiConditionCount(DriverInfoTableMessage carInfoTableMessage) throws Exception;
 
+    public int updateDriverInfoByDriverId(DriverInfo driverInfo) throws Exception;
 
     public void insertDriverInfo(DriverInfo driverInfo) throws Exception;
 
     public List<DriverInfo> getAllCarLocation() throws Exception;
 
-    public DriverInfo getDriverInfoByWxId(String driverWxId) throws Exception;
-
-    public int addDriverInfo(DriverInfo driverInfo) throws Exception;
-
+    public int deleteDriverInfoByDriverId(int driverId) throws Exception;
 
 }

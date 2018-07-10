@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class Passenger implements Serializable {
 
-    private int passengerId;
+    private int passenger_id;
 
     private String passengerWxId;
 
@@ -20,22 +20,12 @@ public class Passenger implements Serializable {
 
     private int passengerStatus;
 
-    private int userGroupId;
-
-    public int getUserGroupId() {
-        return userGroupId;
+    public int getPassenger_id() {
+        return passenger_id;
     }
 
-    public void setUserGroupId(int userGroupId) {
-        this.userGroupId = userGroupId;
-    }
-
-    public int getPassengerId() {
-        return passengerId;
-    }
-
-    public void setPassengerId(int passengerId) {
-        this.passengerId = passengerId;
+    public void setPassenger_id(int passenger_id) {
+        this.passenger_id = passenger_id;
     }
 
     public String getPassengerWxId() {
@@ -81,13 +71,12 @@ public class Passenger implements Serializable {
     @Override
     public String toString() {
         return "Passenger{" +
-                "passengerId=" + passengerId +
+                "passenger_id=" + passenger_id +
                 ", passengerWxId='" + passengerWxId + '\'' +
                 ", passengerPhoneNumber='" + passengerPhoneNumber + '\'' +
                 ", passengerLocation='" + passengerLocation + '\'' +
                 ", passengerLevelStar=" + passengerLevelStar +
                 ", passengerStatus=" + passengerStatus +
-                ", userGroupId=" + userGroupId +
                 '}';
     }
 }

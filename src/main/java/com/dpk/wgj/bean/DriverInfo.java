@@ -30,16 +30,6 @@ public class DriverInfo implements Serializable {
 
     private int carId;
 
-    private int userGroupId;
-
-    public int getUserGroupId() {
-        return userGroupId;
-    }
-
-    public void setUserGroupId(int userGroupId) {
-        this.userGroupId = userGroupId;
-    }
-
     public int getCarId() {
         return carId;
     }
@@ -142,7 +132,6 @@ public class DriverInfo implements Serializable {
                 ", driverStatus=" + driverStatus +
                 ", flag=" + flag +
                 ", carId=" + carId +
-                ", userGroupId=" + userGroupId +
                 '}';
     }
 }

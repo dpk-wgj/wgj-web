@@ -1,5 +1,6 @@
 package com.dpk.wgj.controller;
 
+import com.dpk.wgj.POI.Excel;
 import com.dpk.wgj.bean.CarInfo;
 import com.dpk.wgj.bean.DTO.CarInfoDTO;
 import com.dpk.wgj.bean.DriverInfo;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +36,8 @@ public class DriverInfoController {
     private DriverInfoService driverInfoService;
     @Autowired
     private CarInfoService carInfoService;
-
+    @Autowired
+    private Excel excel;
     private final Logger logger = LoggerFactory.getLogger(DriverInfoController.class);
 
     /**
@@ -96,7 +99,7 @@ public class DriverInfoController {
             if (driverInfo != null){
                 CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
                 CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfo);
-                return new Message(Message.SUCCESS, "查询司机信息 >> 成功", driverInfo);
+                return new Message(Message.SUCCESS, "查询司机信息 >> 成功", carInfoDTO);
             }
             return new Message(Message.FAILURE, "查询司机信息 >> 失败", "未查询到司机手机号码为 [" + driverPhoneNumber + "] 的信息");
         } catch (Exception e) {
@@ -108,7 +111,6 @@ public class DriverInfoController {
     /**
      * 根据司机星级查找司机信息，同时可以关联上司机的车辆信息
      */
-
     @RequestMapping(value = "/getDriveInfoByDriverLevelStar/{driverLevelStar}", method = RequestMethod.GET)
     public Message getDriveInfoByDriverLevelStar(@PathVariable(value = "driverLevelStar") int driverLevelStar){
         DriverInfo driverInfo;
@@ -117,7 +119,7 @@ public class DriverInfoController {
             if (driverInfo != null){
                 CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
                 CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfo);
-                return new Message(Message.SUCCESS, "查询司机信息 >> 成功", driverInfo);
+                return new Message(Message.SUCCESS, "查询司机信息 >> 成功", carInfoDTO);
             }
             return new Message(Message.FAILURE, "查询司机信息 >> 失败", "未查询到司机星级为 [" + driverLevelStar + "] 的信息");
         } catch (Exception e) {
@@ -156,15 +158,47 @@ public class DriverInfoController {
             return new Message(Message.ERROR, "查询车辆信息 >> 异常",  e.getMessage());
         }
     }
+/**
+ * 更新司机信息
+ */
+    @RequestMapping(value = "/updateDriverInfoByDriverId",method = RequestMethod.POST)
+    public Message updateDriverInfoByDriverId(@RequestBody DriverInfo driverInfo) {
+        int upStatus = 0;
+        try {
+            upStatus = driverInfoService.updateDriverInfoByDriverId(driverInfo);
+            if (upStatus == 1) {
+                return new Message(Message.SUCCESS, "更新司机信息 >> 成功", upStatus);
+            }
+            return new Message(Message.FAILURE, "更新司机信息 >> 失败", upStatus);
+        } catch (Exception e) {
+            return new Message(Message.ERROR, "更新司机信息 >> 异常", e.getMessage());
+        }
+    }
 
+    /**
+     * 根据司机Id删除司机信息
+     * @param driverId
+     */
+    @RequestMapping(value = "/deleteDriverInfoByDriverId", method = RequestMethod.POST)
+    public Message deleteDriverInfoByDriverId(@RequestParam(value = "driverId") int driverId){
+        int delStatus = 0;
+        try {
+            delStatus = driverInfoService.deleteDriverInfoByDriverId(driverId);
+            if (delStatus == 1){
+                return new Message(Message.SUCCESS, "删除车辆信息 >> 成功", delStatus);
+            }
+            return new Message(Message.FAILURE, "删除车辆信息 >> 失败", delStatus);
+        } catch (Exception e) {
+            return new Message(Message.ERROR, "删除车辆信息 >> 异常",  e.getMessage());
+        }
+    }
 
     /**
      * 导入Excel表中司机的信息
      */
-    @RequestMapping(value="importExcel", method=RequestMethod.POST)
+    @RequestMapping(value="/importExcel", method=RequestMethod.POST)
     @ResponseBody
-    public Message importExcel(@RequestParam(value = "sourceRiskFile", required = false) MultipartFile sourceRiskFile,
-                                  HttpServletRequest request, Model model) {
+    public Message importExcel(@RequestParam(value = "sourceRiskFile", required = false) MultipartFile sourceRiskFile) {
         String fileName = sourceRiskFile.getOriginalFilename();
         logger.info(fileName);
         //判断文件是否为空
@@ -185,7 +219,18 @@ public class DriverInfoController {
         return null;
 
     }
+    @RequestMapping(value = "/makeExcel",method = RequestMethod.POST)
+    @ResponseBody
+    public Message makeExcel(){
+        try{
+            excel.pushExcel(driverInfoService.getAllDriverInfo());
+            return new Message(1,"导出成功,文件位置存放在D盘根目录下",null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(0,"导出失败",null);
+        }
 
+    }
 
     /**
      * 获取所有当前上岗司机位置

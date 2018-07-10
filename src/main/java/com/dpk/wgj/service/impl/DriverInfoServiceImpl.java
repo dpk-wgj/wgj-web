@@ -100,7 +100,32 @@ public class DriverInfoServiceImpl implements DriverInfoService {
         return count;
     }
     @Override
-    @Transactional()
+    public int updateDriverInfoByDriverId(DriverInfo driverInfo) {
+        int upStatus = 0;
+
+        try {
+            upStatus = driverInfoMapper.updateDriverInfoByDriverId(driverInfo);
+            return upStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return upStatus;
+    }
+    @Override
+    public int deleteDriverInfoByDriverId(int driverId){
+        int deStatus = 0;
+        try {
+            deStatus = driverInfoMapper.deleteDriverInfoByDriverId(driverId);
+            return deStatus;
+        }
+        catch (Exception e) {
+        e.printStackTrace();
+    }
+        return deStatus;
+    }
+
+    @Override
+    @Transactional
     public int importExcel(MultipartFile file, String fileName){
         //记录成功添加的记录数
         int res = 0;
@@ -204,34 +229,6 @@ public class DriverInfoServiceImpl implements DriverInfoService {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @Override
-    public DriverInfo getDriverInfoByWxId(String driverWxId) {
-
-        DriverInfo driverInfo;
-
-        try {
-            driverInfo = driverInfoMapper.getDriverInfoByWxId(driverWxId);
-            return driverInfo;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public int addDriverInfo(DriverInfo driverInfo) {
-
-        int addStatus = 0;
-
-        try {
-            addStatus = driverInfoMapper.addDriverInfo(driverInfo);
-            return addStatus;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return  0;
     }
 
 }
