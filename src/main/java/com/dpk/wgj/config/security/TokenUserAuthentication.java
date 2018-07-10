@@ -41,8 +41,10 @@ public class TokenUserAuthentication implements Authentication {
     public Object getPrincipal() {
         if (userDTO.getDriverInfo()!=null){
             return userDTO.getDriverInfo().getDriverWxId();
-        }else {
+        }else if (userDTO.getPassenger()!=null){
             return userDTO.getPassenger().getPassengerWxId();
+        }else {
+            return userDTO.getUsername();
         }
     }
     @Override
@@ -57,8 +59,10 @@ public class TokenUserAuthentication implements Authentication {
     public String getName() {
         if (userDTO.getDriverInfo()!=null){
             return userDTO.getDriverInfo().getDriverWxId();
-        }else {
+        }else if (userDTO.getPassenger()!=null){
             return userDTO.getPassenger().getPassengerWxId();
-        }
+        }else {
+        return userDTO.getUsername();
+    }
     }
 }

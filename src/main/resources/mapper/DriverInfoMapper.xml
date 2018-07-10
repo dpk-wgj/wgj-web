@@ -15,6 +15,7 @@
         <result column="driver_status" property="driverStatus"/>
         <result column="flag" property="flag"/>
         <result column="car_id" property="carId"/>
+        <result column="user_group_id" property="userGroupId"/>
     </resultMap>
 
     <select id="getDriverInfoByWxId" resultMap="DriverInfoMap">
