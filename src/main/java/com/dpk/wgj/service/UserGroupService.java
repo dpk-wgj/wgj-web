@@ -1,15 +1,12 @@
-package com.dpk.wgj.mapper;
+package com.dpk.wgj.service;
 
 import com.dpk.wgj.bean.UserGroup;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 /*
 qinghua
  */
-@Mapper
-public interface UserGroupMapper {
-
+public interface UserGroupService {
     public UserGroup getUserGroupByName(String groupName) throws Exception;
 
     public List<UserGroup> getAllUserGroup() throws Exception;
@@ -21,5 +18,4 @@ public interface UserGroupMapper {
     public int updateUserGroupById(UserGroup userGroup) throws Exception;
 
     public int deleteUserGroup(int userGroupId) throws Exception;
-
 }

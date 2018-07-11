@@ -12,12 +12,12 @@
     </resultMap>
 
     <select id="getAdminByUsername" resultMap="AdminInfoMap">
-        SELECT username, password, user_group_id FROM admin_info
+        SELECT *  FROM admin_info
         WHERE username = #{username}
     </select>
 
     <select id="getAllAdminInfo" resultMap="AdminInfoMap" >
-        SELECT username, password, user_group_id FROM admin_info
+        SELECT *  FROM admin_info
     </select>
 
     <select id="getUserInfoById" resultMap="AdminInfoMap" parameterType="int">
@@ -40,7 +40,7 @@
                 password = #{password,jdbcType=VARCHAR},
             </if>
             <if test="remark != null">
-                nickname = #{nickname,jdbcType=VARCHAR},
+                remark = #{remark,jdbcType=VARCHAR},
             </if>
             <if test="userGroupId != null">
                 user_group_id = #{userGroupId,jdbcType=INTEGER},
