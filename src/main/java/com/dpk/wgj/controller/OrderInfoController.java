@@ -92,11 +92,11 @@ public class OrderInfoController {
                 int upStatus = passengerService.updatePassengerStatus(passenger);
                 if (upStatus == 1){
                     OrderInfo targetOrderInfo = orderInfoService.getOrderInfoByOrderId(orderInfo.getOrderId());
-                    DriverInfo driverInfo = driverInfoService.getDriverInfoByDriverId(targetOrderInfo.getDriverId());
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("OrderInfo", targetOrderInfo);
-                    map.put("DriverInfo", driverInfo);
-                    return new Message(Message.SUCCESS, "创建订单信息&切换用户状态 >> 成功 >> 获得目标订单", map);
+//                    DriverInfo driverInfo = driverInfoService.getDriverInfoByDriverId(targetOrderInfo.getDriverId());
+//                    Map<String, Object> map = new HashMap<>();
+//                    map.put("OrderInfo", targetOrderInfo);
+//                    map.put("DriverInfo", driverInfo);
+                    return new Message(Message.SUCCESS, "创建订单信息&切换用户状态 >> 成功 >> 获得目标订单", targetOrderInfo);
                 }
                 return new Message(Message.FAILURE, "创建订单信息&切换用户状态 >> 失败 ", addStatus + " " + upStatus);
             }else {
