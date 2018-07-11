@@ -9,6 +9,8 @@
         <result column="driver_id" property="driverId"/>
         <result column="location_info" property="locationInfo"/>
         <result column="order_status" property="orderStatus"/>
+        <result column="start_location" property="startLocation"/>
+        <result column="end_location" property="endLocation"/>
         <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
         <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
     </resultMap>
@@ -34,8 +36,8 @@
     </select>
 
     <insert id="addOrderInfo" parameterType="OrderInfo" useGeneratedKeys="true" keyProperty="orderId">
-        INSERT INTO order_info (passenger_id, driver_id, location_info, order_status, start_time)
-        VALUES (#{passengerId}, #{driverId}, #{locationInfo}, #{orderStatus}, #{startTime})
+        INSERT INTO order_info (passenger_id, driver_id, location_info, order_status, start_time, start_location, end_location)
+        VALUES (#{passengerId}, #{driverId}, #{locationInfo}, #{orderStatus}, #{startTime}, #{startLocation}, #{endLocation})
     </insert>
 
     <select id="getOrderInfoByPassengerId" resultMap="OrderInfoMap" parameterType="int">
@@ -59,6 +61,12 @@
             </if>
             <if test="locationInfo != null">
                 location_info = #{locationInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="startLocation != null">
+                start_location = #{startLocation,jdbcType=VARCHAR},
+            </if>
+            <if test="endLocation != null">
+                end_location = #{endLocation,jdbcType=VARCHAR},
             </if>
             <if test="orderStatus != null">
                 order_status = #{orderStatus,jdbcType=INTEGER},

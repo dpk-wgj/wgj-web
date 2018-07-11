@@ -38,4 +38,15 @@
         SELECT driver_id, driver_name, driver_location, driver_status, car_id  FROM driver_info
         WHERE driver_status = 1
     </select>
+
+    <update id="updateDriverStatus" parameterType="DriverInfo">
+        update driver_info
+        <set>
+            <if test="driverStatus != null">
+                driver_status = #{driverStatus,jdbcType=INTEGER},
+            </if>
+        </set>
+        WHERE driver_id = #{driverId,jdbcType=INTEGER}
+    </update>
+
 </mapper>
