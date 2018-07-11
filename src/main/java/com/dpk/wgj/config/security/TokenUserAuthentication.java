@@ -43,6 +43,8 @@ public class TokenUserAuthentication implements Authentication {
             return userDTO.getDriverInfo().getDriverWxId();
         }else if (userDTO.getPassenger()!=null){
             return userDTO.getPassenger().getPassengerWxId();
+        }else if (userDTO.getAdminInfo()!=null){
+            return userDTO.getAdminInfo().getUsername();
         }else {
             return userDTO.getUsername();
         }
@@ -61,6 +63,8 @@ public class TokenUserAuthentication implements Authentication {
             return userDTO.getDriverInfo().getDriverWxId();
         }else if (userDTO.getPassenger()!=null){
             return userDTO.getPassenger().getPassengerWxId();
+        }else if (userDTO.getAdminInfo()!=null){
+            return userDTO.getAdminInfo().getUsername();
         }else {
         return userDTO.getUsername();
     }

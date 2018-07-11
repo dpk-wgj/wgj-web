@@ -1,5 +1,6 @@
 package com.dpk.wgj.controller;
 
+import com.dpk.wgj.bean.AdminInfo;
 import com.dpk.wgj.bean.DTO.UserDTO;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.Message;
@@ -56,5 +57,22 @@ public class LoginController {
         }
         return message;
     }
+
+    @RequestMapping(value = "/admin/login",method = RequestMethod.POST)
+    public Message loginForAdmin(@RequestBody AdminInfo adminInfo, HttpSession session, HttpServletResponse response){
+
+        UserDTO user = new UserDTO();
+
+        user.setAdminInfo(adminInfo);
+
+        Message message = loginService.loginForAdminInfo(user,response);
+        if(message != null){
+            if(message.getStatus() == Message.SUCCESS){
+                session.setAttribute("user",message.getResult());
+            }
+        }
+        return message;
+    }
+
 
 }
