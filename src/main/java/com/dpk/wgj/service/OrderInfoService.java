@@ -2,6 +2,7 @@ package com.dpk.wgj.service;
 
 import com.dpk.wgj.bean.OrderInfo;
 import com.dpk.wgj.bean.tableInfo.LocationMessage;
+import com.dpk.wgj.bean.tableInfo.OrderInfoTableMessage;
 
 import java.util.Date;
 import java.util.List;
@@ -43,5 +44,15 @@ public interface OrderInfoService {
      * 根据订单Id获取订单信息
      */
     public OrderInfo getOrderInfoByOrderId(int orderId) throws Exception;
+
+    /**
+     * 订单多条件查询功能
+     */
+    public List<OrderInfo> findOrderInfoByMultiCondition(OrderInfoTableMessage orderInfoTableMessage) throws Exception;
+
+    /**
+     * 订单多条件查询功能 -- 订单总数
+     */
+    public int findOrderInfoByMultiConditionCount(OrderInfoTableMessage orderInfoTableMessage) throws Exception;
 
 }

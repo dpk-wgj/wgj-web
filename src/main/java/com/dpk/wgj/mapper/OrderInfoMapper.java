@@ -2,6 +2,7 @@ package com.dpk.wgj.mapper;
 
 import com.dpk.wgj.bean.OrderInfo;
 import com.dpk.wgj.bean.tableInfo.LocationMessage;
+import com.dpk.wgj.bean.tableInfo.OrderInfoTableMessage;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Date;
@@ -23,6 +24,10 @@ public interface OrderInfoMapper {
     public List<OrderInfo> getOrderInfoByPassengerId(int passengerId) throws Exception;
 
     public OrderInfo getOrderInfoByOrderId(int orderId) throws Exception;
+
+    public List<OrderInfo> findOrderInfoByMultiCondition(OrderInfoTableMessage orderInfoTableMessage) throws Exception;
+
+    public int findOrderInfoByMultiConditionCount(OrderInfoTableMessage orderInfoTableMessage) throws Exception;
 
 
 }

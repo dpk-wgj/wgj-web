@@ -1,4 +1,4 @@
-package com.dpk.wgj.bean.DTO;
+package com.dpk.wgj.bean.tableInfo;
 
 import com.dpk.wgj.bean.CarInfo;
 import com.dpk.wgj.bean.DriverInfo;
@@ -9,9 +9,9 @@ import java.io.Serializable;
 
 /**
  * Created by zhoulin on 2018/7/11.
- * 订单关联类
+ * 订单检索信息类
  */
-public class OrderInfoDTO implements Serializable {
+public class OrderInfoTableMessage extends TableMessage implements Serializable{
 
     private OrderInfo orderInfo = new OrderInfo();
 
@@ -20,16 +20,6 @@ public class OrderInfoDTO implements Serializable {
     private DriverInfo driverInfo = new DriverInfo();
 
     private Passenger passenger = new Passenger();
-
-    public OrderInfoDTO() {
-    }
-
-    public OrderInfoDTO(OrderInfo orderInfo, CarInfo carInfo, DriverInfo driverInfo, Passenger passenger) {
-        this.orderInfo = orderInfo;
-        this.carInfo = carInfo;
-        this.driverInfo = driverInfo;
-        this.passenger = passenger;
-    }
 
     public OrderInfo getOrderInfo() {
         return orderInfo;

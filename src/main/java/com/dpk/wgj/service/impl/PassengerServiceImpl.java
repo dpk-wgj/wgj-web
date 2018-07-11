@@ -54,4 +54,16 @@ public class PassengerServiceImpl implements PassengerService {
         }
         return upStatus;
     }
+
+    @Override
+    public Passenger getPassengerByPassengerId(int passengerId) {
+        Passenger passenger;
+        try {
+            passenger = passengerMapper.getPassengerByPassengerId(passengerId);
+            return passenger;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
