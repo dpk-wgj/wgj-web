@@ -11,4 +11,6 @@ public interface LoginService {
 
     public Message loginForPassenger(UserDTO userInfo, HttpServletResponse response);
 
+    public Message loginForAdminInfo(UserDTO userInfo, HttpServletResponse response);
+
 }
