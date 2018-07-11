@@ -129,7 +129,7 @@
         ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
     </select>
 
-    <select id="findOrderInfoByMultiConditionCount" resultMap="int">
+    <select id="findOrderInfoByMultiConditionCount" resultType="int">
         SELECT COUNT(*) FROM order_info o, car_info c, driver_info d, passenger_info p
         <where>
             1 = 1
