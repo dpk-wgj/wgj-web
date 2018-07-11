@@ -53,7 +53,7 @@
     <update id="updateOrderInfoByOrderId" parameterType="OrderInfo">
         update order_info
         <set>
-            <if test="passengerId != null">
+            <if test="passengerId != null and passengerId != ''">
                 passenger_id = #{passengerId,jdbcType=INTEGER},
             </if>
             <if test="driverId != null">
@@ -89,6 +89,30 @@
     <select id="getOrderInfoByOrderId" resultMap="OrderInfoMap" parameterType="int">
         SELECT * FROM order_info
         WHERE order_id = #{orderId}
+    </select>
+
+    <select id="findOrderInfoByMultiCondition" resultMap="OrderInfoMap">
+        SELECT * FROM order_info
+        <where>
+            1 = 1
+            <if test="passengerId != null">
+                AND passenger_id = #{passengerId,jdbcType=INTEGER}
+            </if>
+            <if test="driverId != null">
+                AND driver_id LIKE #{driverId,jdbcType=INTEGER}
+            </if>
+            <if test="orderStatus != null">
+                AND order_status = #{orderStatus,jdbcType=INTEGER}
+            </if>
+            <if test="orderStatus != null">
+                AND order_status = #{orderStatus,jdbcType=INTEGER}
+            </if>
+            <if test="orderStatus != null">
+                AND order_status = #{orderStatus,jdbcType=INTEGER}
+            </if>
+
+        </where>
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
     </select>
 
 
