@@ -1,14 +1,13 @@
 package com.dpk.wgj.service.impl;
 
+import com.dpk.wgj.bean.*;
 import com.dpk.wgj.bean.DTO.UserDTO;
-import com.dpk.wgj.bean.DriverInfo;
-import com.dpk.wgj.bean.Message;
-import com.dpk.wgj.bean.Passenger;
-import com.dpk.wgj.bean.UserGroup;
 import com.dpk.wgj.config.security.JwtTokenUtil;
+import com.dpk.wgj.mapper.AdminInfoMapper;
 import com.dpk.wgj.mapper.DriverInfoMapper;
 import com.dpk.wgj.mapper.PassengerMapper;
 import com.dpk.wgj.mapper.UserGroupMapper;
+import com.dpk.wgj.service.AdminInfoService;
 import com.dpk.wgj.service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +27,9 @@ public class LoginServiceImpl implements LoginService {
 
     @Autowired
     private UserGroupMapper userGroupMapper;
+
+    @Autowired
+    private AdminInfoMapper adminInfoMapper;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -123,5 +125,43 @@ public class LoginServiceImpl implements LoginService {
             e.printStackTrace();
             return new Message(Message.ERROR,"异常",null);
         }
+    }
+
+    @Override
+    public Message loginForAdminInfo(UserDTO userInfo, HttpServletResponse response) {
+        UserDTO user = new UserDTO();
+
+        AdminInfo adminInfo = new AdminInfo();
+
+        try {
+            adminInfo = adminInfoMapper.getAdminByUsername(userInfo.getAdminInfo().getUsername());
+            if(user != null){
+                user.setAdminInfo(adminInfo);
+                if(userInfo.getAdminInfo().getPassword().equals(adminInfo.getPassword())&&userInfo.getAdminInfo().getUsername().equals(adminInfo.getUsername())){
+
+                    UserGroup userGroup = userGroupMapper.getByUserId(adminInfo.getUserGroupId());
+
+                    user.setUserGroup(userGroup);
+
+                    List<String> roles = new ArrayList<>();
+
+                    roles.add(userGroup.getPermission());
+
+                    user.setRoles(roles);
+
+                    response.addHeader("refresh",jwtTokenUtil.create(user));
+
+                    return new Message(Message.SUCCESS,"登陆成功 >> 管理员", user);
+                }else {
+                    return new Message(Message.ERROR,"密码错误",null);
+                }
+            }else {
+                return new Message(Message.ERROR,"用户名不存在",null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
