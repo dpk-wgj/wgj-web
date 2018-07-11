@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-                "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dpk.wgj.mapper.UserGroupMapper">
     <resultMap id="UserGroupMap" type="com.dpk.wgj.bean.UserGroup">
         <id column="user_group_id" property="userGroupId"/>
@@ -9,9 +9,40 @@
         <result column="permission" property="permission"/>
     </resultMap>
 
-    <select id="getByUserId" parameterType="int" resultMap="UserGroupMap">
+    <select id="getUserGroupByName" resultMap="UserGroupMap">
+        SELECT * FROM user_group
+        WHERE group_name = #{groupName}
+    </select>
+
+    <select id="getAllUserGroup" resultMap="UserGroupMap" >
+        SELECT * FROM user_group
+    </select>
+
+    <select id="getUserGroupById" resultMap="UserGroupMap" parameterType="int">
         SELECT * FROM user_group
         WHERE user_group_id = #{userGroupId}
     </select>
+
+    <insert id="addUserGroup" parameterType="UserGroup" useGeneratedKeys="true" keyProperty="user_group_id">
+        INSERT INTO user_group (user_group_id, group_name, permission)
+        VALUES (#{userGroupId}, #{groupName}, #{permission})
+    </insert>
+
+    <update id="updateUserGroupById" parameterType="UserGroup">
+        update user_group
+        <set>
+            <if test="groupName != null">
+                group_name = #{groupName,jdbcType=VARCHAR},
+            </if>
+            <if test="permission != null">
+                permission = #{permission,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where user_group_id = #{userGroupId,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteUserGroup" parameterType="int">
+        DELETE from user_group WHERE user_group_id = #{userGroupId}
+    </delete>
 
 </mapper>
