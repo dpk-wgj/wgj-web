@@ -29,8 +29,7 @@
     </select>
 
     <select id="getDriverInfoByDriverId" resultMap="DriverInfoMap">
-        SELECT driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id
-        FROM driver_info
+        SELECT * FROM driver_info
         WHERE driver_id = #{driverId}
     </select>
 

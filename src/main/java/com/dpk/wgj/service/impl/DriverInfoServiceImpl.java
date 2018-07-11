@@ -255,6 +255,31 @@ public class DriverInfoServiceImpl implements DriverInfoService {
         }
         return res;
     }
+
+    @Override
+    public DriverInfo getDriverInfoByDriverId(int driverId) {
+        DriverInfo driverInfo;
+        try {
+            driverInfo = driverInfoMapper.getDriverInfoByDriverId(driverId);
+            return driverInfo;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    @Override
+    public int updateApiDriverInfoByDriverId(DriverInfo driverInfo) {
+        int upApiStatus = 0;
+
+        try {
+            upApiStatus = driverInfoMapper.updateApiDriverInfoByDriverId(driverInfo);
+            return upApiStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return upApiStatus;
+    }
+
     /**
      * Created by hlx on 2018/7/9.
      * 说明:用于查询所有司机信息

@@ -38,4 +38,8 @@ public interface DriverInfoMapper {
     public void insertDriverInfo(DriverInfo driverInfo) throws Exception;
 
     public int deleteDriverInfoByDriverId(int driverId) throws Exception;
+
+    public DriverInfo getDriverInfoByDriverId(int DriverId) throws Exception;
+
+    public int updateApiDriverInfoByDriverId(DriverInfo driverInfo) throws Exception;
 }

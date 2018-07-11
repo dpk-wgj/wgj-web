@@ -6,7 +6,7 @@ import com.dpk.wgj.bean.DTO.CarInfoDTO;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.service.CarInfoService;
-import com.dpk.wgj.service.DriverInfoApiService;
+import com.dpk.wgj.service.DriverInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class DriverInfoApiController {
 
     @Autowired
-    private DriverInfoApiService driverInfoApiService;
+    private DriverInfoService driverInfoApiService;
 
     @Autowired
     private CarInfoService carInfoService;
