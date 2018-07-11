@@ -139,7 +139,7 @@ public class LoginServiceImpl implements LoginService {
                 user.setAdminInfo(adminInfo);
                 if(userInfo.getAdminInfo().getPassword().equals(adminInfo.getPassword())&&userInfo.getAdminInfo().getUsername().equals(adminInfo.getUsername())){
 
-                    UserGroup userGroup = userGroupMapper.getByUserId(adminInfo.getUserGroupId());
+                    UserGroup userGroup = userGroupMapper.getUserGroupById(adminInfo.getUserGroupId());
 
                     user.setUserGroup(userGroup);
 
