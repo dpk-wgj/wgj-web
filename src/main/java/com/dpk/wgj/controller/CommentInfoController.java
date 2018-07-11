@@ -21,6 +21,25 @@ public class CommentInfoController {
     private CommentInfoService commentInfoService;
 
     /**
+     * 乘客端 >> 添加评价
+     */
+    @RequestMapping(value = "/addCommentInfoByOrderId", method = RequestMethod.POST)
+    public Message addCommentInfoByOrderId(@RequestBody CommentInfo commentInfo){
+
+        int addStatus = 0;
+        try {
+            addStatus = commentInfoService.addCommentInfoByOrderId(commentInfo);
+            if (addStatus == 1){
+                return new Message(Message.SUCCESS, "乘客端 >> 添加评价 >> 成功", addStatus);
+            }
+            return new Message(Message.FAILURE, "乘客端 >> 添加评价 >> 失败", addStatus);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "乘客端 >> 添加评价 >> 异常", "请求异常");
+        }
+    }
+
+    /**
      * 乘客端 >> 删除评价
      */
     @RequestMapping(value = "/deleteCommentInfoByCommentId", method = RequestMethod.POST)
