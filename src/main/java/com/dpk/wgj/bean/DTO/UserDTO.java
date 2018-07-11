@@ -1,5 +1,6 @@
 package com.dpk.wgj.bean.DTO;
 
+import com.dpk.wgj.bean.AdminInfo;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.Passenger;
 import com.dpk.wgj.bean.UserGroup;
@@ -20,12 +21,22 @@ public class UserDTO implements Serializable {
 
     private Passenger passenger;
 
+    private AdminInfo adminInfo;
+
     private List<String> roles;
 
     private UserGroup userGroup;
 
     public UserGroup getUserGroup() {
         return userGroup;
+    }
+
+    public AdminInfo getAdminInfo() {
+        return adminInfo;
+    }
+
+    public void setAdminInfo(AdminInfo adminInfo) {
+        this.adminInfo = adminInfo;
     }
 
     public void setUserGroup(UserGroup userGroup) {
