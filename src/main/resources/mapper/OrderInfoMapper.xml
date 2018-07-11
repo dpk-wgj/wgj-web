@@ -22,12 +22,12 @@
             <if test="carNumber != null and carNumber != ''">
                 AND c.car_number = #{carNumber}
             </if>
-            <if test="startTime != null">
+            <if test="startTime != null and startTime != ''">
                 <![CDATA[
                     AND o.start_time >= #{startTime,jdbcType=TIMESTAMP}
                 ]]>
             </if>
-            <if test="endTime != null">
+            <if test="endTime != null and startTime != ''">
                 <![CDATA[
                     AND o.end_time <= #{endTime,jdbcType=TIMESTAMP}
                 ]]>
@@ -92,28 +92,78 @@
     </select>
 
     <select id="findOrderInfoByMultiCondition" resultMap="OrderInfoMap">
-        SELECT * FROM order_info
+        SELECT o.*, c.car_number, d.driver_name, p.passenger_name FROM order_info o, car_info c, driver_info d, passenger_info p
         <where>
             1 = 1
-            <if test="passengerId != null">
-                AND passenger_id = #{passengerId,jdbcType=INTEGER}
+            AND d.driver_id = o.driver_id
+            AND p.passenger_id = o.passenger_id
+            AND (o.driver_id = c.car_driver_id_a OR o.driver_id = c.car_driver_id_b)
+            <if test="driverInfo != null">
+                <if test="driverInfo.driverName != null and driverInfo.driverName !=''">
+                    AND d.driver_name LIKE #{driverInfo.driverName,jdbcType=VARCHAR}
+                </if>
             </if>
-            <if test="driverId != null">
-                AND driver_id LIKE #{driverId,jdbcType=INTEGER}
+            <if test="passenger != null">
+                <if test="passenger.passengerName != null and passenger.passengerName !=''">
+                    AND p.passenger_name LIKE #{passenger.passengerName,jdbcType=VARCHAR}
+                </if>
             </if>
-            <if test="orderStatus != null">
-                AND order_status = #{orderStatus,jdbcType=INTEGER}
+            <if test="carInfo != null">
+                <if test="carInfo.carNumber != null and carInfo.carNumber !=''">
+                    AND c.car_number LIKE #{carInfo.carNumber,jdbcType=VARCHAR}
+                </if>
             </if>
-            <if test="orderStatus != null">
-                AND order_status = #{orderStatus,jdbcType=INTEGER}
+            <if test="orderInfo != null">
+                <if test="orderInfo.startTime != null and orderInfo.startTime !=''">
+                    <![CDATA[
+                    AND o.start_time >= #{startTime,jdbcType=TIMESTAMP}
+                    ]]>
+                </if>
+                <if test="orderInfo.endTime != null and orderInfo.endTime !=''">
+                    <![CDATA[
+                    AND o.end_time <= #{endTime,jdbcType=TIMESTAMP}
+                    ]]>
+                </if>
             </if>
-            <if test="orderStatus != null">
-                AND order_status = #{orderStatus,jdbcType=INTEGER}
-            </if>
-
         </where>
         ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
     </select>
 
+    <select id="findOrderInfoByMultiConditionCount" resultMap="int">
+        SELECT COUNT(*) FROM order_info o, car_info c, driver_info d, passenger_info p
+        <where>
+            1 = 1
+            AND d.driver_id = o.driver_id
+            AND p.passenger_id = o.passenger_id
+            AND (o.driver_id = c.car_driver_id_a OR o.driver_id = c.car_driver_id_b)
+            <if test="driverInfo != null">
+                <if test="driverInfo.driverName != null and driverInfo.driverName !=''">
+                    AND d.driver_name LIKE #{driverInfo.driverName,jdbcType=VARCHAR}
+                </if>
+            </if>
+            <if test="passenger != null">
+                <if test="passenger.passengerPhoneNumber != null and passenger.passengerPhoneNumber !=''">
+                    AND p.passenger_phone_number LIKE #{passenger.passengerPhoneNumber,jdbcType=VARCHAR}
+                </if>
+            </if>
+            <if test="carInfo != null">
+                <if test="carInfo.carNumber != null and carInfo.carNumber !=''">
+                    AND c.car_number LIKE #{carInfo.carNumber,jdbcType=VARCHAR}
+                </if>
+            </if>
+            <if test="orderInfo != null">
+                <if test="orderInfo.startTime != null and orderInfo.startTime !=''">
+                    <![CDATA[
+                    AND o.start_time >= #{startTime,jdbcType=TIMESTAMP}
+                    ]]>
+                </if>
+                <if test="orderInfo.endTime != null and orderInfo.endTime !=''">
+                    <![CDATA[
+                    AND o.end_time <= #{endTime,jdbcType=TIMESTAMP}
+                    ]]>
+                </if>
+            </if>
+        </where>
+    </select>
 
 </mapper>

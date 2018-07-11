@@ -18,6 +18,11 @@
         WHERE passenger_wx_id = #{passengerWxId}
     </select>
 
+    <select id="getPassengerByPassengerId" resultMap="PassengerMap">
+        SELECT passenger_id, passenger_wx_id, user_group_id FROM passenger_info
+        WHERE passenger_id = #{passengerId}
+    </select>
+
     <insert id="addPassenger" parameterType="Passenger" useGeneratedKeys="true" keyProperty="passengerId">
         INSERT INTO passenger_info (passenger_wx_id, user_group_id)
         VALUES (#{passengerWxId}, #{userGroupId})
