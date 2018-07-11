@@ -91,7 +91,7 @@ public class OrderInfoController {
                 passenger.setPassengerStatus(1);
                 int upStatus = passengerService.updatePassengerStatus(passenger);
                 if (upStatus == 1){
-                    return new Message(Message.SUCCESS, "创建订单信息&切换用户状态 >> 成功", addStatus + " " + upStatus);
+                    return new Message(Message.SUCCESS, "创建订单信息&切换用户状态 >> 成功", orderInfo.getOrderId());
                 }
                 return new Message(Message.FAILURE, "创建订单信息&切换用户状态 >> 失败 ", addStatus + " " + upStatus);
             }else {
@@ -160,7 +160,7 @@ public class OrderInfoController {
      */
     @RequestMapping(value = "/api/driver/updateOrderInfoByOrderId", method = RequestMethod.POST)
     @Transactional
-    public Message updateOrderInfoByOrderId(@RequestBody int orderInfoId){
+    public Message updateOrderInfoByOrderId(@RequestBody OrderInfo order){
         int upStatus = 0;
 
         // 防止恶意注入
@@ -168,7 +168,7 @@ public class OrderInfoController {
         int driverId = userInfo.getUserId();
 
         try {
-            OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(orderInfoId);
+            OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(order.getOrderId());
             if (orderInfo != null && driverId == orderInfo.getDriverId()){
                 orderInfo.setDriverId(0);
                 orderInfo.setOrderStatus(0);
