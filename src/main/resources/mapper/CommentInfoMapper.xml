@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dpk.wgj.mapper.CommentInfoMapper">
+    <resultMap id="CommentInfoMap" type="com.dpk.wgj.bean.CommentInfo">
+        <id column="comment_id" property="commentId"/>
+        <result column="comment_content" property="commentContent"/>
+        <result column="is_clear" property="isClear"/>
+        <result column="is_stable" property="isStable"/>
+        <result column="is_know" property="isKnow"/>
+        <result column="is_good" property="isGood"/>
+        <result column="order_id" property="orderId"/>
+    </resultMap>
+
+    <insert id="addCommentInfoByOrderId" parameterType="CommentInfo" useGeneratedKeys="true" keyProperty="commentId">
+        INSERT INTO comment_info (comment_content, is_clear, is_stable, is_know, is_good, order_id)
+        VALUES (#{commentContent}, #{isClear}, #{isStable}, #{isKnow}, #{isGood}, #{orderId})
+    </insert>
+
+    <delete id="deleteCommentInfoByCommentId" parameterType="int">
+        DELETE from comment_info WHERE comment_id = #{commentId}
+    </delete>
+
+    <select id="getCommendInfoByOrderId" resultMap="CommentInfoMap">
+        SELECT comment_id, comment_content, is_clear, is_stable, is_know, is_good, order_id  FROM comment_info
+        WHERE order_id = #{orderId}
+    </select>
+
+</mapper>

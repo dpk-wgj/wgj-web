@@ -1,8 +1,14 @@
 package com.dpk.wgj.service.impl;
 
+import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.OrderInfo;
+import com.dpk.wgj.bean.Passenger;
 import com.dpk.wgj.bean.tableInfo.LocationMessage;
+import com.dpk.wgj.bean.tableInfo.OrderInfoTableMessage;
+import com.dpk.wgj.mapper.CarInfoMapper;
+import com.dpk.wgj.mapper.DriverInfoMapper;
 import com.dpk.wgj.mapper.OrderInfoMapper;
+import com.dpk.wgj.mapper.PassengerMapper;
 import com.dpk.wgj.service.OrderInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -108,5 +114,32 @@ public class OrderInfoServiceImpl implements OrderInfoService{
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public List<OrderInfo> findOrderInfoByMultiCondition(OrderInfoTableMessage orderInfoTableMessage) {
+
+        List<OrderInfo> orderInfos = new ArrayList<>();
+
+        try {
+            orderInfos = orderInfoMapper.findOrderInfoByMultiCondition(orderInfoTableMessage);
+            return orderInfos;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public int findOrderInfoByMultiConditionCount(OrderInfoTableMessage orderInfoTableMessage) {
+
+        int count = 0;
+        try {
+            count = orderInfoMapper.findOrderInfoByMultiConditionCount(orderInfoTableMessage);
+            return count;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 }
