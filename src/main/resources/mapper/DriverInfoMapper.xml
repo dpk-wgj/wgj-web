@@ -18,6 +18,131 @@
         <result column="user_group_id" property="userGroupId"/>
     </resultMap>
 
+    <select id="getAllDriverInfo" resultMap="DriverInfoMap">
+        SELECT driver_id,driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id,driver_image_url
+        FROM driver_info
+    </select>
+    <select id="getDriverInfoByDriverName" resultMap="DriverInfoMap">
+        SELECT driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id
+        FROM driver_info
+        WHERE driver_name = #{driverName}
+    </select>
+
+
+    <select id="getDriverInfoByDriverPhoneNumber" resultMap="DriverInfoMap">
+        SELECT driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id
+        FROM driver_info
+        WHERE driver_phone_number = #{driverPhoneNumber}
+    </select>
+    <select id="getDriveInfoByDriverLevelStar" resultMap="DriverInfoMap">
+        SELECT driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence,driver_status ,car_id
+        FROM driver_info
+        WHERE driver_level_star = #{driverLevelStar}
+    </select>
+
+    <select id="getDriveInfoByDriverIdentity" resultMap="DriverInfoMap">
+        SELECT driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence,driver_status,car_id FROM driver_info
+        WHERE driver_identity = #{arg0}
+    </select>
+
+    <select id="getDriverByMultiCondition" resultMap="DriverInfoMap">
+        SELECT driver_id,driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence,driver_status,car_id FROM driver_info
+        <where>
+            1 = 1
+            <if test="driverInfo != null">
+                <if test="driverInfo.driverName != null and driverInfo.driverName !=''">
+                    AND driver_name LIKE #{driverInfo.driverName,jdbcType=VARCHAR}
+                </if>
+                <if test="driverInfo.driverWxId != null and driverInfo.driverWxId !=''">
+                    AND driver_wx_id = #{driverInfo.driverWxId,jdbcType=VARCHAR}
+                </if>
+                <if test="driverInfo.driverPhoneNumber != null and driverInfo.driverPhoneNumber !=''">
+                    AND driver_phone_number LIKE #{driverInfo.driverPhoneNumber,jdbcType=VARCHAR}
+                </if>
+                <if test="driverInfo.driverIdentity != null and driverInfo.driverIdentity !=''">
+                    AND driver_identity = #{driverInfo.driverIdentity,jdbcType=VARCHAR}
+                </if>
+                <if test="driverInfo.driverLicence != null and driverInfo.driverLicence !=''">
+                    AND driver_licence = #{driverInfo.driverLicence,jdbcType=VARCHAR}
+                </if>
+
+                <if test="driverInfo.driverLevelStar != 0 and driverInfo.driverLevelStar !=''">
+                    AND driver_level_star LIKE #{driverInfo.driverLevelStar,jdbcType=INTEGER}
+                </if>
+                <if test="driverInfo.driverStatus != 0 and driverInfo.driverStatus !=''">
+                    AND driver_status = #{driverInfo.driverStatus,jdbcType=INTEGER}
+                </if>
+            </if>
+        </where>
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="getDriverByMultiConditionCount" resultType="int">
+        SELECT COUNT(*) FROM driver_info
+        <where>
+            1 = 1
+            <if test="driverInfo != null">
+                <if test="driverInfo.driverName != null and driverInfo.driverName !=''">
+                    AND driver_name LIKE #{driverInfo.driverName,jdbcType=VARCHAR}
+                </if>
+                <if test="driverInfo.driverWxId != null and driverInfo.driverWxId !=''">
+                    AND driver_wx_id = #{driverInfo.driverWxId,jdbcType=VARCHAR}
+                </if>
+                <if test="driverInfo.driverPhoneNumber != null and driverInfo.driverPhoneNumber !=''">
+                    AND driver_phone_number LIKE #{driverInfo.driverPhoneNumber,jdbcType=VARCHAR}
+                </if>
+                <if test="driverInfo.driverIdentity != null and driverInfo.driverIdentity !=''">
+                    AND driver_identity = #{driverInfo.driverIdentity,jdbcType=VARCHAR}
+                </if>
+                <if test="driverInfo.driverLicence != null and driverInfo.driverLicence !=''">
+                    AND driver_licence = #{driverInfo.driverLicence,jdbcType=VARCHAR}
+                </if>
+
+                <if test="driverInfo.driverLevelStar != 0 and driverInfo.driverLevelStar !=''">
+                    AND driver_level_star LIKE #{driverInfo.driverLevelStar,jdbcType=INTEGER}
+                </if>
+                <if test="driverInfo.driverStatus != 0 and driverInfo.driverStatus !=''">
+                    AND driver_status = #{driverInfo.driverStatus,jdbcType=INTEGER}
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertDriverInfo" parameterType="DriverInfo" >
+        INSERT INTO driver_info (driver_name,driver_wx_id, driver_phone_number,driver_identity,driver_licence)
+        VALUES (#{driverName}, #{driverWxId}, #{driverPhoneNumber},#{driverIdentity},#{driverLicence})
+    </insert>
+
+
+    <update id="updateDriverInfoByDriverId" parameterType="DriverInfo">
+        update driver_info
+        <set>
+            <if test="driverName != null ">
+                driver_name = #{driverName,jdbcType=VARCHAR},
+            </if>
+            <if test="driverWxId != null ">
+                driver_wx_id = #{driverWxId,jdbcType=VARCHAR},
+            </if>
+            <if test="driverPhoneNumber != null ">
+                driver_phone_number = #{driverPhoneNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="driverIdentity != null ">
+                driver_identity = #{driverIdentity,jdbcType=VARCHAR},
+            </if>
+            <if test="driverLicence != null ">
+                driver_licence = #{driverLicence,jdbcType=VARCHAR},
+            </if>
+            <if test="driverLevelStar !=null">
+                driver_level_star = #{driverLevelStar,jdbcType=INTEGER},
+            </if>
+        </set>
+        where driver_id = #{driverId,jdbcType=INTEGER}
+    </update>
+
+
+    <delete id="deleteDriverInfoByDriverId" parameterType="int">
+        DELETE from driver_info WHERE driver_id = #{driverId}
+    </delete>
     <select id="getDriverInfoByWxId" resultMap="DriverInfoMap">
         SELECT driver_wx_id, driver_id, user_group_id  FROM driver_info
         WHERE driver_wx_id = #{driverWxId}
