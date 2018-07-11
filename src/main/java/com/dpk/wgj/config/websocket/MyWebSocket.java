@@ -1,6 +1,8 @@
 package com.dpk.wgj.config.webSocket;
 
-
+import com.alibaba.fastjson.JSON;
+import com.dpk.wgj.bean.DriverInfo;
+import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BEncoderStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -54,6 +56,12 @@ public class MyWebSocket {
     }
 
     public void sendMessage(String message) throws IOException {
+
+
+        DriverInfo driverInfo = (DriverInfo) JSON.parseObject(message, DriverInfo.class);
+        System.out.println("JSON="+driverInfo);
+
+
         this.session.getBasicRemote().sendText(message);
     }
 

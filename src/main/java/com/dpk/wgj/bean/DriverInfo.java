@@ -32,6 +32,24 @@ public class DriverInfo implements Serializable {
 
     private int userGroupId;
 
+    public DriverInfo() {
+    }
+
+    public DriverInfo(int driverId, String driverWxId, String driverPhoneNumber, String driverIdentity, String driverLocation, int driverLevelStar, String driverLicence, String driverName, int driverStatus, int flag, int carId, int userGroupId) {
+        this.driverId = driverId;
+        this.driverWxId = driverWxId;
+        this.driverPhoneNumber = driverPhoneNumber;
+        this.driverIdentity = driverIdentity;
+        this.driverLocation = driverLocation;
+        this.driverLevelStar = driverLevelStar;
+        this.driverLicence = driverLicence;
+        this.driverName = driverName;
+        this.driverStatus = driverStatus;
+        this.flag = flag;
+        this.carId = carId;
+        this.userGroupId = userGroupId;
+    }
+
     public int getUserGroupId() {
         return userGroupId;
     }
