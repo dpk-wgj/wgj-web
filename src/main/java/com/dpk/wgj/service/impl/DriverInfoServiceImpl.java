@@ -231,4 +231,17 @@ public class DriverInfoServiceImpl implements DriverInfoService {
         return null;
     }
 
+    @Override
+    public int updateDriverStatus(DriverInfo driverInfo) {
+        int upStatus = 0;
+
+        try {
+            upStatus = driverInfoMapper.updateDriverStatus(driverInfo);
+            return upStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return  0;
+    }
+
 }

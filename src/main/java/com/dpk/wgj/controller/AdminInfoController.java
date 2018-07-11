@@ -1,6 +1,7 @@
 package com.dpk.wgj.controller;
 
 import com.dpk.wgj.bean.AdminInfo;
+import com.dpk.wgj.bean.DTO.UserDTO;
 import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.service.AdminInfoService;
 import org.slf4j.Logger;
