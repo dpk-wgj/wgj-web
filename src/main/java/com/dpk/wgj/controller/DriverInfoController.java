@@ -11,9 +11,11 @@ import com.dpk.wgj.service.DriverInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -190,7 +192,8 @@ public class DriverInfoController {
      */
     @RequestMapping(value="/importExcel", method=RequestMethod.POST)
     @ResponseBody
-    public Message importExcel(@RequestParam(value = "sourceRiskFile", required = false) MultipartFile sourceRiskFile) {
+    public Message importExcel(@RequestParam(value = "file", required = false) MultipartFile sourceRiskFile,
+                               HttpServletRequest request, Model model) {
         String fileName = sourceRiskFile.getOriginalFilename();
         logger.info(fileName);
         //判断文件是否为空
