@@ -91,7 +91,8 @@ public class OrderInfoController {
                 passenger.setPassengerStatus(1);
                 int upStatus = passengerService.updatePassengerStatus(passenger);
                 if (upStatus == 1){
-                    return new Message(Message.SUCCESS, "创建订单信息&切换用户状态 >> 成功", orderInfo.getOrderId());
+                    OrderInfo targetOrderInfo = orderInfoService.getOrderInfoByOrderId(orderInfo.getOrderId());
+                    return new Message(Message.SUCCESS, "创建订单信息&切换用户状态 >> 成功 >> 获得目标订单", targetOrderInfo);
                 }
                 return new Message(Message.FAILURE, "创建订单信息&切换用户状态 >> 失败 ", addStatus + " " + upStatus);
             }else {
