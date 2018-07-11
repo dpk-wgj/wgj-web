@@ -92,7 +92,11 @@ public class OrderInfoController {
                 int upStatus = passengerService.updatePassengerStatus(passenger);
                 if (upStatus == 1){
                     OrderInfo targetOrderInfo = orderInfoService.getOrderInfoByOrderId(orderInfo.getOrderId());
-                    return new Message(Message.SUCCESS, "创建订单信息&切换用户状态 >> 成功 >> 获得目标订单", targetOrderInfo);
+                    DriverInfo driverInfo = driverInfoService.getDriverInfoByDriverId(targetOrderInfo.getDriverId());
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("OrderInfo", targetOrderInfo);
+                    map.put("DriverInfo", driverInfo);
+                    return new Message(Message.SUCCESS, "创建订单信息&切换用户状态 >> 成功 >> 获得目标订单", map);
                 }
                 return new Message(Message.FAILURE, "创建订单信息&切换用户状态 >> 失败 ", addStatus + " " + upStatus);
             }else {
@@ -109,6 +113,7 @@ public class OrderInfoController {
      * @return
      */
     @RequestMapping(value = "/api/passenger/getOrderInfoByPassengerId", method = RequestMethod.GET)
+    @Transactional
     public Message getOrderInfoByPassengerId(){
 
         List<OrderInfo> orderInfos;
