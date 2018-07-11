@@ -2,15 +2,21 @@ package com.dpk.wgj.config.webSocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.dpk.wgj.bean.DTO.UserDTO;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.Message;
+import com.dpk.wgj.bean.OrderInfo;
+import com.dpk.wgj.bean.Passenger;
 import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
+import com.dpk.wgj.service.OrderInfoService;
+import com.dpk.wgj.service.PassengerService;
 import com.fasterxml.jackson.core.JsonParser;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BEncoderStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -18,12 +24,13 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@ServerEndpoint(value = "/ws/{role}/{userId}",configurator=MyEndpointConfigure.class)
+@ServerEndpoint(value = "/ws/{role}/{userId}/{operateId}",configurator=MyEndpointConfigure.class)
 @Component
 public class MyWebSocket {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -40,21 +47,31 @@ public class MyWebSocket {
     private DriverInfoService driverInfoApiService;
 
     @Autowired
+    private PassengerService passengerService;
+
+    @Autowired
     private CarInfoService carInfoService;
+
+    @Autowired
+    private OrderInfoService orderInfoService;
+
+
     // driver  passenger
     private String role;
 
     private String userId;
 
+    private String operateId;
 
     @OnOpen
     public void onOpen(Session session,@PathParam(value="role")String role
-            , @PathParam(value="userId")String userId) throws IOException {
+            , @PathParam(value="userId")String userId, @PathParam(value="operateId")String operateId) throws IOException {
         this.session = session;
         webSocketSet.add(this);
 
         this.role = role;
         this.userId = userId;
+        this.operateId = operateId;
         //key    driver,7     passenger,3   的形式
         String key = role+","+userId;
         sessionPool.put(key, session);
@@ -86,7 +103,9 @@ public class MyWebSocket {
     public void onMessage(String message) throws IOException {
         try {
             System.out.println("后台ws收到的信息:"+message);
-            JSONObject msgJson = new JSONObject();
+            JSONObject driverMsgJson = new JSONObject();
+            JSONObject passMsgJson = new JSONObject();
+
             // broadcast received message
             if(role.equals("driver")){
 
@@ -110,6 +129,17 @@ public class MyWebSocket {
 //                    }
                 }
             }else if(role.equals("passenger")){
+                System.out.println("操作："+","+operateId);
+                switch ((operateId)){
+                    case "0": //新增订单
+
+//                        break;
+//                    case 1:
+//                        break;
+//                    default:
+//                        break;
+                }
+
 
                 List<DriverInfo> driverInfoList = driverInfoApiService.getDriverInfoByDriverStatus(1);
                 int driverId; //要接单的司机id
@@ -122,11 +152,20 @@ public class MyWebSocket {
                             for (String key : sessionPool.keySet()) {
                                 String[] arr = key.split(",");
                                 if(Integer.parseInt(arr[1]) == driverId){
-                                    msgJson.put("status",1);
-                                    msgJson.put("msg","您要开始接单了hhhhhhhhhhhhh");
-                                    msgJson.put("passengerId",userId);
-                                    String msg = JSON.toJSONString(msgJson);
-                                    sendMessage(msg, "driver,"+driverId);
+                                    driverMsgJson.put("status",1);
+                                    driverMsgJson.put("msg","您要开始接单了hhhhhhhhhhhhh");
+                                    driverMsgJson.put("passengerId",userId);
+                                    String driverMsg = JSON.toJSONString(driverMsgJson);
+                                    sendMessage(driverMsg, "driver,"+driverId);
+
+
+                                    passMsgJson.put("status",1);
+                                    passMsgJson.put("msg","已经有司机接单,请在原地等待司机接送");
+                                    passMsgJson.put("driverId",driverId);
+                                    String passMsg = JSON.toJSONString(passMsgJson);
+
+                                    sendMessage(passMsg, "passenger,"+userId);
+
                                 }
 //                                System.out.println("key= "+ key + " and value= " + sessionPool.get(key));
                             }
