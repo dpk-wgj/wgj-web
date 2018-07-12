@@ -21,6 +21,8 @@ public interface DriverInfoMapper {
 
     public DriverInfo getDriverInfoByDriverName(String driverName) throws Exception;
 
+    public List<DriverInfo> getDriverInfoByDriverStatus(int driverStatus) throws Exception;
+
     public DriverInfo getDriverInfoByDriverPhoneNumber(String driverPhoneNumber) throws Exception;
 
     public DriverInfo getDriveInfoByDriverLevelStar(int driverLevelStar) throws Exception;
