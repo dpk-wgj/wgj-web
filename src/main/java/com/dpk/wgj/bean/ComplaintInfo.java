@@ -16,6 +16,16 @@ public class ComplaintInfo implements Serializable {
 
     private int orderId;
 
+    private int passengerId;
+
+    public int getPassengerId() {
+        return passengerId;
+    }
+
+    public void setPassengerId(int passengerId) {
+        this.passengerId = passengerId;
+    }
+
     public int getComplaintId() {
         return complaintId;
     }
@@ -55,6 +65,7 @@ public class ComplaintInfo implements Serializable {
                 ", complaintContent='" + complaintContent + '\'' +
                 ", complaintStatus=" + complaintStatus +
                 ", orderId=" + orderId +
+                ", passengerId=" + passengerId +
                 '}';
     }
 }

@@ -7,21 +7,37 @@
         <id column="complaint_id" property="complaintId"/>
         <result column="complaint_content" property="complaintContent"/>
         <result column="complaint_status" property="complaintStatus"/>
+        <result column="passenger_id" property="passengerId"/>
         <result column="order_id" property="orderId"/>
     </resultMap>
 
     <insert id="addComplaintInfoByOrderId" parameterType="ComplaintInfo" useGeneratedKeys="true" keyProperty="complaintId">
-        INSERT INTO complaint_info (complaint_content, complaint_status, order_id)
-        VALUES (#{complaintContent}, #{complaintStatus}, #{orderId})
+        INSERT INTO complaint_info (complaint_content, complaint_status, order_id, passenger_id)
+        VALUES (#{complaintContent}, #{complaintStatus}, #{orderId}, #{passengerId})
     </insert>
 
     <delete id="deleteComplaintInfoByCommentId" parameterType="int">
         DELETE from complaint_info WHERE complaint_id = #{complaintId}
     </delete>
 
-    <select id="getComplaintInfoByOrderId" resultMap="CommentInfoMap">
-        SELECT complaint_id, complaint_content, complaint_status, order_id  FROM complaint_info
+    <select id="getComplaintInfoByOrderId" resultMap="ComplaintInfoMap">
+        SELECT complaint_id, complaint_content, complaint_status, order_id, passenger_id  FROM complaint_info
         WHERE order_id = #{orderId}
     </select>
+
+    <select id="getComplaintInfoByPassengerId" resultMap="ComplaintInfoMap">
+        SELECT complaint_id, complaint_content, complaint_status, order_id, order_id  FROM complaint_info
+        WHERE passenger_id = #{passengerId}
+    </select>
+
+    <update id="updateComplaintInfoStatus" parameterType="ComplaintInfo">
+        UPDATE complaint_info
+        <set>
+            <if test="complaintStatus != null and complaintStatus != ''">
+                complaint_status = #{complaintStatus,jdbcType=VARCHAR}
+            </if>
+            WHERE order_id =  #{orderId,jdbcType=INTEGER}
+        </set>
+    </update>
 
 </mapper>

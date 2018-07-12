@@ -9,12 +9,16 @@ import com.dpk.wgj.service.OrderInfoService;
 import com.dpk.wgj.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zhoulin on 2018/7/12.
@@ -36,15 +40,16 @@ public class ComplaintInfoController {
      * @return
      */
     @RequestMapping(value = "/addComplaintInfoByOrderId", method = RequestMethod.POST)
+    @Transactional
     public Message addComplaintInfoByOrderId(@RequestBody ComplaintInfo complaintInfo){
 
         // 防止恶意提交投诉
-//        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
-//        int passengerId = userInfo.getUserId();
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        int passengerId = userInfo.getUserId();
 //        boolean flag = false;
 
         int addStatus = 0;
-
+        complaintInfo.setPassengerId(passengerId);
         try {
             // 校验
 //            List<OrderInfo> orderInfoList = orderInfoService.getOrderInfoByPassengerId(passengerId);
@@ -74,6 +79,7 @@ public class ComplaintInfoController {
      * @return
      */
     @RequestMapping(value = "/deleteComplaintInfoByCommentId", method = RequestMethod.POST)
+    @Transactional
     public Message deleteComplaintInfoByCommentId(@RequestBody ComplaintInfo complaintInfo){
         // 防止恶意提交投诉
 //        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
@@ -111,6 +117,7 @@ public class ComplaintInfoController {
      * @return
      */
     @RequestMapping(value = "/getComplaintInfoByOrderId", method = RequestMethod.GET)
+    @Transactional
     public Message getComplaintInfoByOrderId(@RequestBody ComplaintInfo complaintInfo){
         // 防止恶意提交投诉
 //        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
@@ -138,6 +145,27 @@ public class ComplaintInfoController {
         } catch (Exception e) {
             e.printStackTrace();
             return new Message(Message.FAILURE, "查看 >> 订单投诉 >> 失败", e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/getComplaintInfoByPassengerId", method = RequestMethod.POST)
+    @Transactional
+    public Message getComplaintInfoByPassengerId(){
+
+        // 防止恶意提交投诉
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        int passengerId = userInfo.getUserId();
+
+        List<ComplaintInfo> complaintInfos;
+        try {
+            complaintInfos = complaintInfoService.getComplaintInfoByPassengerId(passengerId);
+            if (complaintInfos != null){
+                return new Message(Message.SUCCESS, "获取 >> 用户订单投诉列表 >> 成功", complaintInfos);
+            }
+            return new Message(Message.FAILURE, "获取 >> 用户订单投诉列表 >> 失败", null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.FAILURE, "获取 >> 用户订单投诉列表 >> 异常", e.getMessage());
         }
     }
 
