@@ -36,13 +36,14 @@ public class OrderMapperTest extends WgjApplicationTests {
 
         OrderInfo orderInfo = new OrderInfo();
         Passenger passenger = new Passenger();
-        orderInfo.setOrderStatus(1);
+        orderInfo.setOrderStatus(0);
         passenger.setPassengerId(8);
         orderInfoTableMessage.setOrderInfo(orderInfo);
         orderInfoTableMessage.setPassenger(passenger);
 
+
         List<OrderInfo> list = orderInfoService.findOrderInfoByMultiCondition(orderInfoTableMessage);
-        System.out.println(list.toString() + "111" + orderInfoService.findOrderInfoByMultiConditionCount(orderInfoTableMessage));
+        System.out.println(list.toString());
     }
 
 }

@@ -10,6 +10,8 @@ public interface PassengerService {
 
     public int updatePassengerStatus(Passenger passenger) throws Exception;
 
+    public int updatePassengerPhoneNumber(Passenger passenger) throws Exception;
+
     public Passenger getPassengerByPassengerId(int passengerId) throws Exception;
 
 }
