@@ -1,13 +1,13 @@
 package com.dpk.wgj.controller;
 
+import com.dpk.wgj.bean.*;
 import com.dpk.wgj.bean.DTO.AccessDriverDTO;
+import com.dpk.wgj.bean.DTO.OrderInfoDTO;
 import com.dpk.wgj.bean.DTO.UserDTO;
-import com.dpk.wgj.bean.DriverInfo;
-import com.dpk.wgj.bean.Message;
-import com.dpk.wgj.bean.OrderInfo;
-import com.dpk.wgj.bean.Passenger;
 import com.dpk.wgj.bean.tableInfo.LocationMessage;
+import com.dpk.wgj.bean.tableInfo.OrderInfoTableMessage;
 import com.dpk.wgj.bean.tableInfo.OrderMessage;
+import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
 import com.dpk.wgj.service.OrderInfoService;
 import com.dpk.wgj.service.PassengerService;
@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 //@RequestMapping(value = "/admin/order")
@@ -33,6 +32,9 @@ public class OrderInfoController {
 
     @Autowired
     private DriverInfoService driverInfoService;
+
+    @Autowired
+    private CarInfoService carInfoService;
 
     /**
      * 多条件查询车辆轨迹
@@ -89,7 +91,12 @@ public class OrderInfoController {
                 passenger.setPassengerStatus(1);
                 int upStatus = passengerService.updatePassengerStatus(passenger);
                 if (upStatus == 1){
-                    return new Message(Message.SUCCESS, "创建订单信息&切换用户状态 >> 成功", addStatus + " " + upStatus);
+                    OrderInfo targetOrderInfo = orderInfoService.getOrderInfoByOrderId(orderInfo.getOrderId());
+//                    DriverInfo driverInfo = driverInfoService.getDriverInfoByDriverId(targetOrderInfo.getDriverId());
+//                    Map<String, Object> map = new HashMap<>();
+//                    map.put("OrderInfo", targetOrderInfo);
+//                    map.put("DriverInfo", driverInfo);
+                    return new Message(Message.SUCCESS, "创建订单信息&切换用户状态 >> 成功 >> 获得目标订单", targetOrderInfo);
                 }
                 return new Message(Message.FAILURE, "创建订单信息&切换用户状态 >> 失败 ", addStatus + " " + upStatus);
             }else {
@@ -106,6 +113,7 @@ public class OrderInfoController {
      * @return
      */
     @RequestMapping(value = "/api/passenger/getOrderInfoByPassengerId", method = RequestMethod.GET)
+    @Transactional
     public Message getOrderInfoByPassengerId(){
 
         List<OrderInfo> orderInfos;
@@ -158,7 +166,7 @@ public class OrderInfoController {
      */
     @RequestMapping(value = "/api/driver/updateOrderInfoByOrderId", method = RequestMethod.POST)
     @Transactional
-    public Message updateOrderInfoByOrderId(@RequestBody int orderInfoId){
+    public Message updateOrderInfoByOrderId(@RequestBody OrderInfo order){
         int upStatus = 0;
 
         // 防止恶意注入
@@ -166,7 +174,7 @@ public class OrderInfoController {
         int driverId = userInfo.getUserId();
 
         try {
-            OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(orderInfoId);
+            OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(order.getOrderId());
             if (orderInfo != null && driverId == orderInfo.getDriverId()){
                 orderInfo.setDriverId(0);
                 orderInfo.setOrderStatus(0);
@@ -318,6 +326,47 @@ public class OrderInfoController {
 
     }
 
+    /**
+     * 后台端 >> 多条件查询订单
+     * @return
+     */
+    @RequestMapping(value = "/admin/findOrderInfoByMultiCondition", method = RequestMethod.POST)
+    @Transactional
+    public Message findOrderInfoByMultiCondition(@RequestBody OrderInfoTableMessage tableMessage){
 
+        List<OrderInfo> orderInfos = new ArrayList<>();
+        List<OrderInfoDTO> infoDTOList = new ArrayList<>();
+
+        Map<String, Object> map = new HashMap<>();
+
+        tableMessage.getDriverInfo().setDriverName("%" + tableMessage.getDriverInfo().getDriverName() + "%");
+        tableMessage.getPassenger().setPassengerPhoneNumber("%" + tableMessage.getPassenger().getPassengerPhoneNumber() + "%");
+        tableMessage.getCarInfo().setCarNumber("%" + tableMessage.getCarInfo().getCarNumber() + "%");
+
+        try {
+            orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
+            if (orderInfos != null){
+                for(OrderInfo orderInfo : orderInfos){
+                    int driverId = orderInfo.getDriverId();
+                    int passengerId = orderInfo.getPassengerId();
+                    DriverInfo driverInfo = driverInfoService.getDriverInfoByDriverId(driverId);
+                    Passenger passenger = passengerService.getPassengerByPassengerId(passengerId);
+                    CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
+                    // 判断车辆所有权 未完成
+
+                    OrderInfoDTO orderInfoDTO = new OrderInfoDTO(orderInfo, carInfo, driverInfo, passenger);
+                    infoDTOList.add(orderInfoDTO);
+                }
+                int count = orderInfoService.findOrderInfoByMultiConditionCount(tableMessage);
+                map.put("orderList", infoDTOList);
+                map.put("count", count);
+                return new Message(Message.SUCCESS, "后台端 >> 多条件查询订单 >> 成功", map);
+            }
+            return new Message(Message.FAILURE, "后台端 >> 多条件查询订单 >> 成功", "无查询结果");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "后台端 >> 多条件查询订单 >> 异常", "请求异常 ");
+        }
+    }
 
 }

@@ -36,7 +36,7 @@ public class DriverInfoController {
      * 获取全部信息
      */
 
-    @RequestMapping(value = "/getAllDriverInfo/",method = RequestMethod.GET)
+    @RequestMapping(value = "/getAllDriverInfo",method = RequestMethod.GET)
     public Message getAllDriverInfo()  {
         List<CarInfoDTO> carInfoDTO = new ArrayList<CarInfoDTO>();
         try {

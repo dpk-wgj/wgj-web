@@ -13,4 +13,6 @@ public interface PassengerMapper {
 
     public int updatePassengerStatus(Passenger passenger) throws Exception;
 
+    public Passenger getPassengerByPassengerId(int passengerId) throws Exception;
+
 }

@@ -23,6 +23,11 @@ public interface DriverInfoService {
      * @param driverName
      */
     public DriverInfo getDriverInfoByDriverName(String driverName) throws Exception;
+    /**
+     * 根据司机的在岗状态进行司机全部信息查询
+     * @param driverStatus
+     */
+    public List<DriverInfo> getDriverInfoByDriverStatus(int driverStatus) throws Exception;
 
     /**
      * 全部司机信息查询
@@ -68,5 +73,12 @@ public interface DriverInfoService {
 
     public int deleteDriverInfoByDriverId(int driverId) throws Exception;
 
+    /**
+     * 根据司机Id进行司机全部信息查询
+     * @param driverId
+     */
+    public DriverInfo getDriverInfoByDriverId(int driverId) throws Exception;
+
+    public  int updateApiDriverInfoByDriverId(DriverInfo driverInfo) throws Exception;
 
 }

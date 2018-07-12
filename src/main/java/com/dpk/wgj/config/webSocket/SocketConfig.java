@@ -17,5 +17,9 @@ public class SocketConfig {
     public ServerEndpointExporter serverEndpointExporter(){
         return new ServerEndpointExporter();
     }
-
+    @Bean
+    public MyEndpointConfigure newConfigure()
+    {
+        return new MyEndpointConfigure();
+    }
 }
