@@ -327,6 +327,49 @@ public class OrderInfoController {
     }
 
     /**
+     * 司机端 >> 获得订单id
+     * @param tableMessage
+     * @return
+     */
+    @RequestMapping(value = "/api/driver/getOrderIdForDriver", method = RequestMethod.POST)
+    @Transactional
+    public Message getOrderIdForDriver (@RequestBody OrderInfoTableMessage tableMessage){
+        List<OrderInfo> orderInfos = new ArrayList<>();
+        List<OrderInfoDTO> infoDTOList = new ArrayList<>();
+
+        Map<String, Object> map = new HashMap<>();
+
+//        tableMessage.getDriverInfo().setDriverName("%" + tableMessage.getDriverInfo().getDriverName() + "%");
+//        tableMessage.getPassenger().setPassengerPhoneNumber("%" + tableMessage.getPassenger().getPassengerPhoneNumber() + "%");
+//        tableMessage.getCarInfo().setCarNumber("%" + tableMessage.getCarInfo().getCarNumber() + "%");
+
+        try {
+            orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
+            if (orderInfos != null){
+                for(OrderInfo orderInfo : orderInfos){
+                    int driverId = orderInfo.getDriverId();
+                    int passengerId = orderInfo.getPassengerId();
+                    DriverInfo driverInfo = driverInfoService.getDriverInfoByDriverId(driverId);
+                    Passenger passenger = passengerService.getPassengerByPassengerId(passengerId);
+                    CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
+                    // 判断车辆所有权 未完成
+
+                    OrderInfoDTO orderInfoDTO = new OrderInfoDTO(orderInfo, carInfo, driverInfo, passenger);
+                    infoDTOList.add(orderInfoDTO);
+                }
+                int count = orderInfoService.findOrderInfoByMultiConditionCount(tableMessage);
+                map.put("orderList", infoDTOList);
+                map.put("count", count);
+                return new Message(Message.SUCCESS, "司机端 >> 获得订单id >> 成功", map);
+            }
+            return new Message(Message.FAILURE, "司机端 >> 获得订单id >> 成功", "无查询结果");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "司机端 >> 获得订单id >> 异常", "请求异常 ");
+        }
+    }
+
+    /**
      * 后台端 >> 多条件查询订单
      * @return
      */

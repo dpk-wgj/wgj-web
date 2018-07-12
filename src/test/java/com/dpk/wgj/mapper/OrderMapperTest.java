@@ -2,7 +2,10 @@ package com.dpk.wgj.mapper;
 
 import com.dpk.wgj.WgjApplicationTests;
 import com.dpk.wgj.bean.OrderInfo;
+import com.dpk.wgj.bean.Passenger;
 import com.dpk.wgj.bean.tableInfo.LocationMessage;
+import com.dpk.wgj.bean.tableInfo.OrderInfoTableMessage;
+import com.dpk.wgj.service.OrderInfoService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,30 +20,29 @@ import java.util.List;
 public class OrderMapperTest extends WgjApplicationTests {
 
     @Autowired
-    private OrderInfoMapper orderInfoMapper;
+//    private OrderInfoMapper orderInfoMapper;
+    private OrderInfoService orderInfoService;
+
 
     @Test
     public void testGetLocationInfoByDate() throws Exception {
 
-//        LocationMessage message = new LocationMessage();
-//
-////        message.setCarNumber("A12345");
-//
-//        String startDate = "2018-07-09 08:56:04";
-//        String endDate = "2018-07-09 9:57:04";
-//
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//
-//        Date startTime = sdf.parse(startDate);
-//        Date endTime = sdf.parse(endDate);
-//
-//        message.setStartTime(startTime);
-//        message.setEndTime(endTime);
-//
-//        List<OrderInfo> list = orderInfoMapper.getLocationInfoByDate(message);
-//
-//        System.out.println(list.toString());
+        OrderInfoTableMessage orderInfoTableMessage = new OrderInfoTableMessage();
 
+        orderInfoTableMessage.setLimit(10);
+        orderInfoTableMessage.setOffset(0);
+        orderInfoTableMessage.setSort("order_id");
+        orderInfoTableMessage.setOrder("desc");
+
+        OrderInfo orderInfo = new OrderInfo();
+        Passenger passenger = new Passenger();
+        orderInfo.setOrderStatus(1);
+        passenger.setPassengerId(8);
+        orderInfoTableMessage.setOrderInfo(orderInfo);
+        orderInfoTableMessage.setPassenger(passenger);
+
+        List<OrderInfo> list = orderInfoService.findOrderInfoByMultiCondition(orderInfoTableMessage);
+        System.out.println(list.toString() + "111" + orderInfoService.findOrderInfoByMultiConditionCount(orderInfoTableMessage));
     }
 
 }

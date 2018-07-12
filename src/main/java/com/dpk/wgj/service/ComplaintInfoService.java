@@ -1,6 +1,7 @@
 package com.dpk.wgj.service;
 
 import com.dpk.wgj.bean.ComplaintInfo;
+import com.dpk.wgj.bean.tableInfo.ComplaintMessage;
 
 import java.util.List;
 
@@ -15,4 +16,8 @@ public interface ComplaintInfoService {
     public List<ComplaintInfo> getComplaintInfoByPassengerId(int passengerId) throws Exception;
 
     public int updateComplaintInfoStatus(ComplaintInfo complaintInfo) throws Exception;
+
+    public List<ComplaintInfo> findOrderInfoByMultiCondition(ComplaintMessage complaintMessage) throws Exception;
+
+    public int findOrderInfoByMultiConditionCount(ComplaintMessage complaintMessage) throws Exception;
 }
