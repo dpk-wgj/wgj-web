@@ -31,8 +31,18 @@
     <update id="updatePassengerStatus" parameterType="Passenger">
         update passenger_info
         <set>
-            <if test="passengerStatus != null">
+            <if test="passengerStatus != null and passengerPhoneNumber != ''">
                 passenger_status = #{passengerStatus,jdbcType=INTEGER},
+            </if>
+        </set>
+        WHERE passenger_id = #{passengerId,jdbcType=INTEGER}
+    </update>
+
+    <update id="updatePassengerPhoneNumber" parameterType="Passenger">
+        update passenger_info
+        <set>
+            <if test="passengerPhoneNumber != null and passengerPhoneNumber != ''">
+                passenger_phone_number = #{passengerPhoneNumber,jdbcType=VARCHAR},
             </if>
         </set>
         WHERE passenger_id = #{passengerId,jdbcType=INTEGER}

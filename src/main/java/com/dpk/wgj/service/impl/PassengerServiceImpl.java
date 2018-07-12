@@ -44,10 +44,21 @@ public class PassengerServiceImpl implements PassengerService {
 
     @Override
     public int updatePassengerStatus(Passenger passenger) {
-
         int upStatus = 0;
         try {
             upStatus = passengerMapper.updatePassengerStatus(passenger);
+            return upStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return upStatus;
+    }
+
+    @Override
+    public int updatePassengerPhoneNumber(Passenger passenger) {
+        int upStatus = 0;
+        try {
+            upStatus = passengerMapper.updatePassengerPhoneNumber(passenger);
             return upStatus;
         } catch (Exception e) {
             e.printStackTrace();
