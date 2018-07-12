@@ -18,6 +18,25 @@ public class AdminInfoServiceImpl implements AdminInfoService {
 
     private final Logger logger = LoggerFactory.getLogger(AdminInfoServiceImpl.class);
 
+    /*
+    根据名字模糊查询所有用户（qinghua）
+     */
+    @Override
+    public List<AdminInfo> getAllAdminByUsername(String username) {
+
+        List<AdminInfo> adminInfos;
+
+        try {
+            adminInfos =  adminInfoMapper.getAllAdminByUsername(username);
+            return adminInfos;
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+        }
+
+        return null;
+
+    }
+
     @Override
     public AdminInfo getAdminByUsername(String username) {
 

@@ -8,6 +8,8 @@ public interface AdminInfoService {
 
     public AdminInfo getAdminByUsername(String username) throws Exception;
 
+    public List<AdminInfo> getAllAdminByUsername(String username) throws Exception;
+
     public List<AdminInfo> getAllAdminInfo() throws Exception;
 
     public AdminInfo getUserInfoById(int userId) throws Exception;

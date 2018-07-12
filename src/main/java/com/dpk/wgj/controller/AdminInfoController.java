@@ -45,10 +45,30 @@ public class AdminInfoController {
     @RequestMapping(value = "/getAdminByUsername", method = RequestMethod.POST)
     public Message getAdminByUsername(@RequestParam(value = "username") String username){
 
+        AdminInfo adminInfo;
         try {
-            AdminInfo adminInfo = adminInfoService.getAdminByUsername(username);
+            adminInfo = adminInfoService.getAdminByUsername(username);
             if (adminInfo != null){
                 return new Message(Message.SUCCESS, "获取用户信息 >> 成功", adminInfo);
+            }
+            return new Message(Message.FAILURE, "获取用户信息 >> 失败", "未找到该用户");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "获取用户信息 >> 异常", "查找异常");
+        }
+    }
+
+    /**
+     * 根据用户名模糊查找用户信息（qinhua）
+     */
+    @RequestMapping(value = "/getAllAdminByUsername", method = RequestMethod.POST)
+    public Message getAllAdminByUsername(@RequestParam(value = "username") String username){
+
+        List<AdminInfo> adminInfos;
+        try {
+            adminInfos = adminInfoService.getAllAdminByUsername(username);
+            if (adminInfos != null){
+                return new Message(Message.SUCCESS, "获取用户信息 >> 成功", adminInfos);
             }
             return new Message(Message.FAILURE, "获取用户信息 >> 失败", "未找到该用户");
         } catch (Exception e) {
