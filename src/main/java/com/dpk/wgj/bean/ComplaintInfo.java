@@ -1,6 +1,7 @@
 package com.dpk.wgj.bean;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by zhoulin on 2018/7/7.
@@ -17,6 +18,36 @@ public class ComplaintInfo implements Serializable {
     private int orderId;
 
     private int passengerId;
+
+    private String complaintFeedback;
+
+    private Date complaintCreateTime;
+
+    private Date complaintFeedbackTime;
+
+    public String getComplaintFeedback() {
+        return complaintFeedback;
+    }
+
+    public void setComplaintFeedback(String complaintFeedback) {
+        this.complaintFeedback = complaintFeedback;
+    }
+
+    public Date getComplaintCreateTime() {
+        return complaintCreateTime;
+    }
+
+    public void setComplaintCreateTime(Date complaintCreateTime) {
+        this.complaintCreateTime = complaintCreateTime;
+    }
+
+    public Date getComplaintFeedbackTime() {
+        return complaintFeedbackTime;
+    }
+
+    public void setComplaintFeedbackTime(Date complaintFeedbackTime) {
+        this.complaintFeedbackTime = complaintFeedbackTime;
+    }
 
     public int getPassengerId() {
         return passengerId;
@@ -66,6 +97,9 @@ public class ComplaintInfo implements Serializable {
                 ", complaintStatus=" + complaintStatus +
                 ", orderId=" + orderId +
                 ", passengerId=" + passengerId +
+                ", complaintFeedback='" + complaintFeedback + '\'' +
+                ", complaintCreateTime=" + complaintCreateTime +
+                ", complaintFeedbackTime=" + complaintFeedbackTime +
                 '}';
     }
 }

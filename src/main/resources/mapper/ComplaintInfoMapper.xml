@@ -8,12 +8,14 @@
         <result column="complaint_content" property="complaintContent"/>
         <result column="complaint_status" property="complaintStatus"/>
         <result column="passenger_id" property="passengerId"/>
-        <result column="order_id" property="orderId"/>
+        <result column="complaint_feedback" property="complaintFeedback"/>
+        <result column="complaint_create_time" property="complaintCreateTime"/>
+        <result column="complaint_feedback_time" property="complaintFeedbackTime"/>
     </resultMap>
 
     <insert id="addComplaintInfoByOrderId" parameterType="ComplaintInfo" useGeneratedKeys="true" keyProperty="complaintId">
-        INSERT INTO complaint_info (complaint_content, complaint_status, order_id, passenger_id)
-        VALUES (#{complaintContent}, #{complaintStatus}, #{orderId}, #{passengerId})
+        INSERT INTO complaint_info (complaint_content, complaint_status, order_id, passenger_id, complaint_create_time)
+        VALUES (#{complaintContent}, #{complaintStatus}, #{orderId}, #{passengerId}, #{complaintCreateTime})
     </insert>
 
     <delete id="deleteComplaintInfoByCommentId" parameterType="int">
@@ -21,12 +23,12 @@
     </delete>
 
     <select id="getComplaintInfoByOrderId" resultMap="ComplaintInfoMap">
-        SELECT complaint_id, complaint_content, complaint_status, order_id, passenger_id  FROM complaint_info
+        SELECT complaint_id, complaint_content, complaint_status, order_id, passenger_id, complaint_create_time, complaint_feedback, complaint_feedback_time FROM complaint_info
         WHERE order_id = #{orderId}
     </select>
 
     <select id="getComplaintInfoByPassengerId" resultMap="ComplaintInfoMap">
-        SELECT complaint_id, complaint_content, complaint_status, order_id, order_id  FROM complaint_info
+        SELECT complaint_id, complaint_content, complaint_status, order_id, passenger_id, complaint_create_time, complaint_feedback, complaint_feedback_time  FROM complaint_info
         WHERE passenger_id = #{passengerId}
     </select>
 
@@ -34,7 +36,13 @@
         UPDATE complaint_info
         <set>
             <if test="complaintStatus != null and complaintStatus != ''">
-                complaint_status = #{complaintStatus,jdbcType=VARCHAR}
+                complaint_status = #{complaintStatus,jdbcType=INTEGER},
+            </if>
+            <if test="complaintFeedback != null and complaintFeedback != ''">
+                complaint_feedback = #{complaintFeedback,jdbcType=VARCHAR},
+            </if>
+            <if test="complaintFeedbackTime != null and complaintFeedbackTime != ''">
+                complaint_feedback_time = #{complaintStatus,jdbcType=TIMESTAMP}
             </if>
             WHERE order_id =  #{orderId,jdbcType=INTEGER}
         </set>
