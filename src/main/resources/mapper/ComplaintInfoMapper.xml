@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dpk.wgj.mapper.ComplaintInfoMapper">
+    <resultMap id="ComplaintInfoMap" type="com.dpk.wgj.bean.ComplaintInfo">
+        <id column="complaint_id" property="complaintId"/>
+        <result column="complaint_content" property="complaintContent"/>
+        <result column="complaint_status" property="complaintStatus"/>
+        <result column="order_id" property="orderId"/>
+    </resultMap>
+
+    <insert id="addComplaintInfoByOrderId" parameterType="ComplaintInfo" useGeneratedKeys="true" keyProperty="complaintId">
+        INSERT INTO complaint_info (complaint_content, complaint_status, order_id)
+        VALUES (#{complaintContent}, #{complaintStatus}, #{orderId})
+    </insert>
+
+    <delete id="deleteComplaintInfoByCommentId" parameterType="int">
+        DELETE from complaint_info WHERE complaint_id = #{complaintId}
+    </delete>
+
+    <select id="getComplaintInfoByOrderId" resultMap="CommentInfoMap">
+        SELECT complaint_id, complaint_content, complaint_status, order_id  FROM complaint_info
+        WHERE order_id = #{orderId}
+    </select>
+
+</mapper>

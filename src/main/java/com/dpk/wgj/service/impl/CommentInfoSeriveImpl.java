@@ -1,6 +1,7 @@
 package com.dpk.wgj.service.impl;
 
 import com.dpk.wgj.bean.CommentInfo;
+import com.dpk.wgj.mapper.CommentInfoMapper;
 import com.dpk.wgj.service.CommentInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class CommentInfoSeriveImpl implements CommentInfoService {
 
     @Autowired
-    private CommentInfoService commentInfoService;
+    private CommentInfoMapper commentInfoMapper;
 
     @Override
     public int addCommentInfoByOrderId(CommentInfo commentInfo) {
@@ -20,7 +21,7 @@ public class CommentInfoSeriveImpl implements CommentInfoService {
         int addStatus = 0;
 
         try {
-            addStatus = commentInfoService.addCommentInfoByOrderId(commentInfo);
+            addStatus = commentInfoMapper.addCommentInfoByOrderId(commentInfo);
             return addStatus;
         } catch (Exception e) {
             e.printStackTrace();
@@ -34,7 +35,7 @@ public class CommentInfoSeriveImpl implements CommentInfoService {
         int delStatus = 0;
 
         try {
-            delStatus = commentInfoService.deleteCommentInfoByCommentId(commentId);
+            delStatus = commentInfoMapper.deleteCommentInfoByCommentId(commentId);
             return delStatus;
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,7 +49,7 @@ public class CommentInfoSeriveImpl implements CommentInfoService {
         CommentInfo commentInfo;
 
         try {
-            commentInfo = commentInfoService.getCommendInfoByOrderId(orderId);
+            commentInfo = commentInfoMapper.getCommendInfoByOrderId(orderId);
             return commentInfo;
         } catch (Exception e) {
             e.printStackTrace();
