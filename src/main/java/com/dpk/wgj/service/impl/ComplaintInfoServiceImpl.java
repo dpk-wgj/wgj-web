@@ -1,6 +1,7 @@
 package com.dpk.wgj.service.impl;
 
 import com.dpk.wgj.bean.ComplaintInfo;
+import com.dpk.wgj.bean.tableInfo.ComplaintMessage;
 import com.dpk.wgj.mapper.ComplaintInfoMapper;
 import com.dpk.wgj.service.ComplaintInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import java.util.List;
 
 /**
  * Created by zhoulin on 2018/7/12.
- * 投诉功能 Service
+ * 订单投诉功能 Service
  */
 @Service
 public class ComplaintInfoServiceImpl implements ComplaintInfoService {
@@ -80,6 +81,27 @@ public class ComplaintInfoServiceImpl implements ComplaintInfoService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return 0;
+    }
+
+    @Override
+    public List<ComplaintInfo> findOrderInfoByMultiCondition(ComplaintMessage complaintMessage) {
+        List<ComplaintInfo> complaintInfoList;
+
+        try {
+            complaintInfoList = complaintInfoMapper.findOrderInfoByMultiCondition(complaintMessage);
+            return complaintInfoList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public int findOrderInfoByMultiConditionCount(ComplaintMessage complaintMessage) {
+
+
+
         return 0;
     }
 }

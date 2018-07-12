@@ -42,10 +42,44 @@
                 complaint_feedback = #{complaintFeedback,jdbcType=VARCHAR},
             </if>
             <if test="complaintFeedbackTime != null and complaintFeedbackTime != ''">
-                complaint_feedback_time = #{complaintStatus,jdbcType=TIMESTAMP}
+                complaint_feedback_time = #{complaintFeedbackTime,jdbcType=TIMESTAMP}
             </if>
             WHERE order_id =  #{orderId,jdbcType=INTEGER}
         </set>
     </update>
+
+    <select id="findOrderInfoByMultiCondition" resultMap="ComplaintInfoMap">
+        SELECT complaint_id, complaint_content, complaint_status, order_id, passenger_id, complaint_create_time, complaint_feedback, complaint_feedback_time FROM complaint_info
+        <where>
+            1 = 1
+            <if test="complaintStatus != null and complaintStatus != ''">
+                AND complaint_status = #{complaintStatus,jdbcType=INTEGER}
+            </if>
+            <if test="complaintCreateTime != null and complaintCreateTime != ''">
+                AND complaint_create_time = #{complaintCreateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="complaintStatus != null and complaintStatus != ''">
+                AND complaint_status = #{complaintStatus,jdbcType=INTEGER}
+            </if>
+        </where>
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="findOrderInfoByMultiConditionCount" resultType="int">
+        SELECT COUNT(*) FROM complaint_info
+        <where>
+            1 = 1
+            <if test="complaintStatus != null and complaintStatus != ''">
+                AND complaint_status = #{complaintStatus,jdbcType=INTEGER}
+            </if>
+            <if test="complaintCreateTime != null and complaintCreateTime != ''">
+                AND complaint_create_time = #{complaintCreateTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="complaintStatus != null and complaintStatus != ''">
+                AND complaint_status = #{complaintStatus,jdbcType=INTEGER}
+            </if>
+        </where>
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
 
 </mapper>
