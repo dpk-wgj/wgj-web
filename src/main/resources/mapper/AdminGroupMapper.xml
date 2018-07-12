@@ -11,7 +11,7 @@
 
     <select id="getAdminGroupByName" resultMap="AdminGroupMap">
         SELECT * FROM admin_group
-        WHERE group_name = #{groupName}
+        WHERE group_name like "%"#{groupName}"%"
     </select>
 
     <select id="getAllAdminGroup" resultMap="AdminGroupMap" >
