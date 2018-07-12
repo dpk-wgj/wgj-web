@@ -19,7 +19,7 @@
         DELETE from complaint_info WHERE complaint_id = #{complaintId}
     </delete>
 
-    <select id="getComplaintInfoByOrderId" resultMap="CommentInfoMap">
+    <select id="getComplaintInfoByOrderId" resultMap="ComplaintInfoMap">
         SELECT complaint_id, complaint_content, complaint_status, order_id  FROM complaint_info
         WHERE order_id = #{orderId}
     </select>

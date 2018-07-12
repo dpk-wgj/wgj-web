@@ -24,10 +24,11 @@ public class AdminInfoController {
      * 根据ID名查找用户信息（例子）
      */
     @RequestMapping(value = "/getUserInfoById", method = RequestMethod.POST)
-    public Message getUserInfoById(@RequestParam(value = "userId", required = true) int userId){
+    public Message getUserInfoById(@RequestParam(value = "userId") int userId){
 
         try {
-            AdminInfo adminInfo = adminInfoService.getUserInfoById(userId);
+            AdminInfo adminInfo;
+            adminInfo = adminInfoService.getUserInfoById(userId);
             if (adminInfo != null){
                 return new Message(Message.SUCCESS, "获取用户信息 >> 成功", adminInfo);
             }

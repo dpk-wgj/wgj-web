@@ -58,7 +58,7 @@ public class AdminInfoServiceImpl implements AdminInfoService {
             adminInfo =  adminInfoMapper.getUserInfoById(userId);
             return adminInfo;
         } catch (Exception e) {
-            logger.info(e.getMessage());
+            e.printStackTrace();
         }
 
         return null;
