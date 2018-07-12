@@ -1,8 +1,8 @@
 package com.dpk.wgj.controller;
 
-import com.dpk.wgj.bean.UserGroup;
 import com.dpk.wgj.bean.Message;
-import com.dpk.wgj.service.UserGroupService;
+import com.dpk.wgj.bean.AdminGroup;
+import com.dpk.wgj.service.AdminGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,24 +11,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/group")
-public class UserGroupController {
+@RequestMapping(value = "/admin/Admingroup")
+public class AdminGroupController {
 
     @Autowired
-    private UserGroupService userGroupService;
+    private AdminGroupService adminGroupService;
 
-    private final Logger logger = LoggerFactory.getLogger(UserGroupController.class);
+    private final Logger logger = LoggerFactory.getLogger(AdminGroupController.class);
 
     /**
      * 根据分组ID查找分组信息（qinghua）
      */
-    @RequestMapping(value = "/getUserGroupById", method = RequestMethod.POST)
-    public Message getUserGroupById(@RequestParam(value = "userGroupId") int userGroupId){
+    @RequestMapping(value = "/getAdminGroupById", method = RequestMethod.POST)
+    public Message getAdminGroupById(@RequestParam(value = "AdminGroupId") int adminGroupId){
 
         try {
-            UserGroup userGroup = userGroupService.getUserGroupById(userGroupId);
-            if (userGroup != null){
-                return new Message(Message.SUCCESS, "获取分组信息 >> 成功", userGroup);
+            AdminGroup adminGroup = adminGroupService.getAdminGroupById(adminGroupId);
+            if (adminGroup != null){
+                return new Message(Message.SUCCESS, "获取分组信息 >> 成功", adminGroup);
             }
             return new Message(Message.FAILURE, "获取分组信息 >> 失败", "未找到该用户");
         } catch (Exception e) {
@@ -40,13 +40,13 @@ public class UserGroupController {
     /**
      * 根据分组名查找分组信息（qinhua）
      */
-    @RequestMapping(value = "/getUserGroupByName", method = RequestMethod.POST)
-    public Message getUserGroupByName(@RequestParam(value = "groupName") String groupName){
+    @RequestMapping(value = "/getAdminGroupByName", method = RequestMethod.POST)
+    public Message getAdminGroupByName(@RequestParam(value = "groupName") String groupName){
 
         try {
-            UserGroup userGroup = userGroupService.getUserGroupByName(groupName);
-            if (userGroup != null){
-                return new Message(Message.SUCCESS, "获取分组信息 >> 成功", userGroup);
+            AdminGroup adminGroup = adminGroupService.getAdminGroupByName(groupName);
+            if (adminGroup != null){
+                return new Message(Message.SUCCESS, "获取分组信息 >> 成功", adminGroup);
             }
             return new Message(Message.FAILURE, "获取分组信息 >> 失败", "未找到该用户");
         } catch (Exception e) {
@@ -58,11 +58,11 @@ public class UserGroupController {
     /**
      * 根据分组ID删除分组信息（qinhua）
      */
-    @RequestMapping(value = "/deleteUserGroup", method = RequestMethod.POST)
-    public Message deleteUserGroup(@RequestParam(value = "userGroupId") int userGroupId){
+    @RequestMapping(value = "/deleteAdminGroup", method = RequestMethod.POST)
+    public Message deleteAdminGroup(@RequestParam(value = "adminGroupId") int adminGroupId){
         int delStatus = 0;
         try {
-            delStatus = userGroupService.deleteUserGroup(userGroupId);
+            delStatus = adminGroupService.deleteAdminGroup(adminGroupId);
             if (delStatus == 1){
                 return new Message(Message.SUCCESS, "删除分组信息 >> 成功", delStatus);
             }
@@ -76,11 +76,11 @@ public class UserGroupController {
     /**
      * 添加用分组信息（qinhua）
      */
-    @RequestMapping(value = "/addUserGroup", method = RequestMethod.POST)
-    public Message addUserGroup(@RequestBody UserGroup userGroup){
+    @RequestMapping(value = "/addAdminGroup", method = RequestMethod.POST)
+    public Message addAdminGroup(@RequestBody AdminGroup adminGroup){
         int addStatus = 0;
         try {
-            addStatus = userGroupService.addUserGroup(userGroup);
+            addStatus = adminGroupService.addAdminGroup(adminGroup);
             if (addStatus == 1){
                 return new Message(Message.SUCCESS, "添加分组信息 >> 成功", addStatus);
             }
@@ -94,11 +94,11 @@ public class UserGroupController {
      * 更新用户信息（qinhua）
      * 需要ById不？
      */
-    @RequestMapping(value = "/updateUserGroupById", method = RequestMethod.POST)
-    public Message updateUserGroupById(@RequestBody UserGroup userGroup){
+    @RequestMapping(value = "/updateAdminGroupById", method = RequestMethod.POST)
+    public Message updateAdminGroupById(@RequestBody AdminGroup adminGroup){
         int upStatus = 0;
         try {
-            upStatus = userGroupService.updateUserGroupById(userGroup);
+            upStatus = adminGroupService.updateAdminGroupById(adminGroup);
             if (upStatus == 1){
                 return new Message(Message.SUCCESS, "更新分组信息 >> 成功", upStatus);
             }
@@ -111,13 +111,13 @@ public class UserGroupController {
     /**
      * 获取所有分组信息（qinhua）
      */
-    @RequestMapping(value = "/getAlluserGroup", method = RequestMethod.GET)
-    public Message getAlluserGroup(){
-        List<UserGroup> userGroup;
+    @RequestMapping(value = "/getAllAdminGroup", method = RequestMethod.GET)
+    public Message getAllAdminGroup(){
+        List<AdminGroup> adminGroup;
         try {
-            userGroup = userGroupService.getAllUserGroup();
-            if (userGroup != null){
-                return new Message(Message.SUCCESS, "获取分组信息 >> 成功", userGroup);
+            adminGroup = adminGroupService.getAllAdminGroup();
+            if (adminGroup != null){
+                return new Message(Message.SUCCESS, "获取分组信息 >> 成功", adminGroup);
             }
             return new Message(Message.FAILURE, "获取分组信息 >> 失败", "无用户");
         } catch (Exception e) {

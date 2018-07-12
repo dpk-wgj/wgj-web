@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dpk.wgj.mapper.AdminGroupMapper">
+    <resultMap id="AdminGroupMap" type="com.dpk.wgj.bean.AdminGroup">
+        <id column="user_group_id" property="adminGroupId"/>
+        <result column="group_name" property="groupName"/>
+        <result column="permission" property="permission"/>
+    </resultMap>
+
+    <select id="getAdminGroupByName" resultMap="AdminGroupMap">
+        SELECT * FROM admin_group
+        WHERE group_name = #{groupName}
+    </select>
+
+    <select id="getAllAdminGroup" resultMap="AdminGroupMap" >
+        SELECT * FROM admin_group
+    </select>
+
+    <select id="getAdminGroupById" resultMap="AdminGroupMap" parameterType="int">
+        SELECT * FROM admin_group
+        WHERE user_group_id = #{adminGroupId}
+    </select>
+
+    <insert id="addAdminGroup" parameterType="AdminGroup" useGeneratedKeys="true" keyProperty="user_group_id">
+        INSERT INTO admin_group (user_group_id, group_name, permission)
+        VALUES (#{adminGroupId}, #{groupName}, #{permission})
+    </insert>
+
+    <update id="updateAdminGroupById" parameterType="AdminGroup">
+        update admin_group
+        <set>
+            <if test="groupName != null">
+                group_name = #{groupName,jdbcType=VARCHAR},
+            </if>
+            <if test="permission != null">
+                permission = #{permission,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where user_group_id = #{adminGroupId,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteAdminGroup" parameterType="int">
+        DELETE from admin_group WHERE user_group_id = #{adminGroupId}
+    </delete>
+
+</mapper>
