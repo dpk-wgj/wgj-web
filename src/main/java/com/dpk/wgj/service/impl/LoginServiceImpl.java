@@ -55,7 +55,7 @@ public class LoginServiceImpl implements LoginService {
             if(user != null){
 //                if(userInfo.getPassword().equals(user.getPassword())&&userInfo.getUsername().equals(user.getUsername())){
                   if (true){
-                    UserGroup userGroup = userGroupMapper.getUserGroupById(user.getDriverInfo().getUserGroupId());
+                    UserGroup userGroup = userGroupMapper.getByUserId(user.getDriverInfo().getUserGroupId());
 
                     user.setUserGroup(userGroup);
 
@@ -102,7 +102,7 @@ public class LoginServiceImpl implements LoginService {
             if(user != null){
 //                if(userInfo.getPassword().equals(user.getPassword())&&userInfo.getUsername().equals(user.getUsername())){
                 if (true){
-                    UserGroup userGroup = userGroupMapper.getUserGroupById(user.getPassenger().getUserGroupId());
+                    UserGroup userGroup = userGroupMapper.getByUserId(user.getPassenger().getUserGroupId());
 
                     user.setUserGroup(userGroup);
 
@@ -139,7 +139,7 @@ public class LoginServiceImpl implements LoginService {
                 user.setAdminInfo(adminInfo);
                 if(userInfo.getAdminInfo().getPassword().equals(adminInfo.getPassword())&&userInfo.getAdminInfo().getUsername().equals(adminInfo.getUsername())){
 
-                    UserGroup userGroup = userGroupMapper.getUserGroupById(adminInfo.getUserGroupId());
+                    UserGroup userGroup = userGroupMapper.getByUserId(adminInfo.getUserGroupId());
 
                     user.setUserGroup(userGroup);
 

@@ -18,7 +18,7 @@
         SELECT * FROM user_group
     </select>
 
-    <select id="getUserGroupById" resultMap="UserGroupMap" parameterType="int">
+    <select id="getByUserId" resultMap="UserGroupMap" parameterType="int">
         SELECT * FROM user_group
         WHERE user_group_id = #{userGroupId}
     </select>
