@@ -148,13 +148,12 @@ public class Excel {
             cell6_6.setCellStyle(setBorder3);
 
         }
-//
-//            String strPath = "d:\\生产通知单\\";
-//            File file = new File(strPath);
-//            if(!file.exists()){
-//                file.mkdirs();
-//            }
-        workBook.write(new File("d:\\司机基本信息表.xls"));
+        String strPath = "d:\\微公交系统\\司机个人信息报表\\";
+        File file = new File(strPath);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        workBook.write(new File(strPath+"司机个人信息报表.xls"));
 
         workBook.close();//最后记得关闭工作簿
     }

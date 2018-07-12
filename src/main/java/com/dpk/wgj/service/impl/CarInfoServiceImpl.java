@@ -134,4 +134,16 @@ public class CarInfoServiceImpl implements CarInfoService{
         }
         return null;
     }
+    @Override
+    public CarInfo getCarInfoNoCompatibleByCarId(int carId) {
+        CarInfo carInfo;
+        try {
+            carInfo = carInfoMapper.getCarInfoByCarId(carId);
+            return carInfo;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return null;
+    }
+
 }
