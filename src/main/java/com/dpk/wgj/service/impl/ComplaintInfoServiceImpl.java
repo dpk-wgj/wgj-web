@@ -6,6 +6,8 @@ import com.dpk.wgj.service.ComplaintInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * Created by zhoulin on 2018/7/12.
  * 投诉功能 Service
@@ -53,5 +55,31 @@ public class ComplaintInfoServiceImpl implements ComplaintInfoService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public List<ComplaintInfo> getComplaintInfoByPassengerId(int passengerId) {
+        List<ComplaintInfo> complaintInfos;
+
+        try {
+            complaintInfos = complaintInfoMapper.getComplaintInfoByPassengerId(passengerId);
+            return complaintInfos;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public int updateComplaintInfoStatus(ComplaintInfo complaintInfo) {
+        int upStatus = 0;
+
+        try {
+            upStatus = complaintInfoMapper.updateComplaintInfoStatus(complaintInfo);
+            return upStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 }
