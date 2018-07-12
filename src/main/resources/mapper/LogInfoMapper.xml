@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dpk.wgj.mapper.LogInfoMapper">
+    <resultMap id="LogInfoMap" type="com.dpk.wgj.bean.LogInfo">
+        <id column="log_id" property="logId"/>
+        <result column="action" property="action"/>
+        <result column="role_id" property="roleId"/>
+        <result column="log_time" property="logTime"/>
+        <result column="order_id" property="orderId"/>
+    </resultMap>
+
+    <select id="findLogInfoMutiCondition" resultMap="LogInfoMap" parameterType="LogInfoMessage">
+        SELECT o.order_id, o.location_info, o.driver_id FROM order_info o, car_info c
+        <where>
+            (o.driver_id = c.car_driver_id_a OR o.driver_id = c.car_driver_id_b)
+            <if test="carNumber != null and carNumber != ''">
+                AND c.car_number = #{carNumber}
+            </if>
+            <if test="startTime != null and startTime != ''">
+                <![CDATA[
+                    AND o.start_time >= #{startTime,jdbcType=TIMESTAMP}
+                ]]>
+            </if>
+            <if test="endTime != null and startTime != ''">
+                <![CDATA[
+                    AND o.end_time <= #{endTime,jdbcType=TIMESTAMP}
+                ]]>
+            </if>
+        </where>
+    </select>
+
+    <insert id="addOrderInfo" parameterType="OrderInfo" useGeneratedKeys="true" keyProperty="orderId">
+        INSERT INTO order_info (passenger_id, driver_id, location_info, order_status, start_time, start_location, end_location)
+        VALUES (#{passengerId}, #{driverId}, #{locationInfo}, #{orderStatus}, #{startTime}, #{startLocation}, #{endLocation})
+    </insert>
+
+    <select id="getOrderInfoByPassengerId" resultMap="OrderInfoMap" parameterType="int">
+        SELECT * FROM order_info
+        WHERE passenger_id = #{passengerId}
+    </select>
+
+    <select id="getOrderInfoByDriverId" resultMap="OrderInfoMap" parameterType="int">
+        SELECT * FROM order_info
+        WHERE driver_id = #{driverId}
+    </select>
+
+    <update id="updateOrderInfoByOrderId" parameterType="OrderInfo">
+        update order_info
+        <set>
+            <if test="passengerId != null and passengerId != ''">
+                passenger_id = #{passengerId,jdbcType=INTEGER},
+            </if>
+            <if test="driverId != null">
+                driver_id = #{driverId,jdbcType=INTEGER},
+            </if>
+            <if test="locationInfo != null">
+                location_info = #{locationInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="startLocation != null">
+                start_location = #{startLocation,jdbcType=VARCHAR},
+            </if>
+            <if test="endLocation != null">
+                end_location = #{endLocation,jdbcType=VARCHAR},
+            </if>
+            <if test="orderStatus != null">
+                order_status = #{orderStatus,jdbcType=INTEGER},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        WHERE order_id = #{orderId,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteOrderInfoByOrderId" parameterType="int">
+        DELETE FORM order_info
+        WHERE order_id = #{orderId,jdbcType=INTEGER}
+    </delete>
+
+    <select id="getOrderInfoByOrderId" resultMap="OrderInfoMap" parameterType="int">
+        SELECT * FROM order_info
+        WHERE order_id = #{orderId}
+    </select>
+
+    <select id="findOrderInfoByMultiCondition" resultMap="OrderInfoMap">
+        SELECT o.*, c.car_number, d.driver_name, p.passenger_phone_number FROM order_info o, car_info c, driver_info d, passenger_info p
+        <where>
+            1 = 1
+            AND d.driver_id = o.driver_id
+            AND p.passenger_id = o.passenger_id
+            AND (o.driver_id = c.car_driver_id_a OR o.driver_id = c.car_driver_id_b)
+            <if test="driverInfo != null">
+                <if test="driverInfo.driverName != null and driverInfo.driverName !=''">
+                    AND d.driver_name LIKE #{driverInfo.driverName,jdbcType=VARCHAR}
+                </if>
+            </if>
+            <if test="passenger != null">
+                <if test="passenger.passengerId != null and passenger.passengerId !=''">
+                    AND p.passenger_id =   #{passenger.passengerId,jdbcType=INTEGER}
+                </if>
+                <if test="passenger.passengerPhoneNumber != null and passenger.passengerPhoneNumber !=''">
+                    AND p.passenger_phone_number LIKE "%"#{passenger.passengerPhoneNumber,jdbcType=VARCHAR}"%"
+                </if>
+            </if>
+            <if test="carInfo != null">
+                <if test="carInfo.carNumber != null and carInfo.carNumber !=''">
+                    AND c.car_number LIKE "%"#{carInfo.carNumber,jdbcType=VARCHAR}"%"
+                </if>
+            </if>
+            <if test="orderInfo != null">
+                <if test="orderInfo.orderStatus != null and orderInfo.orderStatus !=''">
+                    AND o.order_status = #{orderInfo.orderStatus,jdbcType=INTEGER}
+                </if>
+                <if test="orderInfo.startTime != null and orderInfo.startTime !=''">
+                    <![CDATA[
+                    AND o.start_time >= #{orderInfo.startTime,jdbcType=TIMESTAMP}
+                    ]]>
+                </if>
+                <if test="orderInfo.endTime != null and orderInfo.endTime !=''">
+                    <![CDATA[
+                    AND o.end_time <= #{orderInfo.endTime,jdbcType=TIMESTAMP}
+                    ]]>
+                </if>
+            </if>
+        </where>
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="findOrderInfoByMultiConditionCount" resultType="int">
+        SELECT COUNT(*) FROM order_info o, car_info c, driver_info d, passenger_info p
+        <where>
+            1 = 1
+            AND d.driver_id = o.driver_id
+            AND p.passenger_id = o.passenger_id
+            AND (o.driver_id = c.car_driver_id_a OR o.driver_id = c.car_driver_id_b)
+            <if test="driverInfo != null">
+                <if test="driverInfo.driverName != null and driverInfo.driverName !=''">
+                    AND d.driver_name LIKE "%"#{driverInfo.driverName,jdbcType=VARCHAR}"%"
+                </if>
+            </if>
+            <if test="passenger != null">
+                <if test="passenger.passengerId != null and passenger.passengerId !=''">
+                    AND p.passenger_id = #{passenger.passengerId,jdbcType=INTEGER}
+                </if>
+                <if test="passenger.passengerPhoneNumber != null and passenger.passengerPhoneNumber !=''">
+                    AND p.passenger_phone_number LIKE "%"#{passenger.passengerPhoneNumber,jdbcType=VARCHAR}"%"
+                </if>
+            </if>
+            <if test="carInfo != null">
+                <if test="carInfo.carNumber != null and carInfo.carNumber !=''">
+                    AND c.car_number LIKE "%"#{carInfo.carNumber,jdbcType=VARCHAR}"%"
+                </if>
+            </if>
+            <if test="orderInfo != null">
+                <if test="orderInfo.orderStatus != null and orderInfo.orderStatus !=''">
+                    AND o.order_status = #{orderInfo.orderStatus,jdbcType=INTEGER}
+                </if>
+                <if test="orderInfo.startTime != null and orderInfo.startTime !=''">
+                    <![CDATA[
+                    AND o.start_time >= #{orderInfo.startTime,jdbcType=TIMESTAMP}
+                    ]]>
+                </if>
+                <if test="orderInfo.endTime != null and orderInfo.endTime !=''">
+                    <![CDATA[
+                    AND o.end_time <= #{orderInfo.endTime,jdbcType=TIMESTAMP}
+                    ]]>
+                </if>
+            </if>
+        </where>
+    </select>
+
+</mapper>

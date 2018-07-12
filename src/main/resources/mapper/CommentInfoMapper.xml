@@ -6,6 +6,7 @@
     <resultMap id="CommentInfoMap" type="com.dpk.wgj.bean.CommentInfo">
         <id column="comment_id" property="commentId"/>
         <result column="comment_content" property="commentContent"/>
+        <result column="comment_point" property="commentPoint"/>
         <result column="is_clear" property="isClear"/>
         <result column="is_stable" property="isStable"/>
         <result column="is_know" property="isKnow"/>

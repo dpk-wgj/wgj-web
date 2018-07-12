@@ -22,6 +22,16 @@ public class CommentInfo implements Serializable {
 
     private int orderId;
 
+    private int commentPoint;
+
+    public int getCommentPoint() {
+        return commentPoint;
+    }
+
+    public void setCommentPoint(int commentPoint) {
+        this.commentPoint = commentPoint;
+    }
+
     public int getCommentId() {
         return commentId;
     }
@@ -88,6 +98,7 @@ public class CommentInfo implements Serializable {
                 ", isKnow=" + isKnow +
                 ", isGood=" + isGood +
                 ", orderId=" + orderId +
+                ", commentPoint=" + commentPoint +
                 '}';
     }
 }
