@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by zhoulin on 2018/7/12.
@@ -30,9 +27,6 @@ public class ComplaintInfoController {
 
     @Autowired
     private ComplaintInfoService complaintInfoService;
-
-    @Autowired
-    private OrderInfoService orderInfoService;
 
     /**
      * 提交订单投诉
@@ -50,6 +44,7 @@ public class ComplaintInfoController {
 
         int addStatus = 0;
         complaintInfo.setPassengerId(passengerId);
+        complaintInfo.setComplaintCreateTime(new Date());
         try {
             // 校验
 //            List<OrderInfo> orderInfoList = orderInfoService.getOrderInfoByPassengerId(passengerId);
