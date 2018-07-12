@@ -8,6 +8,8 @@
         <result column="car_number" property="carNumber"/>
         <result column="car_type" property="carType"/>
         <result column="car_seat" property="carSeat"/>
+        <result column="car_driver_id_a" property="carDriverIdA"/>
+        <result column="car_driver_id_b" property="carDriverIdB"/>
     </resultMap>
 
     <select id="getCarInfoByCarNumber" resultMap="CarInfoMap">
@@ -33,14 +35,20 @@
     <update id="updateCarInfoByCarId" parameterType="CarInfo">
         update car_info
         <set>
-            <if test="carNumber != null">
+            <if test="carNumber != null  and carNumber !=''" >
                 car_number = #{carNumber,jdbcType=VARCHAR},
             </if>
-            <if test="carType != null">
+            <if test="carType != null and carType != ''">
                 car_type = #{carType,jdbcType=VARCHAR},
             </if>
-            <if test="carSeat != null">
+            <if test="carSeat != null and carSeat != ''" >
                 car_seat = #{carSeat,jdbcType=INTEGER},
+            </if>
+          <if test="carDriverIdA != null and carDriverIdA !=''">
+              car_driver_id_a = #{carDriverIdA,jdbcType =INTEGER},
+          </if>
+            <if test="carDriverIdB != null and carDriverIdB !=''">
+                car_driver_id_b = #{carDriverIdB,jdbcType =INTEGER},
             </if>
         </set>
         where car_id = #{carId,jdbcType=INTEGER}
@@ -50,7 +58,7 @@
         SELECT car_id, car_number, car_type, car_seat FROM car_info
         <where>
             1 = 1
-            <if test="carInfo != null">
+            <if test="carInfo != null" >
                 <if test="carInfo.carNumber != null and carInfo.carNumber !=''">
                     AND car_number = #{carInfo.carNumber,jdbcType=VARCHAR}
                 </if>
@@ -81,6 +89,10 @@
                 </if>
             </if>
         </where>
+    </select>
+    <select id="getCarDriverIdInfo" resultMap="CarInfoMap">
+        SELECT car_id,car_driver_id_a,car_driver_id_b FROM car_info
+        where car_driver_id_a is null or car_driver_id_b is null;
     </select>
 
 

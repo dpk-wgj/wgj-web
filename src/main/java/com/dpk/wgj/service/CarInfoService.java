@@ -24,4 +24,6 @@ public interface CarInfoService {
 
     public int findCarInfoByMultiConditionCount(CarInfoTableMessage carInfoTableMessage) throws Exception;
 
+    public List<CarInfo> getCarDriverIdInfo() throws  Exception;
+
 }

@@ -71,7 +71,6 @@
                 <if test="driverInfo.driverLicence != null and driverInfo.driverLicence !=''">
                     AND driver_licence = #{driverInfo.driverLicence,jdbcType=VARCHAR}
                 </if>
-
                 <if test="driverInfo.driverLevelStar != 0 and driverInfo.driverLevelStar !=''">
                     AND driver_level_star LIKE #{driverInfo.driverLevelStar,jdbcType=INTEGER}
                 </if>
@@ -140,6 +139,9 @@
             </if>
             <if test="driverLevelStar !=null  and driverLevelStar !=''">
                 driver_level_star = #{driverLevelStar,jdbcType=INTEGER},
+            </if>
+            <if test="carId !=null and carId !=''" >
+                car_id = #{carId ,jdbcType = INTEGER},
             </if>
         </set>
         where driver_id = #{driverId,jdbcType=INTEGER}

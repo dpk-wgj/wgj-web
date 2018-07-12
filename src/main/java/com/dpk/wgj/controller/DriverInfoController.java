@@ -30,6 +30,9 @@ public class DriverInfoController {
 
     @Autowired
     private CarInfoService carInfoService;
+
+    @Autowired
+    private CarInfoController carInfoController;
     @Autowired
     private Excel excel;
     private final Logger logger = LoggerFactory.getLogger(DriverInfoController.class);
@@ -122,7 +125,7 @@ public class DriverInfoController {
 
     }
     /**
-     * 多条件查询司机信息
+     * 多条件查询司机信息，同时给司机匹配和绑定车辆信息
      * @param tableMessage
      * @return
      */
@@ -130,18 +133,47 @@ public class DriverInfoController {
     public Message getDriverByMultiCondition(@RequestBody DriverInfoTableMessage tableMessage){
         List<DriverInfo> driverInfo;
         CarInfo carInfo;
+        List <CarInfo> carInfoCarDriverId;
         List<CarInfoDTO> carInfoDTOList = new ArrayList<>();
         int count = 0;
         Map<String, Object> map = new HashMap<>();
         tableMessage.getDriverInfo().setDriverName("%" + tableMessage.getDriverInfo().getDriverName() + "%");
         try {
+            carInfoCarDriverId = carInfoService.getCarDriverIdInfo();    //获取car_driver_id_a和car_driver_id_b为空的车辆信息
+
             driverInfo = driverInfoService.getDriverByMultiCondition(tableMessage);
             count = driverInfoService.getDriverByMultiConditionCount(tableMessage);
-            if (driverInfo != null){
-                for (DriverInfo driverInfos : driverInfo){
-                    carInfo = carInfoService.getCarInfoByCarId(driverInfos.getCarId());
-                    CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfos);
-                    carInfoDTOList.add(carInfoDTO);
+            if (driverInfo != null)
+            {
+                for (DriverInfo driverInfos : driverInfo)
+                {
+                        for (CarInfo carInfoCarDriverId1:carInfoCarDriverId)
+                        {
+                            if(driverInfos.getCarId()==0 )
+                            {
+                                if (carInfoCarDriverId1.getCarDriverIdA()==0)
+                                {
+                                    driverInfos.setCarId(carInfoCarDriverId1.getCarId());
+                                    carInfoCarDriverId1.setCarDriverIdA(driverInfos.getDriverId());
+                                    this.updateDriverInfoByDriverId(driverInfos);
+                                    carInfoController .updateCarInfoByCarId(carInfoCarDriverId1);
+                                    break;
+                                }
+                                else if (carInfoCarDriverId1.getCarDriverIdB()==0)
+                                {
+                                    driverInfos.setCarId(carInfoCarDriverId1.getCarId());
+                                    carInfoCarDriverId1.setCarDriverIdB(driverInfos.getDriverId());
+                                    this.updateDriverInfoByDriverId(driverInfos);
+                                    carInfoController .updateCarInfoByCarId(carInfoCarDriverId1);
+                                    break;
+                                }
+                            else
+                                continue;
+                            }
+                        }
+                        carInfo = carInfoService.getCarInfoByCarId(driverInfos.getCarId());
+                        CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfos);
+                        carInfoDTOList.add(carInfoDTO);
                 }
                 map.put("count", count);
                 map.put("driverInfos", carInfoDTOList);

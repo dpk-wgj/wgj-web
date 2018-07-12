@@ -79,6 +79,7 @@ public class CarInfoServiceImpl implements CarInfoService{
         return null;
     }
 
+
     @Override
     public int updateCarInfoByCarId(CarInfo carInfo) {
         int upStatus = 0;
@@ -118,5 +119,19 @@ public class CarInfoServiceImpl implements CarInfoService{
             e.printStackTrace();
         }
         return count;
+    }
+
+    @Override
+    public List<CarInfo> getCarDriverIdInfo(){
+        List<CarInfo> carInfo;
+        try{
+            carInfo = carInfoMapper.getCarDriverIdInfo();
+            return carInfo;
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
