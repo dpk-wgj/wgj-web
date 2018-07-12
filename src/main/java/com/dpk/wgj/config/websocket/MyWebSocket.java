@@ -2,18 +2,18 @@ package com.dpk.wgj.config.webSocket;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.dpk.wgj.bean.*;
+import com.dpk.wgj.bean.DTO.CarInfoDTO;
 import com.dpk.wgj.bean.DTO.UserDTO;
-import com.dpk.wgj.bean.DriverInfo;
-import com.dpk.wgj.bean.Message;
-import com.dpk.wgj.bean.OrderInfo;
-import com.dpk.wgj.bean.Passenger;
+import com.dpk.wgj.bean.tableInfo.OrderInfoTableMessage;
 import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
 import com.dpk.wgj.service.OrderInfoService;
 import com.dpk.wgj.service.PassengerService;
 import com.fasterxml.jackson.core.JsonParser;
+import com.sun.org.apache.xpath.internal.operations.Or;
 import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BEncoderStream;
-import org.elasticsearch.common.collect.CopyOnWriteHashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,18 +29,19 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@ServerEndpoint(value = "/ws/{role}/{userId}/{operateId}",configurator=MyEndpointConfigure.class)
+@ServerEndpoint(value = "/ws/{role}/{userId}/{orderId}",configurator=MyEndpointConfigure.class)
 @Component
 public class MyWebSocket {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static int onlineCount = 0;
-    private static HashMap<String, MyWebSocket> sessionPool = new HashMap<>();
+    private static ConcurrentHashMap<String, Session> sessionPool = new ConcurrentHashMap<>();
 
 //    private static Map<String,Session> sessionPool = new HashMap<String,Session>();
-    private static Map<String,String> sessionIds = new HashMap<String,String>();
+//    private static ConcurrentHashMap<String,String> sessionIds = new ConcurrentHashMap<String,String>();
 
     private Session session;
 
@@ -62,23 +63,25 @@ public class MyWebSocket {
 
     private String userId;
 
-    private String operateId;
+    private Integer orderId;
+
+
 
     @OnOpen
     public void onOpen(Session session,@PathParam(value="role")String role
-            , @PathParam(value="userId")String userId, @PathParam(value="operateId")String operateId) throws IOException {
+            , @PathParam(value="userId")String userId, @PathParam(value="orderId")String orderId) throws IOException {
         this.session = session;
 
         this.role = role;
         this.userId = userId;
-        this.operateId = operateId;
+        if(role.equals("passenger")){this.orderId = Integer.parseInt(orderId);}
         //key    driver,7     passenger,3   的形式
         String key = role+","+userId;
-        sessionPool.put(key, this);
-        sessionIds.put(this.session.getId(), key);
+        System.out.println(session.getId()+","+key+"链接进来了");
+        sessionPool.put(key, session);
         for (String k : sessionPool.keySet()) {
-            if(!sessionPool.get(k).equals(this)) { //send to others only.
-                sessionPool.get(k).sendMessage("someone just joined in.",sessionIds.get(session.getId()));
+            if(!sessionPool.get(k).equals(role+","+userId)) { //send to others only.
+//                sendMessage("someone just joined in.",k);
             }
         }
         logger.info("new connection...current online count: {}", getOnlineCount());
@@ -87,13 +90,13 @@ public class MyWebSocket {
     @OnClose
     public void onClose() throws IOException{
 
-        sessionPool.remove(sessionIds.get(session.getId()));
-        sessionIds.remove(session.getId());
 
         for (String k : sessionPool.keySet()) {
-            sessionPool.get(k).sendMessage("someone just closed a connection.", k);
-        }
+            System.out.println("要关闭的链接："+k);
+//            sessionPool.get(k).sendMessage("someone just closed a connection.", k);
+            sessionPool.remove(role+","+userId);
 
+        }
         logger.info("one connection closed...current online count: {}", getOnlineCount());
     }
 
@@ -101,12 +104,54 @@ public class MyWebSocket {
     public void onMessage(String message) throws IOException {
         try {
             System.out.println("后台ws收到的信息:"+message);
-            JSONObject driverMsgJson = new JSONObject();
-            JSONObject passMsgJson = new JSONObject();
 
-            // broadcast received message
             if(role.equals("driver")){
 
+                /*1. 遍历session 查询有无正在请求司机的乘客 向客户端发送信息*/
+                for (String key : sessionPool.keySet()) {
+
+                    String[] arr = key.split(",");
+                    if(arr[0].equals("passenger")){
+                        int passId = Integer.parseInt(arr[1]);
+                        Passenger passenger = passengerService.getPassengerByPassengerId(passId);
+                        if(passenger.getPassengerStatus() == 0) {//呼车的状态
+
+                            sendMessage(1,"成功接单 请前往乘客点",passenger, "driver,"+userId);
+
+                            // 查询出乘客id=passId且刚下的订单
+                            OrderInfoTableMessage tableMessage = new OrderInfoTableMessage();
+                            OrderInfo orderInfo = new OrderInfo();
+                            Passenger p = new Passenger();
+                            CarInfo carInfo = new CarInfo();
+                            orderInfo.setOrderStatus(0);
+                            p.setPassengerId(passId);
+                            tableMessage.setOrderInfo(orderInfo);
+                            tableMessage.setPassenger(p);
+                            tableMessage.setCarInfo(carInfo);
+                            tableMessage.getDriverInfo().setDriverName("%%");
+                            tableMessage.getPassenger().setPassengerPhoneNumber("%%");
+                            tableMessage.getCarInfo().setCarNumber("%%");
+
+                            List<OrderInfo> orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
+
+                            for (OrderInfo o: orderInfos){
+                                System.out.println("查询到乘客刚下的订单："+o.getOrderId());
+                            }
+                            // 将订单状态改为接单状态
+//                            OrderInfo orderInfo = new OrderInfo();
+//                            orderInfo.setOrderStatus(1);
+//                            orderInfo.setOrderId(orderId);
+//                            System.out.println("接单状态："+orderId);
+//                            orderInfoService.updateOrderInfoByOrderId(orderInfo);
+//
+//                            CarInfo carInfo = carInfoService.getCarInfoByCarId(d.getCarId());
+//                            CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, d);
+//                            sendMessage(1,"已经有司机接单,请在原地等待司机接送", carInfoDTO, "passenger,"+userId);
+
+                        }
+                    }
+
+                }
 //                for(MyWebSocket item : webSocketSet){
 //                    DriverInfo driverInfo = (DriverInfo) JSON.parseObject(message, DriverInfo.class);
 //
@@ -127,16 +172,20 @@ public class MyWebSocket {
 //                    }
 //                }
             }else if(role.equals("passenger")){
-                System.out.println("操作："+","+operateId);
-                switch ((operateId)){
-                    case "0": //新增订单
+
+                for (String k: sessionPool.keySet()){
+                    System.out.println("现在连接池中海油:"+k+",sessionId:"+sessionPool.get(k).getId());
+                }
+                System.out.println("操作："+","+orderId);
+//                switch ((orderId)){
+//                    case 0: //新增订单
 
 //                        break;
 //                    case 1:
 //                        break;
 //                    default:
 //                        break;
-                }
+//                }
 
 
                 List<DriverInfo> driverInfoList = driverInfoApiService.getDriverInfoByDriverStatus(1);
@@ -151,20 +200,20 @@ public class MyWebSocket {
                                 String[] arr = key.split(",");
                                 if(Integer.parseInt(arr[1]) == driverId){
                                     Passenger passenger = passengerService.getPassengerByPassengerId(Integer.parseInt(userId));
-                                    driverMsgJson.put("status",1);
-                                    driverMsgJson.put("msg","您要开始接单了hhhhhhhhhhhhh");
-                                    driverMsgJson.put("passengerInfo",passenger);
-                                    String driverMsg = JSON.toJSONString(driverMsgJson);
-                                    sendMessage(driverMsg, "driver,"+driverId);
 
+                                    sendMessage(1,"成功接单 请前往乘客点",passenger, "driver,"+driverId);
 
-                                    passMsgJson.put("status",1);
-                                    passMsgJson.put("msg","已经有司机接单,请在原地等待司机接送");
-                                    passMsgJson.put("driverInfo",d);
+                                    /*将订单状态改为接单状态*/
+                                    OrderInfo orderInfo = new OrderInfo();
+                                    orderInfo.setOrderStatus(1);
+                                    orderInfo.setOrderId(orderId);
+                                    System.out.println("接单状态："+orderId);
+                                    orderInfoService.updateOrderInfoByOrderId(orderInfo);
 
-                                    String passMsg = JSON.toJSONString(passMsgJson);
+                                    CarInfo carInfo = carInfoService.getCarInfoByCarId(d.getCarId());
+                                    CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, d);
+                                    sendMessage(1,"已经有司机接单,请在原地等待司机接送", carInfoDTO, "passenger,"+userId);
 
-                                    sendMessage(passMsg, "passenger,"+userId);
 
                                 }
 //                                System.out.println("key= "+ key + " and value= " + sessionPool.get(key));
@@ -173,54 +222,47 @@ public class MyWebSocket {
                         }
                     }
                 }
-//            for (String key : sessionPool.keySet()) {
-//                System.out.println("key= "+ key + " and value= " + sessionPool.get(key));
-//            }
-//                for(MyWebSocket item : webSocketSet){
-//                    DriverInfo driverInfo = (DriverInfo) JSON.parseObject(message, DriverInfo.class);
-//
-//                    int upApiStatus = 0;
-//                    try {
-//                        upApiStatus = driverInfoApiService.updateApiDriverInfoByDriverId(driverInfo);
-//                        if (upApiStatus == 1) {
-//                            item.sendMessage("更新司机信息成功", sessionIds.get(session.getId()));
-//                            return;
-//                        }
-//                        item.sendMessage("更新司机信息失败",sessionIds.get(session.getId()));
-//                        return;
-//
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        item.sendMessage("更新司机信息失败",sessionIds.get(session.getId()));
-//                        return;
-//                    }
-//                }
 
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+//    public void sendMessage(String message, String sendObj) throws IOException {
+//
+//
+//        System.out.println("发送的消息:"+message+"发送对象："+sendObj+","+sessionPool.get(sendObj));
+//        Session s = sessionPool.get(sendObj);
+//        if(s!=null){
+//            try {
+//                s.getBasicRemote().sendText(message);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//    }
 
-    /**
-     *
-     * @param message 发送的消息
-     * @param sendObj  要发送的对象
-     * @throws IOException
-     */
-    public void sendMessage(String message, String sendObj) throws IOException {
-        System.out.println("发送的消息:"+message+"发送对象："+sendObj);
-        Session s = sessionPool.get(sendObj).session;
+    public void sendMessage(int status, String msg, Object result, String sendObj) throws IOException {
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("status",status);
+        jsonObject.put("msg", msg);
+        jsonObject.put("result",result);
+        String sendMsg = JSON.toJSONString(jsonObject);
+
+
+        System.out.println("发送的消息:"+sendMsg+"发送对象："+sendObj+","+sessionPool.get(sendObj));
+        Session s = sessionPool.get(sendObj);
         if(s!=null){
             try {
-                s.getBasicRemote().sendText(message);
+                s.getBasicRemote().sendText(sendMsg);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
     }
-
     public static synchronized int getOnlineCount(){
         return MyWebSocket.onlineCount;
     }
