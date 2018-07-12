@@ -23,10 +23,10 @@ public class UserGroupController {
      * 根据分组ID查找分组信息（qinghua）
      */
     @RequestMapping(value = "/getUserGroupById", method = RequestMethod.POST)
-    public Message getUserGroupById(@RequestParam(value = "userGroupId") int userGroupId){
+    public Message getByUserId(@RequestParam(value = "userGroupId") int userGroupId){
 
         try {
-            UserGroup userGroup = userGroupService.getUserGroupById(userGroupId);
+            UserGroup userGroup = userGroupService.getByUserId(userGroupId);
             if (userGroup != null){
                 return new Message(Message.SUCCESS, "获取分组信息 >> 成功", userGroup);
             }

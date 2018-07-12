@@ -11,7 +11,7 @@ public interface UserGroupService {
 
     public List<UserGroup> getAllUserGroup() throws Exception;
 
-    public UserGroup getUserGroupById(int userGroupId) throws Exception;
+    public UserGroup getByUserId(int userGroupId) throws Exception;
 
     public int addUserGroup(UserGroup userGroup) throws Exception;
 

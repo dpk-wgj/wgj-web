@@ -52,12 +52,12 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
-    public UserGroup getUserGroupById(int userGroupId) {
+    public UserGroup getByUserId(int userGroupId) {
 
         UserGroup userGroup;
 
         try {
-            userGroup =  userGroupMapper.getUserGroupById(userGroupId);
+            userGroup =  userGroupMapper.getByUserId(userGroupId);
             return userGroup;
         } catch (Exception e) {
             logger.info(e.getMessage());

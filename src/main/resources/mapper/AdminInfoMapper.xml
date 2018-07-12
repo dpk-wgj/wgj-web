@@ -13,7 +13,7 @@
 
     <select id="getAdminByUsername" resultMap="AdminInfoMap">
         SELECT *  FROM admin_info
-        WHERE username = #{username}
+        WHERE username like #%{username}%
     </select>
 
     <select id="getAllAdminInfo" resultMap="AdminInfoMap" >
