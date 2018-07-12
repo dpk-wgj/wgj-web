@@ -1,9 +1,11 @@
 package com.dpk.wgj.controller;
 
+import com.dpk.wgj.bean.DTO.UserDTO;
 import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.bean.Passenger;
 import com.dpk.wgj.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,8 +30,11 @@ public class PassengerController {
     @RequestMapping(value = "/bindPassengerPhoneNumber", method = RequestMethod.POST)
     public Message bindPassengerPhoneNumber(@RequestBody Passenger passenger){
 
-        int upStatus = 0;
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        int passengerId = userInfo.getUserId();
 
+        int upStatus = 0;
+        passenger.setPassengerId(passengerId);
         try {
             upStatus = passengerService.updatePassengerPhoneNumber(passenger);
             if (upStatus == 1){
