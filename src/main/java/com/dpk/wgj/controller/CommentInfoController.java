@@ -1,13 +1,17 @@
 package com.dpk.wgj.controller;
 
 import com.dpk.wgj.bean.CommentInfo;
+import com.dpk.wgj.bean.LogInfo;
 import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.service.CommentInfoService;
+import com.dpk.wgj.service.LogInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 /**
  * Created by zhoulin on 2018/7/11.
@@ -20,6 +24,9 @@ public class CommentInfoController {
     @Autowired
     private CommentInfoService commentInfoService;
 
+    @Autowired
+    private LogInfoService logInfoService;
+
     /**
      * 乘客端 >> 添加评价
      */
@@ -29,6 +36,10 @@ public class CommentInfoController {
         int addStatus = 0;
         try {
             addStatus = commentInfoService.addCommentInfoByOrderId(commentInfo);
+
+            // 插入用户成为日志
+            logInfoService.addLogInfo(new LogInfo("乘客端 >> 添加评价", 2, new Date(), commentInfo.getOrderId()));
+
             if (addStatus == 1){
                 return new Message(Message.SUCCESS, "乘客端 >> 添加评价 >> 成功", addStatus);
             }
@@ -48,6 +59,10 @@ public class CommentInfoController {
         int delStatus = 0;
         try {
             delStatus = commentInfoService.deleteCommentInfoByCommentId(commentInfo.getCommentId());
+
+            // 插入用户成为日志
+            logInfoService.addLogInfo(new LogInfo("乘客端 >> 删除评价", 2, new Date(), commentInfo.getOrderId()));
+
             if (delStatus == 1){
                 return new Message(Message.SUCCESS, "乘客端 >> 删除评价 >> 成功", delStatus);
             }

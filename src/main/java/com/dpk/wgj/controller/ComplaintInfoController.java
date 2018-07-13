@@ -2,9 +2,11 @@ package com.dpk.wgj.controller;
 
 import com.dpk.wgj.bean.ComplaintInfo;
 import com.dpk.wgj.bean.DTO.UserDTO;
+import com.dpk.wgj.bean.LogInfo;
 import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.bean.OrderInfo;
 import com.dpk.wgj.service.ComplaintInfoService;
+import com.dpk.wgj.service.LogInfoService;
 import com.dpk.wgj.service.OrderInfoService;
 import com.dpk.wgj.service.PassengerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class ComplaintInfoController {
     @Autowired
     private ComplaintInfoService complaintInfoService;
 
+    @Autowired
+    private LogInfoService logInfoService;
+
     /**
      * 提交订单投诉
      * @param complaintInfo
@@ -45,7 +50,12 @@ public class ComplaintInfoController {
         int addStatus = 0;
         complaintInfo.setPassengerId(passengerId);
         complaintInfo.setComplaintCreateTime(new Date());
+
         try {
+
+            // 插入用户成为日志
+            logInfoService.addLogInfo(new LogInfo("乘客端 >> 提交订单投诉", 2, new Date(), complaintInfo.getOrderId()));
+
             // 校验
 //            List<OrderInfo> orderInfoList = orderInfoService.getOrderInfoByPassengerId(passengerId);
 //            for (OrderInfo orderInfo : orderInfoList){
@@ -84,6 +94,10 @@ public class ComplaintInfoController {
         int delStatus = 0;
 
         try {
+
+            // 插入用户成为日志
+            logInfoService.addLogInfo(new LogInfo("乘客端 >> 删除订单投诉", 2, new Date(), complaintInfo.getOrderId()));
+
             // 校验
 //            List<OrderInfo> orderInfoList = orderInfoService.getOrderInfoByPassengerId(passengerId);
 //            for (OrderInfo orderInfo : orderInfoList){

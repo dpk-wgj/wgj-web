@@ -8,6 +8,7 @@ import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.bean.tableInfo.DriverInfoTableMessage;
 import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
+import com.dpk.wgj.service.LogInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,13 @@ public class DriverInfoController {
 
     @Autowired
     private CarInfoService carInfoService;
+
+    @Autowired
+    private LogInfoService logInfoService;
+
     @Autowired
     private Excel excel;
+
     private final Logger logger = LoggerFactory.getLogger(DriverInfoController.class);
 
     /**
@@ -58,10 +64,10 @@ public class DriverInfoController {
         }
 
     }
+
     /**
      * 根据司机名字查找司机信息，同时可以关联上车辆信息
      */
-
     @RequestMapping(value = "/getDriveInfoByDriverName/{driverName}", method = RequestMethod.GET)
     public Message getDriverInfoByDriverName(@PathVariable(value = "driverName") String driverName){
         DriverInfo driverInfo;
@@ -79,10 +85,10 @@ public class DriverInfoController {
         }
 
     }
+
     /**
      * 根据司机手机号查找司机信息，同时可以关联上司机的车辆信息
      */
-
     @RequestMapping(value = "/getDriveInfoByDriverPhoneNumber/{driverPhoneNumber}", method = RequestMethod.GET)
     public Message getDriverInfoByDriverPhoneNumber(@PathVariable(value = "driverPhoneNumber") String driverPhoneNumber){
         DriverInfo driverInfo;
@@ -211,6 +217,7 @@ public class DriverInfoController {
         return null;
 
     }
+
     @RequestMapping(value = "/makeExcel",method = RequestMethod.POST)
     @ResponseBody
     public Message makeExcel(){
