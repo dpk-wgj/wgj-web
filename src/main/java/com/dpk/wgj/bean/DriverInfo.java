@@ -1,5 +1,7 @@
 package com.dpk.wgj.bean;
 
+import org.springframework.lang.NonNull;
+
 import java.io.Serializable;
 
 /**
@@ -31,6 +33,10 @@ public class DriverInfo implements Serializable {
     private int carId;
 
     private int userGroupId;
+
+    public DriverInfo() {
+    }
+
 
     public int getUserGroupId() {
         return userGroupId;

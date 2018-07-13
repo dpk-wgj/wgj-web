@@ -52,7 +52,7 @@ public class Message {
 
     @Override
     public String toString() {
-        return "Message{" +
+        return "{" +
                 "status=" + status +
                 ", message='" + message + '\'' +
                 ", result=" + result +

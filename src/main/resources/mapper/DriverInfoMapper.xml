@@ -27,6 +27,11 @@
         FROM driver_info
         WHERE driver_name = #{driverName}
     </select>
+    <select id="getDriverInfoByDriverStatus" resultMap="DriverInfoMap">
+        SELECT driver_id,driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id
+        FROM driver_info
+        WHERE driver_status = #{driverStatus}
+    </select>
 
     <select id="getDriverInfoByDriverId" resultMap="DriverInfoMap">
         SELECT * FROM driver_info
@@ -152,6 +157,9 @@
             <if test="driverLocation != null  and driverLocation !=''">
                 driver_location = #{driverLocation,jdbcType=VARCHAR},
             </if>
+            <if test="driverStatus != null">
+                driver_status = #{driverStatus,jdbcType=INTEGER},
+            </if>
         </set>
         where driver_id = #{driverId,jdbcType=INTEGER}
     </update>
@@ -159,6 +167,7 @@
     <delete id="deleteDriverInfoByDriverId" parameterType="int">
         DELETE from driver_info WHERE driver_id = #{driverId}
     </delete>
+
     <select id="getDriverInfoByWxId" resultMap="DriverInfoMap">
         SELECT driver_wx_id, driver_id, user_group_id  FROM driver_info
         WHERE driver_wx_id = #{driverWxId}

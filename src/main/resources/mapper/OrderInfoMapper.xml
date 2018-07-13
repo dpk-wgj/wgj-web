@@ -92,7 +92,7 @@
     </select>
 
     <select id="findOrderInfoByMultiCondition" resultMap="OrderInfoMap">
-        SELECT o.*, c.car_number, d.driver_name, p.passenger_name FROM order_info o, car_info c, driver_info d, passenger_info p
+        SELECT o.*, c.car_number, d.driver_name, p.passenger_phone_number FROM order_info o, car_info c, driver_info d, passenger_info p
         <where>
             1 = 1
             AND d.driver_id = o.driver_id
@@ -104,24 +104,30 @@
                 </if>
             </if>
             <if test="passenger != null">
-                <if test="passenger.passengerName != null and passenger.passengerName !=''">
-                    AND p.passenger_name LIKE #{passenger.passengerName,jdbcType=VARCHAR}
+                <if test="passenger.passengerId != null and passenger.passengerId !=''">
+                    AND p.passenger_id =  #{passenger.passengerId,jdbcType=INTEGER}
+                </if>
+                <if test="passenger.passengerPhoneNumber != null and passenger.passengerPhoneNumber !=''">
+                    AND p.passenger_phone_number LIKE "%"#{passenger.passengerPhoneNumber,jdbcType=VARCHAR}"%"
                 </if>
             </if>
             <if test="carInfo != null">
                 <if test="carInfo.carNumber != null and carInfo.carNumber !=''">
-                    AND c.car_number LIKE #{carInfo.carNumber,jdbcType=VARCHAR}
+                    AND c.car_number LIKE "%"#{carInfo.carNumber,jdbcType=VARCHAR}"%"
                 </if>
             </if>
             <if test="orderInfo != null">
+                <if test="orderInfo.orderStatus != null and orderInfo.orderStatus !=''">
+                    AND o.order_status = #{orderInfo.orderStatus,jdbcType=INTEGER}
+                </if>
                 <if test="orderInfo.startTime != null and orderInfo.startTime !=''">
                     <![CDATA[
-                    AND o.start_time >= #{startTime,jdbcType=TIMESTAMP}
+                    AND o.start_time >= #{orderInfo.startTime,jdbcType=TIMESTAMP}
                     ]]>
                 </if>
                 <if test="orderInfo.endTime != null and orderInfo.endTime !=''">
                     <![CDATA[
-                    AND o.end_time <= #{endTime,jdbcType=TIMESTAMP}
+                    AND o.end_time <= #{orderInfo.endTime,jdbcType=TIMESTAMP}
                     ]]>
                 </if>
             </if>
@@ -138,28 +144,34 @@
             AND (o.driver_id = c.car_driver_id_a OR o.driver_id = c.car_driver_id_b)
             <if test="driverInfo != null">
                 <if test="driverInfo.driverName != null and driverInfo.driverName !=''">
-                    AND d.driver_name LIKE #{driverInfo.driverName,jdbcType=VARCHAR}
+                    AND d.driver_name LIKE "%"#{driverInfo.driverName,jdbcType=VARCHAR}"%"
                 </if>
             </if>
             <if test="passenger != null">
+                <if test="passenger.passengerId != null and passenger.passengerId !=''">
+                    AND p.passenger_id = #{passenger.passengerId,jdbcType=INTEGER}
+                </if>
                 <if test="passenger.passengerPhoneNumber != null and passenger.passengerPhoneNumber !=''">
-                    AND p.passenger_phone_number LIKE #{passenger.passengerPhoneNumber,jdbcType=VARCHAR}
+                    AND p.passenger_phone_number LIKE "%"#{passenger.passengerPhoneNumber,jdbcType=VARCHAR}"%"
                 </if>
             </if>
             <if test="carInfo != null">
                 <if test="carInfo.carNumber != null and carInfo.carNumber !=''">
-                    AND c.car_number LIKE #{carInfo.carNumber,jdbcType=VARCHAR}
+                    AND c.car_number LIKE "%"#{carInfo.carNumber,jdbcType=VARCHAR}"%"
                 </if>
             </if>
             <if test="orderInfo != null">
+                <if test="orderInfo.orderStatus != null and orderInfo.orderStatus !=''">
+                    AND o.order_status = #{orderInfo.orderStatus,jdbcType=INTEGER}
+                </if>
                 <if test="orderInfo.startTime != null and orderInfo.startTime !=''">
                     <![CDATA[
-                    AND o.start_time >= #{startTime,jdbcType=TIMESTAMP}
+                    AND o.start_time >= #{orderInfo.startTime,jdbcType=TIMESTAMP}
                     ]]>
                 </if>
                 <if test="orderInfo.endTime != null and orderInfo.endTime !=''">
                     <![CDATA[
-                    AND o.end_time <= #{endTime,jdbcType=TIMESTAMP}
+                    AND o.end_time <= #{orderInfo.endTime,jdbcType=TIMESTAMP}
                     ]]>
                 </if>
             </if>

@@ -7,10 +7,7 @@ import com.dpk.wgj.bean.DTO.UserDTO;
 import com.dpk.wgj.bean.tableInfo.LocationMessage;
 import com.dpk.wgj.bean.tableInfo.OrderInfoTableMessage;
 import com.dpk.wgj.bean.tableInfo.OrderMessage;
-import com.dpk.wgj.service.CarInfoService;
-import com.dpk.wgj.service.DriverInfoService;
-import com.dpk.wgj.service.OrderInfoService;
-import com.dpk.wgj.service.PassengerService;
+import com.dpk.wgj.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +32,9 @@ public class OrderInfoController {
 
     @Autowired
     private CarInfoService carInfoService;
+
+    @Autowired
+    private LogInfoService logInfoService;
 
     /**
      * 多条件查询车辆轨迹
@@ -85,6 +85,10 @@ public class OrderInfoController {
         try {
             addStatus = orderInfoService.addOrderInfo(orderInfo);
             if (addStatus == 1){
+
+                // 插入用户成为日志
+                logInfoService.addLogInfo(new LogInfo("乘客端 >> 一键呼车", 2, new Date(), orderInfo.getOrderId()));
+
                 Passenger passenger = new Passenger();
                 passenger.setPassengerId(passengerId);
                 //乘客状态切换至 服务中
@@ -174,6 +178,10 @@ public class OrderInfoController {
 
         try {
             OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(order.getOrderId());
+
+            // 插入用户成为日志
+            logInfoService.addLogInfo(new LogInfo("司机端 >> 申请改派", 1, new Date(), orderInfo.getOrderId()));
+
             if (orderInfo != null && driverId == orderInfo.getDriverId()){
                 orderInfo.setDriverId(0);
                 orderInfo.setOrderStatus(0);
@@ -217,6 +225,9 @@ public class OrderInfoController {
 
             DriverInfo driverInfo = driverInfoService.getDriverInfoByWxId(driverWxId);
 
+            // 插入用户成为日志
+            logInfoService.addLogInfo(new LogInfo("司机端 >> 接到乘客", 1, new Date(), orderInfo.getOrderId()));
+
             // 当司机当前位置 与 用户所定的起始位置 一致才能切换 订单状态
             if (orderInfo != null && driverId == orderInfo.getDriverId() && accessDriverDTO.getCurrentLocation().equals(accessDriverDTO.getTargetLocation())){
                 orderInfo.setOrderStatus(2);
@@ -247,6 +258,10 @@ public class OrderInfoController {
 
         try {
             OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(orderInfoId);
+
+            // 插入用户成为日志
+            logInfoService.addLogInfo(new LogInfo("乘客端 >> 取消订单", 2, new Date(), orderInfo.getOrderId()));
+
             int driverId = orderInfo.getDriverId();
             if (orderInfo != null && passengerId == orderInfo.getPassengerId()){
                 orderInfo.setOrderStatus(4);
@@ -294,6 +309,9 @@ public class OrderInfoController {
         try {
             OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(accessDriverDTO.getOrderId());
 
+            // 插入用户成为日志
+            logInfoService.addLogInfo(new LogInfo("司机端 >> 送达目的地后", 1, new Date(), orderInfo.getOrderId()));
+
             DriverInfo driverInfo = driverInfoService.getDriverInfoByWxId(driverWxId);
 
             // 当司机当前位置 与 用户所定的目的位置 一致才能切换 订单状态
@@ -326,6 +344,45 @@ public class OrderInfoController {
     }
 
     /**
+     * 司机端 >> 获得订单id
+     * @param tableMessage
+     * @return
+     */
+    @RequestMapping(value = "/api/driver/getOrderIdForDriver", method = RequestMethod.POST)
+    @Transactional
+    public Message getOrderIdForDriver (@RequestBody OrderInfoTableMessage tableMessage){
+        List<OrderInfo> orderInfos = new ArrayList<>();
+        List<OrderInfoDTO> infoDTOList = new ArrayList<>();
+
+        Map<String, Object> map = new HashMap<>();
+
+        try {
+            orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
+            if (orderInfos != null){
+                for(OrderInfo orderInfo : orderInfos){
+                    int driverId = orderInfo.getDriverId();
+                    int passengerId = orderInfo.getPassengerId();
+                    DriverInfo driverInfo = driverInfoService.getDriverInfoByDriverId(driverId);
+                    Passenger passenger = passengerService.getPassengerByPassengerId(passengerId);
+                    CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
+                    // 判断车辆所有权 未完成
+
+                    OrderInfoDTO orderInfoDTO = new OrderInfoDTO(orderInfo, carInfo, driverInfo, passenger);
+                    infoDTOList.add(orderInfoDTO);
+                }
+                int count = orderInfoService.findOrderInfoByMultiConditionCount(tableMessage);
+                map.put("orderList", infoDTOList);
+                map.put("count", count);
+                return new Message(Message.SUCCESS, "司机端 >> 获得订单id >> 成功", map);
+            }
+            return new Message(Message.FAILURE, "司机端 >> 获得订单id >> 成功", "无查询结果");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "司机端 >> 获得订单id >> 异常", "请求异常 ");
+        }
+    }
+
+    /**
      * 后台端 >> 多条件查询订单
      * @return
      */
@@ -338,9 +395,9 @@ public class OrderInfoController {
 
         Map<String, Object> map = new HashMap<>();
 
-        tableMessage.getDriverInfo().setDriverName("%" + tableMessage.getDriverInfo().getDriverName() + "%");
-        tableMessage.getPassenger().setPassengerPhoneNumber("%" + tableMessage.getPassenger().getPassengerPhoneNumber() + "%");
-        tableMessage.getCarInfo().setCarNumber("%" + tableMessage.getCarInfo().getCarNumber() + "%");
+//        tableMessage.getDriverInfo().setDriverName("%" + tableMessage.getDriverInfo().getDriverName() + "%");
+//        tableMessage.getPassenger().setPassengerPhoneNumber("%" + tableMessage.getPassenger().getPassengerPhoneNumber() + "%");
+//        tableMessage.getCarInfo().setCarNumber("%" + tableMessage.getCarInfo().getCarNumber() + "%");
 
         try {
             orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);

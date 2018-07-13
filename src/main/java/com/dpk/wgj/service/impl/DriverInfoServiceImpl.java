@@ -71,6 +71,19 @@ public class DriverInfoServiceImpl implements DriverInfoService {
         }
         return null;
     }
+    @Override
+    public List<DriverInfo> getDriverInfoByDriverStatus(int driverStatus) {
+
+        List<DriverInfo> driverInfos;
+
+        try {
+            driverInfos = driverInfoMapper.getDriverInfoByDriverStatus(driverStatus);
+            return driverInfos;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     @Override
     public int addDriverInfo(DriverInfo driverInfo) {
