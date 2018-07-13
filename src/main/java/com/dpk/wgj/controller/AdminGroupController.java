@@ -91,8 +91,8 @@ public class AdminGroupController {
     }
 
     /**
-     * 更新用户信息（qinhua）
-     * 需要ById不？
+     * 更新分组信息（qinhua）
+     *
      */
     @RequestMapping(value = "/updateAdminGroupById", method = RequestMethod.POST)
     public Message updateAdminGroupById(@RequestBody AdminGroup adminGroup){

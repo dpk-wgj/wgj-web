@@ -12,13 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api")
+@RequestMapping(value = "/adminmanger")
 public class AdminInfoController {
 
     @Autowired
     private AdminInfoService adminInfoService;
 
     private final Logger logger = LoggerFactory.getLogger(AdminInfoController.class);
+
+
 
     /**
      * 根据ID名查找用户信息（例子）
@@ -114,24 +116,6 @@ public class AdminInfoController {
     }
 
     /**
-     * 更新用户信息（qinhua）
-     * 需要ById不？
-     */
-    @RequestMapping(value = "/updateAdminInfo", method = RequestMethod.POST)
-    public Message updateAdminInfo(@RequestBody AdminInfo adminInfo){
-        int upStatus = 0;
-        try {
-            upStatus = adminInfoService.updateAdminInfo(adminInfo);
-            if (upStatus == 1){
-                return new Message(Message.SUCCESS, "更新用户信息 >> 成功", upStatus);
-            }
-            return new Message(Message.FAILURE, "更新用户信息 >> 失败", upStatus);
-        } catch (Exception e) {
-            return new Message(Message.ERROR, "更新用户信息 >> 异常",  e.getMessage());
-        }
-    }
-
-    /**
      * 获取所有用户信息（qinhua）
      */
     @RequestMapping(value = "/getAllAdminInfo", method = RequestMethod.GET)
@@ -149,4 +133,21 @@ public class AdminInfoController {
         }
     }
 
+    /**
+     * 更新用户信息（qinhua）
+     * 需要ById不？
+     */
+    @RequestMapping(value = "/updateAdminInfo", method = RequestMethod.POST)
+    public Message updateAdminInfo(@RequestBody AdminInfo adminInfo){
+        int upStatus = 0;
+        try {
+            upStatus = adminInfoService.updateAdminInfo(adminInfo);
+            if (upStatus == 1){
+                return new Message(Message.SUCCESS, "更新用户信息 >> 成功", upStatus);
+            }
+            return new Message(Message.FAILURE, "更新用户信息 >> 失败", upStatus);
+        } catch (Exception e) {
+            return new Message(Message.ERROR, "更新用户信息 >> 异常",  e.getMessage());
+        }
+    }
 }

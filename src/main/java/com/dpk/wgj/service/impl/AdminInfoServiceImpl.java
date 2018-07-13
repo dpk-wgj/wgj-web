@@ -20,7 +20,7 @@ public class AdminInfoServiceImpl implements AdminInfoService {
 
     /*
     根据名字模糊查询所有用户（qinghua）
-     */
+*/
     @Override
     public List<AdminInfo> getAllAdminByUsername(String username) {
 

@@ -12,16 +12,16 @@
     </resultMap>
 
     <select id="getAdminByUsername" resultMap="AdminInfoMap">
-        SELECT *  FROM admin_info
+        SELECT * FROM admin_info
         WHERE username = #{username}
     </select>
     <select id="getAllAdminByUsername" resultMap="AdminInfoMap">
-        SELECT *  FROM admin_info
+        SELECT * FROM admin_info
         WHERE username LIKE "%"#{username}"%"
     </select>
 
     <select id="getAllAdminInfo" resultMap="AdminInfoMap" >
-        SELECT *  FROM admin_info
+        SELECT * FROM admin_info
     </select>
 
     <select id="getUserInfoById" resultMap="AdminInfoMap" parameterType="int">
