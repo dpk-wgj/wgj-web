@@ -77,7 +77,7 @@ public class OrderInfoController {
         orderInfo.setEndLocation(orderMessage.getEndLocation());
         orderInfo.setPassengerId(passengerId);
         orderInfo.setLocationInfo(orderMessage.getLocationInfo());
-        orderInfo.setStartTime(new Date());
+        orderInfo.setStartTime(String.valueOf(new Date()));
 
         // 订单切换至 下单状态
         orderInfo.setOrderStatus(0);
@@ -145,12 +145,9 @@ public class OrderInfoController {
      */
     @RequestMapping(value = "/api/driver/getOrderInfoByDriverId", method = RequestMethod.GET)
     public Message getOrderInfoByDriverId(){
-
         List<OrderInfo> orderInfos;
-
         UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int driverId = userInfo.getUserId();
-
         try {
             orderInfos = orderInfoService.getOrderInfoByDriverId(driverId);
             if (orderInfos != null){
