@@ -97,7 +97,7 @@ public class OrderInfoController {
                 Passenger passenger = new Passenger();
                 passenger.setPassengerId(passengerId);
                 //乘客状态切换至 服务中
-                passenger.setPassengerStatus(1);
+                passenger.setPassengerStatus(0);
                 int upStatus = passengerService.updatePassengerStatus(passenger);
                 if (upStatus == 1){
                     OrderInfo targetOrderInfo = orderInfoService.getOrderInfoByOrderId(orderInfo.getOrderId());

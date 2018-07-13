@@ -27,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint(value = "/ws/{role}/{userId}/{orderId}",configurator=MyEndpointConfigure.class)
 @Component
-public class MyWebSocket {
+public class DriverAndPassWebSocket {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static int onlineCount = 0;
@@ -251,7 +251,6 @@ public class MyWebSocket {
                                                 CarInfo carInfo = carInfoService.getCarInfoByCarId(d.getCarId());
                                                 CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, d);
                                                 sendMessage(1, "已经有司机接单,请在原地等待司机接送", carInfoDTO, "passenger," + userId);
-
                                             }
                                         }
 //                                System.out.println("key= "+ key + " and value= " + sessionPool.get(key));
@@ -312,15 +311,15 @@ public class MyWebSocket {
 
     }
     public static synchronized int getOnlineCount(){
-        return MyWebSocket.onlineCount;
+        return DriverAndPassWebSocket.onlineCount;
     }
 
     public static synchronized void incrOnlineCount(){
-        MyWebSocket.onlineCount++;
+        DriverAndPassWebSocket.onlineCount++;
     }
 
     public static synchronized void decOnlineCount(){
-        MyWebSocket.onlineCount--;
+        DriverAndPassWebSocket.onlineCount--;
     }
 
 }
