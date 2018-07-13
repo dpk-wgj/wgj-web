@@ -2,6 +2,7 @@ package com.dpk.wgj.controller;
 
 import com.dpk.wgj.bean.*;
 import com.dpk.wgj.bean.DTO.AccessDriverDTO;
+import com.dpk.wgj.bean.DTO.OrderDTO;
 import com.dpk.wgj.bean.DTO.OrderInfoDTO;
 import com.dpk.wgj.bean.DTO.UserDTO;
 import com.dpk.wgj.bean.tableInfo.LocationMessage;
@@ -77,7 +78,11 @@ public class OrderInfoController {
         orderInfo.setEndLocation(orderMessage.getEndLocation());
         orderInfo.setPassengerId(passengerId);
         orderInfo.setLocationInfo(orderMessage.getLocationInfo());
-        orderInfo.setStartTime(String.valueOf(new Date()));
+
+        String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//将时间格式转换成符合Timestamp要求的格式.
+        Timestamp newdate = Timestamp.valueOf(nowTime);//把时间转换
+
+        orderInfo.setStartTime(nowTime);
 
         // 订单切换至 下单状态
         orderInfo.setOrderStatus(0);
@@ -121,6 +126,7 @@ public class OrderInfoController {
     public Message getOrderInfoByPassengerId(){
 
         List<OrderInfo> orderInfos;
+        List<OrderDTO> orderDTOList = new ArrayList<>();
 
         UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int passengerId = userInfo.getUserId();
@@ -128,9 +134,18 @@ public class OrderInfoController {
         try {
             orderInfos = orderInfoService.getOrderInfoByPassengerId(passengerId);
             if (orderInfos != null){
-                return new Message(Message.SUCCESS, "乘客端 >> 获取订单列表 >> 成功", orderInfos);
+                for (OrderInfo orderInfo : orderInfos){
+                    DriverInfo driverInfo = new DriverInfo();
+                    OrderDTO dto = new OrderDTO();
+                    driverInfo = driverInfoService.getDriverInfoByDriverId(orderInfo.getDriverId());
+                    dto.setDriverInfo(driverInfo);
+                    dto.setOrderInfo(orderInfo);
+                    orderDTOList.add(dto);
+                }
+//                System.out.println(orderDTOList.get(0).getOrderInfo().ges);
+                return new Message(Message.SUCCESS, "乘客端 >> 获取订单列表 >> 成功", orderDTOList);
             } else {
-                return new Message(Message.FAILURE, "乘客端 >> 获取订单列表 >> 失败", orderInfos);
+                return new Message(Message.FAILURE, "乘客端 >> 获取订单列表 >> 失败", orderDTOList);
             }
         } catch (Exception e) {
             e.printStackTrace();
