@@ -24,7 +24,6 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 @ServerEndpoint(value = "/ws/{role}/{userId}/{orderId}",configurator=MyEndpointConfigure.class)
 @Component
@@ -214,15 +213,16 @@ public class MyWebSocket {
                 }
 
             }else if(role.equals("passenger")){
+
+                OrderInfo order = new OrderInfo();
+
                 switch (msgArr[1]){
                     case "arriveDest":
                         break;
                     case "toWait":
 
-                        OrderInfo order = new OrderInfo();
-
                         for (String k: sessionPool.keySet()){
-                            System.out.println("现在连接池中海油:"+k+",sessionId:"+sessionPool.get(k).getId());
+                            System.out.println("现在连接池中还有:"+k+",sessionId:"+sessionPool.get(k).getId());
                         }
                         System.out.println("订单Id："+","+orderId);
 
@@ -251,7 +251,6 @@ public class MyWebSocket {
                                                 CarInfo carInfo = carInfoService.getCarInfoByCarId(d.getCarId());
                                                 CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, d);
                                                 sendMessage(1, "已经有司机接单,请在原地等待司机接送", carInfoDTO, "passenger," + userId);
-
                                             }
                                         }
 //                                System.out.println("key= "+ key + " and value= " + sessionPool.get(key));
@@ -260,6 +259,28 @@ public class MyWebSocket {
                                 }
                             }
                         }
+                        break;
+                    case "cancelOrder":
+                        tableMessage = new OrderInfoTableMessage();
+                        tableMessage.setLimit(1);tableMessage.setOffset(0);tableMessage.setOrder("desc");tableMessage.setSort("order_id");
+                        OrderInfo orderInfo3 = new OrderInfo();
+                        orderInfo3.setOrderStatus(1);
+                        orderInfo3.setDriverId(userId);
+                        tableMessage.setOrderInfo(orderInfo3);
+                        orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
+
+                        if(orderInfos!=null){
+                            System.out.println("查询到乘客要进行取消的订单id："+orderInfos.get(0).getOrderId());
+                            order = orderInfoService.getOrderInfoByOrderId(orderInfos.get(0).getOrderId());
+                        }
+
+                        orderInfo3 = new OrderInfo();
+                        orderInfo3.setOrderId(order.getOrderId());
+                        orderInfo3.setOrderStatus(4);//设置订单为取消状态
+                        orderInfoService.updateOrderInfoByOrderId(orderInfo3);
+
+                        sendMessage(3,"乘客取消了订单", null, "passenger,"+order.getPassengerId());
+                        sendMessage(3,"乘客取消了订单", null, "driver,"+order.getDriverId());
 
                         break;
                 }
@@ -277,7 +298,6 @@ public class MyWebSocket {
         jsonObject.put("msg", msg);
         jsonObject.put("result",result);
         String sendMsg = JSON.toJSONString(jsonObject);
-
 
         System.out.println("发送的消息:"+sendMsg+"发送对象："+sendObj+","+sessionPool.get(sendObj));
         Session s = sessionPool.get(sendObj);
@@ -302,17 +322,5 @@ public class MyWebSocket {
         MyWebSocket.onlineCount--;
     }
 
-
-    public void updateOrder(int orderId, int status){
-        try {
-            OrderInfo orderInfo = new OrderInfo();
-            orderInfo.setOrderStatus(status);
-            orderInfo.setOrderId(orderId);
-            System.out.println("接单状态："+orderId);
-            orderInfoService.updateOrderInfoByOrderId(orderInfo);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 }
 
