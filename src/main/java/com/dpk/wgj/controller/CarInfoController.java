@@ -120,11 +120,10 @@ public class CarInfoController {
             if (carInfos != null){
                 for (CarInfo carInfo : carInfos){
                     driverInfo = driverInfoService.getDriverInfoByCarId(carInfo.getCarId());
-
                     CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfo);
                     carInfoDTOList.add(carInfoDTO);
                 }
-                map.put("count", 1);
+                map.put("count", count);
 
                 map.put("carInfos", carInfoDTOList);
                 return new Message(Message.SUCCESS, "查询车辆信息 >> 成功", map);
@@ -170,7 +169,7 @@ public class CarInfoController {
         try {
             carInfor = carInfoService.getCarInfoNoCompatibleByCarId(carId);
             if (carInfor != null){
-                if(carInfor.getCarDriverIdA() ==0 || carInfor.getCarDriverIdA()==0){
+                if(carInfor.getCarDriverIdA() ==0 || carInfor.getCarDriverIdB()==0){
                 return new Message(Message.SUCCESS, "查询车辆信息 >> 成功", carInfor);
                 }
                 else

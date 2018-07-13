@@ -145,5 +145,29 @@ public class CarInfoServiceImpl implements CarInfoService{
         }
         return null;
     }
+    @Override
+    public CarInfo getCarInfoByDriverId(int DriverId) {
 
+        CarInfo carInfo;
+
+        try {
+            carInfo = carInfoMapper.getCarInfoByDriverId(DriverId);
+            return carInfo;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return null;
+    }
+    @Override
+    public int updateCarInfoDriverIdByCarId(CarInfo carInfo) {
+        int upStatus = 0;
+
+        try {
+            upStatus = carInfoMapper.updateCarInfoDriverIdByCarId(carInfo);
+            return upStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return upStatus;
+    }
 }

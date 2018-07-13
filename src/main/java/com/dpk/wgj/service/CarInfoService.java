@@ -28,5 +28,9 @@ public interface CarInfoService {
 
     public CarInfo getCarInfoNoCompatibleByCarId(int carId) throws Exception;
 
+    public CarInfo getCarInfoByDriverId(int driverId) throws  Exception;
+
+    public int updateCarInfoDriverIdByCarId(CarInfo carInfo) throws Exception;
+
 
 }

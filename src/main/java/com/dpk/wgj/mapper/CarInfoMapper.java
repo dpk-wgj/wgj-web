@@ -25,4 +25,8 @@ public interface CarInfoMapper {
 
     public List<CarInfo> getCarDriverIdInfo()throws  Exception;
 
+    public CarInfo getCarInfoByDriverId(int DriverId) throws  Exception;
+
+    public int updateCarInfoDriverIdByCarId(CarInfo carInfo) throws  Exception;
+
 }

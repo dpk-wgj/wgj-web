@@ -191,11 +191,14 @@ public class DriverInfoController {
     public Message updateDriverInfoByDriverId(@RequestBody DriverInfo driverInfo) {
         int upStatus = 0;
         try {
-            upStatus = driverInfoService.updateDriverInfoByDriverId(driverInfo);
-            if (upStatus == 1) {
-                return new Message(Message.SUCCESS, "更新司机信息 >> 成功", upStatus);
-            }
-            return new Message(Message.FAILURE, "更新司机信息 >> 失败", upStatus);
+                upStatus = driverInfoService.updateDriverInfoByDriverId(driverInfo);//更新司机所绑定的车辆的Id
+                if (upStatus == 1)
+                {
+                    return new Message(Message.SUCCESS, "更新司机信息 >> 成功", upStatus);
+                }
+                else
+                    return new Message(Message.FAILURE, "更新司机信息 >> 失败", "更新失败");
+
         } catch (Exception e) {
             return new Message(Message.ERROR, "更新司机信息 >> 异常", e.getMessage());
         }
@@ -208,14 +211,29 @@ public class DriverInfoController {
     @RequestMapping(value = "/deleteDriverInfoByDriverId", method = RequestMethod.POST)
     public Message deleteDriverInfoByDriverId(@RequestParam(value = "driverId") int driverId){
         int delStatus = 0;
+        int delStatus1 = 0;
+        CarInfo carInfo;
         try {
-            delStatus = driverInfoService.deleteDriverInfoByDriverId(driverId);
-            if (delStatus == 1){
-                return new Message(Message.SUCCESS, "删除车辆信息 >> 成功", delStatus);
+            carInfo = carInfoService.getCarInfoByDriverId(driverId);//获取要删除司机的车辆信息
+            if(carInfo.getCarDriverIdA() == driverId)    //获取车辆中哪个carDriverId绑定了司机Id
+            {
+                carInfo.setCarDriverIdA(0);    //设置所绑定的carDriverId为空
+                delStatus1 = carInfoService.updateCarInfoDriverIdByCarId(carInfo);//更新所绑定的车辆的信息
+                delStatus = driverInfoService.deleteDriverInfoByDriverId(driverId);//删除司机信息
             }
-            return new Message(Message.FAILURE, "删除车辆信息 >> 失败", delStatus);
+            else if(carInfo.getCarDriverIdB() == driverId)
+            {
+                carInfo.setCarDriverIdB(0);
+                delStatus1 = carInfoService.updateCarInfoByCarId(carInfo);
+                delStatus = driverInfoService.deleteDriverInfoByDriverId(driverId);
+            }
+
+            if (delStatus == 1 && delStatus1==1){
+                return new Message(Message.SUCCESS, "删除司机信息 >> 成功", delStatus);
+            }
+            return new Message(Message.FAILURE, "删除司机信息 >> 失败", delStatus);
         } catch (Exception e) {
-            return new Message(Message.ERROR, "删除车辆信息 >> 异常",  e.getMessage());
+            return new Message(Message.ERROR, "删除司机信息 >> 异常",  e.getMessage());
         }
     }
 
@@ -246,6 +264,9 @@ public class DriverInfoController {
         return null;
 
     }
+    /**
+     * 导出司机信息到Excel表
+     */
     @RequestMapping(value = "/makeExcel",method = RequestMethod.POST)
     @ResponseBody
     public Message makeExcel(){
@@ -285,6 +306,52 @@ public class DriverInfoController {
             return new Message(Message.ERROR, "获取所有车辆位置 >> 异常", e.getMessage());
         }
     }
-
+    /**
+     * 换车操作后，更新司机信息和车辆信息
+     */
+    @RequestMapping(value = "/changCar",method = RequestMethod.POST)
+    public Message changCar(@RequestBody DriverInfo driverInfo) {
+        int upStatus = 0;
+        int upStatus1 = 0;
+        CarInfo carInfo; //司机原本所绑定的车辆
+        CarInfo carInfo1;//司机换车之后所绑定的车辆
+        System.out.println(driverInfo.getDriverId());
+        System.out.println(driverInfo.getCarId());
+        try {
+            carInfo1 = carInfoService.getCarInfoByDriverId(driverInfo.getDriverId());//获取要换车司机的原本的车辆信息
+            carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());//获取换车的车辆信息
+            if(carInfo!=null && carInfo1 !=null)  //设置新车的CarDriverId为司机的Id
+            {
+                if(carInfo.getCarDriverIdA() == 0)
+                {
+                    carInfo.setCarDriverIdA(driverInfo.getDriverId());
+                }
+                else if(carInfo.getCarDriverIdB() == 0)
+                {
+                    carInfo.setCarDriverIdB(driverInfo.getDriverId());
+                }
+                if(carInfo1.getCarDriverIdA() == driverInfo.getDriverId())    //获取旧车中哪个carDriverId绑定了司机Id
+                {
+                    carInfo1.setCarDriverIdA(0);    //设置所绑定的carDriverId为空
+                }
+                else if(carInfo1.getCarDriverIdB() == driverInfo.getDriverId())
+                {
+                    carInfo.setCarDriverIdB(0);
+                }
+                upStatus  = carInfoService.updateCarInfoDriverIdByCarId(carInfo1);//更新旧车所绑定的司机的Id
+                upStatus1 = carInfoService.updateCarInfoByCarId(carInfo); //更新新车所绑定的司机的Id
+                if (upStatus == 1 && upStatus1==1)
+                {
+                    return new Message(Message.SUCCESS, "更新信息 >> 成功", upStatus);
+                }
+                else
+                    return new Message(Message.FAILURE, "更新信息 >> 失败", "更新失败");
+            }
+            else
+            return new Message(Message.FAILURE, "更新信息 >> 失败", "所选车辆信息为为空");
+        } catch (Exception e) {
+            return new Message(Message.ERROR, "更新信息 >> 异常", e.getMessage());
+        }
+    }
 
 }
