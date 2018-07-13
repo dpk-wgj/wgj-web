@@ -158,16 +158,16 @@ public class DriverInfoController {
                                 {
                                     driverInfos.setCarId(carInfoCarDriverId1.getCarId());
                                     carInfoCarDriverId1.setCarDriverIdA(driverInfos.getDriverId());
-                                    this.updateDriverInfoByDriverId(driverInfos);
-                                    carInfoController .updateCarInfoByCarId(carInfoCarDriverId1);
+                                    driverInfoService.updateDriverInfoByDriverId(driverInfos);
+                                    carInfoService.updateCarInfoByCarId(carInfoCarDriverId1);
                                     break;
                                 }
                                 else if (carInfoCarDriverId1.getCarDriverIdB()==0)
                                 {
                                     driverInfos.setCarId(carInfoCarDriverId1.getCarId());
                                     carInfoCarDriverId1.setCarDriverIdB(driverInfos.getDriverId());
-                                    this.updateDriverInfoByDriverId(driverInfos);
-                                    carInfoController .updateCarInfoByCarId(carInfoCarDriverId1);
+                                    driverInfoService.updateDriverInfoByDriverId(driverInfos);
+                                    carInfoService.updateCarInfoByCarId(carInfoCarDriverId1);
                                     break;
                                 }
                             else

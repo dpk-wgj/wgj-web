@@ -7,6 +7,7 @@
         <id column="complaint_id" property="complaintId"/>
         <result column="complaint_content" property="complaintContent"/>
         <result column="complaint_status" property="complaintStatus"/>
+        <result column="order_id" property="orderId"/>
         <result column="passenger_id" property="passengerId"/>
         <result column="complaint_feedback" property="complaintFeedback"/>
         <result column="complaint_create_time" property="complaintCreateTime"/>
