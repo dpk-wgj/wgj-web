@@ -45,7 +45,7 @@ public class LoginServiceImpl implements LoginService {
             // 用户不存在则自动添加
             if (driverInfo == null){
                 driverInfo1.setDriverWxId(userInfo.getDriverInfo().getDriverWxId());
-                driverInfo1.setUserGroupId(2);
+                driverInfo1.setUserGroupId(1);
                 driverInfoMapper.addDriverInfo(driverInfo1);
                 user.setDriverInfo(driverInfo1);
             } else {

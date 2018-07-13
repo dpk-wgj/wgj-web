@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dpk.wgj.mapper.LogInfoMapper">
+    <resultMap id="LogInfoMap" type="com.dpk.wgj.bean.LogInfo">
+        <id column="log_id" property="logId"/>
+        <result column="action" property="action"/>
+        <result column="role_id" property="roleId"/>
+        <result column="log_time" property="logTime"/>
+        <result column="order_id" property="orderId"/>
+    </resultMap>
+
+    <insert id="addLogInfo" parameterType="LogInfo" useGeneratedKeys="true" keyProperty="logId">
+        INSERT INTO log_info (action, role_id, log_time, order_id)
+        VALUES (#{action}, #{roleId}, #{logTime}, #{orderId})
+    </insert>
+
+    <select id="getLogInfoByLogId" resultMap="LogInfoMap" parameterType="int">
+        SELECT * FROM log_info
+        WHERE log_id = #{logId}
+    </select>
+
+    <delete id="deleteOrderInfoByOrderId" parameterType="int">
+        DELETE FORM log_info
+        WHERE log_id = #{logId,jdbcType=INTEGER}
+    </delete>
+
+    <select id="findLogInfoMultiCondition" resultMap="LogInfoMap">
+        SELECT * FROM log_info
+        <where>
+            1 = 1
+            <if test="logInfo != null">
+                <if test="logInfo.logId != null and logInfo.logId !=''">
+                    AND log_id = #{logInfo.logId,jdbcType=INTEGER}
+                </if>
+                <if test="logInfo.action != null and logInfo.action !=''">
+                    AND action LIKE "%"#{logInfo.action,jdbcType=VARCHAR}"%"
+                </if>
+                <if test="logInfo.roleId != null and logInfo.roleId !=''">
+                    AND role_id = #{logInfo.roleId,jdbcType=INTEGER}
+                </if>
+                <if test="logInfo.logTime != null and logInfo.logTime !=''">
+                    <![CDATA[
+                    AND log_time <= #{logInfo.logTime,jdbcType=TIMESTAMP}
+                    ]]>
+                </if>
+                <if test="logInfo.orderId != null and logInfo.orderId !=''">
+                    AND order_id = #{logInfo.orderId,jdbcType=INTEGER}
+                </if>
+            </if>
+        </where>
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="findLogInfoMultiConditionCount" resultType="int">
+        SELECT COUNT(*) FROM log_info
+        <where>
+            1 = 1
+            <if test="logInfo != null">
+                <if test="logInfo.logId != null and logInfo.logId !=''">
+                    AND log_id = #{logInfo.logId,jdbcType=INTEGER}
+                </if>
+                <if test="logInfo.action != null and logInfo.action !=''">
+                    AND action LIKE "%"#{logInfo.action,jdbcType=VARCHAR}"%"
+                </if>
+                <if test="logInfo.roleId != null and logInfo.roleId !=''">
+                    AND role_id = #{logInfo.roleId,jdbcType=INTEGER}
+                </if>
+                <if test="logInfo.logTime != null and logInfo.logTime !=''">
+                    <![CDATA[
+                    AND log_time <= #{logInfo.logTime,jdbcType=TIMESTAMP}
+                    ]]>
+                </if>
+                <if test="logInfo.orderId != null and logInfo.orderId !=''">
+                    AND order_id = #{logInfo.orderId,jdbcType=INTEGER}
+                </if>
+            </if>
+        </where>
+    </select>
+
+</mapper>
