@@ -251,6 +251,7 @@ public class MyWebSocket {
                                                 CarInfo carInfo = carInfoService.getCarInfoByCarId(d.getCarId());
                                                 CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, d);
                                                 sendMessage(1, "已经有司机接单,请在原地等待司机接送", carInfoDTO, "passenger," + userId);
+
                                             }
                                         }
 //                                System.out.println("key= "+ key + " and value= " + sessionPool.get(key));
