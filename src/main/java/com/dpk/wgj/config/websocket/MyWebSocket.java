@@ -4,24 +4,20 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dpk.wgj.bean.*;
 import com.dpk.wgj.bean.DTO.CarInfoDTO;
-import com.dpk.wgj.bean.DTO.OrderInfoDTO;
-import com.dpk.wgj.bean.DTO.UserDTO;
 import com.dpk.wgj.bean.tableInfo.OrderInfoTableMessage;
 import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
 import com.dpk.wgj.service.OrderInfoService;
 import com.dpk.wgj.service.PassengerService;
-import com.fasterxml.jackson.core.JsonParser;
-import com.sun.org.apache.xpath.internal.operations.Or;
-import com.sun.xml.internal.messaging.saaj.packaging.mime.util.BEncoderStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.*;
+import javax.websocket.OnClose;
+import javax.websocket.OnMessage;
+import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
@@ -101,6 +97,9 @@ public class MyWebSocket {
     @OnMessage
     public void onMessage(String message) throws IOException {
         try {
+            String[] msgArr = message.split(",");//message为'role,message'的形式  例如driver,toWait
+            role = msgArr[0];
+
             System.out.println("后台ws收到的信息:"+message);
             DriverInfo driverInfo = new DriverInfo();
             Passenger passenger = new Passenger();
@@ -110,7 +109,7 @@ public class MyWebSocket {
 
                 driverInfo = driverInfoApiService.getDriverInfoByDriverId(userId);
                 OrderInfo order = new OrderInfo();
-                switch (message){
+                switch (msgArr[1]){
                     case "toWait":
                         /*1. 遍历session 查询有无正在请求司机的乘客 向客户端发送信息*/
                         for (String key : sessionPool.keySet()) {
@@ -165,6 +164,7 @@ public class MyWebSocket {
                             }
                         }
                         break;
+
                     case "arriveToPassenger": //到乘客上车点（接到乘客）
                         System.out.println("到乘客上车点（接到乘客）");
                         // 查询出司机id=userId且status=1(已经接单)
@@ -188,7 +188,7 @@ public class MyWebSocket {
                         sendMessage(1,"司机已经接到了我", null, "passenger,"+order.getPassengerId());
 
                         break;
-                    case "arriveToDest":
+                    case "arriveToDest": //司机端按下到达目的地按钮
                         System.out.println("到达目的地");
                         // 查询出司机id=userId且status=2(派送中)
                         tableMessage = new OrderInfoTableMessage();
@@ -214,7 +214,7 @@ public class MyWebSocket {
                 }
 
             }else if(role.equals("passenger")){
-                switch (message){
+                switch (msgArr[1]){
                     case "arriveDest":
                         break;
                     case "toWait":
