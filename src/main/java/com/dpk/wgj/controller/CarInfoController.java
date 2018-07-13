@@ -158,24 +158,23 @@ public class CarInfoController {
     }
     /**
      * 根据carId查询未完全匹配车辆的信息
-     * @param carId1
+     * @param carNumber
      * @return
      */
-    @RequestMapping(value = "/getCarInfoNoCompatibleByCarId/{carId1}", method = RequestMethod.GET)
-    public Message getCarInfoNoCompatibleByCarId(@PathVariable(value = "carId1")  String carId1){
+    @RequestMapping(value = "/getCarInfoNoCompatibleByCarNumber/{carNumber}", method = RequestMethod.GET)
+    public Message getCarInfoNoCompatibleByCarNumber(@PathVariable(value = "carNumber")  String carNumber){
         CarInfo carInfor;
-        int carId =Integer.parseInt(carId1);
 
         try {
-            carInfor = carInfoService.getCarInfoNoCompatibleByCarId(carId);
+            carInfor = carInfoService.getCarInfoNoCompatibleByCarNumber(carNumber);
             if (carInfor != null){
                 if(carInfor.getCarDriverIdA() ==0 || carInfor.getCarDriverIdB()==0){
                 return new Message(Message.SUCCESS, "查询车辆信息 >> 成功", carInfor);
                 }
                 else
-                    return new Message(Message.FAILURE, "查询车辆信息 >> 失败"," id 为[" + carId + "] 的车辆已经绑定了两辆车");
+                    return new Message(Message.FAILURE, "查询车辆信息 >> 失败"," 车牌号码为[" + carNumber + "] 的车辆已经绑定了两辆车");
             }
-            return new Message(Message.FAILURE, "查询车辆信息 >> 失败", "未查询到id [" + carId + "] 信息");
+            return new Message(Message.FAILURE, "查询车辆信息 >> 失败", "未查询到车牌号码为[" + carNumber + "] 的信息");
         } catch (Exception e) {
             return new Message(Message.ERROR, "查询车辆信息 >> 异常", e.getMessage());
         }

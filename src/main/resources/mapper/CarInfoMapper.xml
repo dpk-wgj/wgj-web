@@ -54,6 +54,18 @@
         where car_id = #{carId,jdbcType=INTEGER}
     </update>
 
+    <update id="updateDeleteCarCarInfoDriverIdByCarId" parameterType="CarInfo">
+        update car_info
+        <set>
+            <if test="carDriverIdA == 0">
+                car_driver_id_a = 0,
+            </if>
+            <if test="carDriverIdB == 0">
+                car_driver_id_b = 0,
+            </if>
+        </set>
+        where car_id = #{carId,jdbcType=INTEGER}
+    </update>
     <select id="findCarInfoByMultiCondition" resultMap="CarInfoMap">
         SELECT car_id, car_number, car_type, car_seat FROM car_info
         <where>
@@ -92,7 +104,7 @@
     </select>
     <select id="getCarDriverIdInfo" resultMap="CarInfoMap">
         SELECT car_id,car_driver_id_a,car_driver_id_b FROM car_info
-        where car_driver_id_a is null or car_driver_id_b is null
+        where (car_driver_id_a is null OR car_driver_id_a = 0 OR car_driver_id_b is null OR car_driver_id_b = 0)
     </select>
 
     <select id="getCarInfoByDriverId" resultMap="CarInfoMap">
