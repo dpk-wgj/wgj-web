@@ -21,6 +21,9 @@ public class MyWebSocket {
 
     private Session session;
 
+
+
+
     @OnOpen
     public void onOpen(Session session) throws IOException {
         this.session = session;
