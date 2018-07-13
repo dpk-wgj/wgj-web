@@ -172,7 +172,6 @@ public class OrderInfoController {
     @Transactional
     public Message updateOrderInfoByOrderId(@RequestBody OrderInfo order){
         int upStatus = 0;
-
         // 防止恶意注入
         UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int driverId = userInfo.getUserId();

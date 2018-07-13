@@ -9,6 +9,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class DriverInfoServiceImpl implements DriverInfoService {
     private DriverInfoMapper driverInfoMapper;
 
     private final Logger logger = LoggerFactory.getLogger(DriverInfoServiceImpl.class);
+
     @Override
     public DriverInfo getDriverInfoByCarId(int carId) {
         DriverInfo driverInfo;
@@ -214,19 +216,18 @@ public class DriverInfoServiceImpl implements DriverInfoService {
         logger.info("000000");
         try {
             InputStream fileInputStream = file.getInputStream();
-//            //判断是否是03版本的Excel(还是07的)
-//            boolean is03Excel = fileName.matches("^.+\\.(?i)(xls)$");
-//            //1、读取工作簿
-//            Workbook workbook = is03Excel ? new HSSFWorkbook(fileInputStream)
-//                    : new XSSFWorkbook(fileInputStream);
-            Workbook workbook =new HSSFWorkbook(fileInputStream);
+            //判断是否是03版本的Excel(还是07的)
+            boolean is03Excel = fileName.matches("^.+\\.(?i)(xls)$");
+            //1、读取工作簿
+            Workbook workbook = is03Excel ? new HSSFWorkbook(fileInputStream)
+                    : new XSSFWorkbook(fileInputStream);
             //2、读取工作表
             Sheet sheet=workbook.getSheetAt(0);
             //3、读取行
             System.out.println(sheet.getPhysicalNumberOfRows());
             if(sheet.getPhysicalNumberOfRows()>1){
                 DriverInfo driverInfo= null;
-                for (int i = 1; i < sheet.getPhysicalNumberOfRows(); i++) {
+                for (int i = 2; i < sheet.getPhysicalNumberOfRows(); i++) {
                     //4、读取单元格
                     Row row=sheet.getRow(i);
                     driverInfo = new DriverInfo();
@@ -240,14 +241,14 @@ public class DriverInfoServiceImpl implements DriverInfoService {
                     row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
                     driverInfo.setDriverWxId(row.getCell(1).getStringCellValue());
 
-                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
-                    driverInfo.setDriverPhoneNumber(row.getCell(1).getStringCellValue());
+                    row.getCell(2).setCellType(Cell.CELL_TYPE_STRING);
+                    driverInfo.setDriverPhoneNumber(row.getCell(2).getStringCellValue());
 
-                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
-                    driverInfo.setDriverIdentity(row.getCell(1).getStringCellValue());
+                    row.getCell(3).setCellType(Cell.CELL_TYPE_STRING);
+                    driverInfo.setDriverIdentity(row.getCell(3).getStringCellValue());
 
-                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
-                    driverInfo.setDriverLicence(row.getCell(1).getStringCellValue());
+                    row.getCell(4).setCellType(Cell.CELL_TYPE_STRING);
+                    driverInfo.setDriverLicence(row.getCell(4).getStringCellValue());
                     //风险源
                     try {
                         //先查询是否存在，然后再添加

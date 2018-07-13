@@ -79,6 +79,7 @@ public class CarInfoServiceImpl implements CarInfoService{
         return null;
     }
 
+
     @Override
     public int updateCarInfoByCarId(CarInfo carInfo) {
         int upStatus = 0;
@@ -118,5 +119,55 @@ public class CarInfoServiceImpl implements CarInfoService{
             e.printStackTrace();
         }
         return count;
+    }
+
+    @Override
+    public List<CarInfo> getCarDriverIdInfo(){
+        List<CarInfo> carInfo;
+        try{
+            carInfo = carInfoMapper.getCarDriverIdInfo();
+            return carInfo;
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    @Override
+    public CarInfo getCarInfoNoCompatibleByCarId(int carId) {
+        CarInfo carInfo;
+        try {
+            carInfo = carInfoMapper.getCarInfoByCarId(carId);
+            return carInfo;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return null;
+    }
+    @Override
+    public CarInfo getCarInfoByDriverId(int DriverId) {
+
+        CarInfo carInfo;
+
+        try {
+            carInfo = carInfoMapper.getCarInfoByDriverId(DriverId);
+            return carInfo;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return null;
+    }
+    @Override
+    public int updateCarInfoDriverIdByCarId(CarInfo carInfo) {
+        int upStatus = 0;
+
+        try {
+            upStatus = carInfoMapper.updateCarInfoDriverIdByCarId(carInfo);
+            return upStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return upStatus;
     }
 }
