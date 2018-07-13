@@ -19,6 +19,16 @@ public class LogInfo implements Serializable {
 
     private int orderId;
 
+    public LogInfo() {
+    }
+
+    public LogInfo(String action, int roleId, Date logTime, int orderId) {
+        this.action = action;
+        this.roleId = roleId;
+        this.logTime = logTime;
+        this.orderId = orderId;
+    }
+
     public int getLogId() {
         return logId;
     }
