@@ -138,7 +138,7 @@ public class CarInfoServiceImpl implements CarInfoService{
     public CarInfo getCarInfoNoCompatibleByCarNumber(String carNumber) {
         CarInfo carInfo;
         try {
-            carInfo = carInfoMapper.getCarInfoByCarNumber(carNumber);
+            carInfo = carInfoMapper.getCarInfoNoCompatibleByCarNumber(carNumber);
             return carInfo;
         } catch (Exception e) {
             logger.error(e.getMessage());

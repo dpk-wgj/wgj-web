@@ -167,7 +167,8 @@ public class CarInfoController {
 
         try {
             carInfor = carInfoService.getCarInfoNoCompatibleByCarNumber(carNumber);
-            if (carInfor != null){
+            if (carInfor != null)
+            {
                 if(carInfor.getCarDriverIdA() ==0 || carInfor.getCarDriverIdB()==0){
                 return new Message(Message.SUCCESS, "查询车辆信息 >> 成功", carInfor);
                 }

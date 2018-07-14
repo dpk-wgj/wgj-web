@@ -317,8 +317,8 @@ public class DriverInfoController {
         int upStatus = 0;
         int upStatus1 = 0;
         int upStatus2 = 0;
-        CarInfo carInfo; //司机原本所绑定的车辆
-        CarInfo carInfo1;//司机换车之后所绑定的车辆
+        CarInfo carInfo; //司机换车之后所绑定的车辆
+        CarInfo carInfo1;//司机原本所绑定的车辆
         try {
             carInfo1 = carInfoService.getCarInfoByDriverId(driverInfo.getDriverId());//获取要换车司机的原本的车辆信息
             carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());//获取换车的车辆信息
@@ -338,7 +338,7 @@ public class DriverInfoController {
                 }
                 else if(carInfo1.getCarDriverIdB() == driverInfo.getDriverId())
                 {
-                    carInfo.setCarDriverIdB(0);
+                    carInfo1.setCarDriverIdB(0);
                 }
                 upStatus  = carInfoService.updateCarInfoDriverIdByCarId(carInfo1);//更新旧车所绑定的司机的Id
                 upStatus1 = carInfoService.updateCarInfoByCarId(carInfo); //更新新车所绑定的司机的Id
