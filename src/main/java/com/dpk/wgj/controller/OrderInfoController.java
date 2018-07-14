@@ -136,10 +136,13 @@ public class OrderInfoController {
             if (orderInfos != null){
                 for (OrderInfo orderInfo : orderInfos){
                     DriverInfo driverInfo = new DriverInfo();
+                    CarInfo carInfo = new CarInfo();
                     OrderDTO dto = new OrderDTO();
                     driverInfo = driverInfoService.getDriverInfoByDriverId(orderInfo.getDriverId());
+                    carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
                     dto.setDriverInfo(driverInfo);
                     dto.setOrderInfo(orderInfo);
+                    dto.setCarInfo(carInfo);
                     orderDTOList.add(dto);
                 }
 //                System.out.println(orderDTOList.get(0).getOrderInfo().ges);
