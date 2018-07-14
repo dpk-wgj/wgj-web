@@ -27,19 +27,17 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint(value = "/ws/{role}/{userId}/{orderId}",configurator=MyEndpointConfigure.class)
 @Component
-public class MyWebSocket {
+public class DriverAndPassWebSocket {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static int onlineCount = 0;
-    private static ConcurrentHashMap<String, Session> sessionPool = new ConcurrentHashMap<>();
 
-//    private static Map<String,Session> sessionPool = new HashMap<String,Session>();
-//    private static ConcurrentHashMap<String,String> sessionIds = new ConcurrentHashMap<String,String>();
+    private static ConcurrentHashMap<String, Session> sessionPool = new ConcurrentHashMap<>();
 
     private Session session;
 
     @Autowired
-    private DriverInfoService driverInfoApiService;
+    private DriverInfoService driverInfoService;
 
     @Autowired
     private PassengerService passengerService;
@@ -68,7 +66,7 @@ public class MyWebSocket {
         this.role = role;
         this.userId = Integer.parseInt(userId);
         if(role.equals("passenger")){this.orderId = Integer.parseInt(orderId);}
-        //key    driver,7     passenger,3   的形式
+        //key    driver,7     passenger,8   的形式
         String key = role+","+userId;
         System.out.println(session.getId()+","+key+"链接进来了");
         sessionPool.put(key, session);
@@ -82,7 +80,6 @@ public class MyWebSocket {
 
     @OnClose
     public void onClose() throws IOException{
-
 
         for (String k : sessionPool.keySet()) {
             System.out.println("要关闭的链接："+k);
@@ -106,7 +103,7 @@ public class MyWebSocket {
             List<OrderInfo> orderInfos = null;
             if(role.equals("driver")){
 
-                driverInfo = driverInfoApiService.getDriverInfoByDriverId(userId);
+                driverInfo = driverInfoService.getDriverInfoByDriverId(userId);
                 OrderInfo order = new OrderInfo();
                 switch (msgArr[1]){
                     case "toWait":
@@ -146,17 +143,33 @@ public class MyWebSocket {
 
                                 if(Integer.parseInt(a[1]) == order.getPassengerId()){
 
-                                    /*将订单状态改为接单状态*/
+                                    //将订单状态改为接单状态
                                     order.setOrderId(orderId);
                                     order.setDriverId(userId);
                                     order.setOrderStatus(1);
                                     orderInfoService.updateOrderInfoByOrderId(order);
 
                                     Passenger pass = passengerService.getPassengerByPassengerId(order.getPassengerId());
-                                    sendMessage(1,"成功接单 请前往乘客点",pass, "driver,"+userId);
+                                    //将乘客状态改为服务中
+                                    pass.setPassengerStatus(1);
+                                    passengerService.updatePassengerStatus(pass);
+
+                                    JSONObject o = new JSONObject();
+                                    order = orderInfoService.getOrderInfoByOrderId(orderId);
+                                    o.put("order",order);o.put("passenger",pass);
+                                    sendMessage(1,"h成功拿到订单，请前往乘客 点",o, "driver,"+userId);
+
+                                }
+                            } else if(a[0].equals("driver")){
+
+                                if(Integer.parseInt(a[1]) == order.getDriverId()) {
+                                    //将司机状态改为接客前
+                                    driverInfo.setFlag(1);
+                                    driverInfoService.updateApiDriverInfoByDriverId(driverInfo);
 
                                     CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
                                     CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfo);
+
                                     sendMessage(1,"已经有司机接单,请在原地等待司机接送", carInfoDTO, "passenger,"+order.getPassengerId());
 
                                 }
@@ -184,6 +197,9 @@ public class MyWebSocket {
                         orderInfo.setOrderStatus(2);//设置订单为派送状态
                         orderInfoService.updateOrderInfoByOrderId(orderInfo);
 
+                        //将司机状态改为服务中
+                        driverInfo.setFlag(2);
+                        driverInfoService.updateApiDriverInfoByDriverId(driverInfo);
                         sendMessage(1,"司机已经接到了我", null, "passenger,"+order.getPassengerId());
 
                         break;
@@ -207,7 +223,19 @@ public class MyWebSocket {
                         orderInfo2.setOrderStatus(3);//设置订单为派送状态
                         orderInfoService.updateOrderInfoByOrderId(orderInfo2);
 
+                        //将乘客状态改为服务后
+                        Passenger p = new Passenger();
+                        p.setPassengerId(order.getPassengerId());
+                        p.setPassengerStatus(2);
+                        passengerService.updatePassengerStatus(p);
                         sendMessage(2,"已经到达目的地，结束订单", null, "passenger,"+order.getPassengerId());
+                    case "changeDriver"://司机端按下一键改派按钮
+                        // TODO: 2018/7/14 还没做
+                        /*1.降低服务质量星级*/
+
+                        /*2.向乘客发送消息更换司机*/
+
+                        /*3.插入日志记录*/
 
                         break;
                 }
@@ -221,16 +249,20 @@ public class MyWebSocket {
                         break;
                     case "toWait":
 
-                        for (String k: sessionPool.keySet()){
-                            System.out.println("现在连接池中还有:"+k+",sessionId:"+sessionPool.get(k).getId());
-                        }
+//                        for (String k: sessionPool.keySet()){
+//                            System.out.println("现在连接池中还有:"+k+",sessionId:"+sessionPool.get(k).getId());
+//                        }
                         System.out.println("订单Id："+","+orderId);
 
-                        List<DriverInfo> driverInfoList = driverInfoApiService.getDriverInfoByDriverStatus(1);
+                        List<DriverInfo> driverInfoList = driverInfoService.getDriverInfoByDriverStatus(1);
                         int driverId; //要接单的司机id
+                        /*1.查询出所有可以接单的乘客列表  */
                         for (DriverInfo d: driverInfoList){
-                            /*可接单的   选择最高的司机星级*/
+                            // TODO: 2018/7/14    根据乘客下单位置 派送距离最近的司机的匹配算法还没写 
+
+                            // 可接单的   选择最高的司机星级
                             if(d.getFlag()==0){
+                                //这里积分匹配目前是定死的状态
                                 if (d.getDriverLevelStar() > 91){
                                     driverId = d.getDriverId();
 
@@ -246,12 +278,14 @@ public class MyWebSocket {
                                                 orderInfoService.updateOrderInfoByOrderId(order);
 
                                                 Passenger pass = passengerService.getPassengerByPassengerId((userId));
-                                                sendMessage(1, "成功接单 请前往乘客点", pass, "driver," + driverId);
+                                                JSONObject o = new JSONObject();
+                                                order = orderInfoService.getOrderInfoByOrderId(orderId);
+                                                o.put("order",order);o.put("passenger",pass);
+                                                sendMessage(1, "j成功拿到订单，请前往乘客点", o, "driver," + driverId);
 
                                                 CarInfo carInfo = carInfoService.getCarInfoByCarId(d.getCarId());
                                                 CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, d);
                                                 sendMessage(1, "已经有司机接单,请在原地等待司机接送", carInfoDTO, "passenger," + userId);
-
                                             }
                                         }
 //                                System.out.println("key= "+ key + " and value= " + sessionPool.get(key));
@@ -280,7 +314,18 @@ public class MyWebSocket {
                         orderInfo3.setOrderStatus(4);//设置订单为取消状态
                         orderInfoService.updateOrderInfoByOrderId(orderInfo3);
 
+                        //将乘客状态改为服务后
+                        passenger = passengerService.getPassengerByPassengerId(orderInfo3.getPassengerId());
+                        passenger.setPassengerStatus(2);
+                        passengerService.updatePassengerStatus(passenger);
+
                         sendMessage(3,"乘客取消了订单", null, "passenger,"+order.getPassengerId());
+
+                        //将司机状态改为接单前
+                        driverInfo = driverInfoService.getDriverInfoByDriverId(order.getDriverId());
+                        driverInfo.setFlag(0);
+                        driverInfoService.updateApiDriverInfoByDriverId(driverInfo);
+
                         sendMessage(3,"乘客取消了订单", null, "driver,"+order.getDriverId());
 
                         break;
@@ -291,7 +336,14 @@ public class MyWebSocket {
         }
     }
 
-
+    /**
+     * 点对点推送的通知方法
+     * @param status
+     * @param msg
+     * @param result
+     * @param sendObj
+     * @throws IOException
+     */
     public void sendMessage(int status, String msg, Object result, String sendObj) throws IOException {
 
         JSONObject jsonObject = new JSONObject();
@@ -312,15 +364,15 @@ public class MyWebSocket {
 
     }
     public static synchronized int getOnlineCount(){
-        return MyWebSocket.onlineCount;
+        return DriverAndPassWebSocket.onlineCount;
     }
 
     public static synchronized void incrOnlineCount(){
-        MyWebSocket.onlineCount++;
+        DriverAndPassWebSocket.onlineCount++;
     }
 
     public static synchronized void decOnlineCount(){
-        MyWebSocket.onlineCount--;
+        DriverAndPassWebSocket.onlineCount--;
     }
 
 }
