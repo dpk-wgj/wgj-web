@@ -163,12 +163,9 @@ public class OrderInfoController {
      */
     @RequestMapping(value = "/api/driver/getOrderInfoByDriverId", method = RequestMethod.GET)
     public Message getOrderInfoByDriverId(){
-
         List<OrderInfo> orderInfos;
-
         UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int driverId = userInfo.getUserId();
-
         try {
             orderInfos = orderInfoService.getOrderInfoByDriverId(driverId);
             if (orderInfos != null){

@@ -26,11 +26,13 @@ public interface CarInfoService {
 
     public List<CarInfo> getCarDriverIdInfo() throws  Exception;
 
-    public CarInfo getCarInfoNoCompatibleByCarId(int carId) throws Exception;
+    public CarInfo getCarInfoNoCompatibleByCarNumber(String carNumber) throws Exception;
 
     public CarInfo getCarInfoByDriverId(int driverId) throws  Exception;
 
     public int updateCarInfoDriverIdByCarId(CarInfo carInfo) throws Exception;
+
+    public int updateDeleteCarCarInfoDriverIdByCarId(CarInfo carInfo) throws Exception;
 
 
 }

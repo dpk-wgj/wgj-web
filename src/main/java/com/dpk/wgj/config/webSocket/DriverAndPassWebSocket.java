@@ -242,19 +242,15 @@ public class DriverAndPassWebSocket {
                 }
 
             }else if(role.equals("passenger")){
-
                 OrderInfo order = new OrderInfo();
-
                 switch (msgArr[1]){
                     case "arriveDest":
                         break;
                     case "toWait":
-
 //                        for (String k: sessionPool.keySet()){
 //                            System.out.println("现在连接池中还有:"+k+",sessionId:"+sessionPool.get(k).getId());
 //                        }
                         System.out.println("订单Id："+","+orderId);
-
                         List<DriverInfo> driverInfoList = driverInfoService.getDriverInfoByDriverStatus(1);
                         int driverId; //要接单的司机id
                         /*1.查询出所有可以接单的乘客列表  */

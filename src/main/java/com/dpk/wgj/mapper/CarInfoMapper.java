@@ -29,4 +29,9 @@ public interface CarInfoMapper {
 
     public int updateCarInfoDriverIdByCarId(CarInfo carInfo) throws  Exception;
 
+    public int updateDeleteCarCarInfoDriverIdByCarId(CarInfo carInfo) throws  Exception;
+
+    public CarInfo getCarInfoNoCompatibleByCarNumber(String carNumber) throws  Exception;
+
+
 }
