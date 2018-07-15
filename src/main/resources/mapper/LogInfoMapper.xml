@@ -40,14 +40,19 @@
                 <if test="logInfo.roleId != null and logInfo.roleId !=''">
                     AND role_id = #{logInfo.roleId,jdbcType=INTEGER}
                 </if>
-                <if test="logInfo.logTime != null and logInfo.logTime !=''">
-                    <![CDATA[
-                    AND log_time <= #{logInfo.logTime,jdbcType=TIMESTAMP}
-                    ]]>
-                </if>
                 <if test="logInfo.orderId != null and logInfo.orderId !=''">
                     AND order_id = #{logInfo.orderId,jdbcType=INTEGER}
                 </if>
+            </if>
+            <if test="startTime != null and startTime !=''">
+                <![CDATA[
+                    AND log_time >= #{startTime,jdbcType=TIMESTAMP}
+                    ]]>
+            </if>
+            <if test="endTime != null and endTime !=''">
+                <![CDATA[
+                    AND log_time <= #{endTime,jdbcType=TIMESTAMP}
+                    ]]>
             </if>
         </where>
         ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
@@ -67,14 +72,19 @@
                 <if test="logInfo.roleId != null and logInfo.roleId !=''">
                     AND role_id = #{logInfo.roleId,jdbcType=INTEGER}
                 </if>
-                <if test="logInfo.logTime != null and logInfo.logTime !=''">
-                    <![CDATA[
-                    AND log_time <= #{logInfo.logTime,jdbcType=TIMESTAMP}
-                    ]]>
-                </if>
                 <if test="logInfo.orderId != null and logInfo.orderId !=''">
                     AND order_id = #{logInfo.orderId,jdbcType=INTEGER}
                 </if>
+            </if>
+            <if test="startTime != null and startTime !=''">
+                <![CDATA[
+                    AND log_time >= #{startTime,jdbcType=TIMESTAMP}
+                    ]]>
+            </if>
+            <if test="endTime != null and endTime !=''">
+                <![CDATA[
+                    AND log_time <= #{endTime,jdbcType=TIMESTAMP}
+                    ]]>
             </if>
         </where>
     </select>
