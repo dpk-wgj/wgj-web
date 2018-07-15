@@ -76,12 +76,12 @@
                     AND order_id = #{logInfo.orderId,jdbcType=INTEGER}
                 </if>
             </if>
-            <if test="startTime != null and startTime !=''">
+            <if test="startTime != null and startTime !='' and startTime != 'null null'">
                 <![CDATA[
                     AND log_time >= #{startTime,jdbcType=TIMESTAMP}
                     ]]>
             </if>
-            <if test="endTime != null and endTime !=''">
+            <if test="endTime != null and endTime !='' and endTime != 'null null'">
                 <![CDATA[
                     AND log_time <= #{endTime,jdbcType=TIMESTAMP}
                     ]]>
