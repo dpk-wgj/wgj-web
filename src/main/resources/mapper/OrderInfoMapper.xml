@@ -97,10 +97,11 @@
             1 = 1
             AND d.driver_id = o.driver_id
             AND p.passenger_id = o.passenger_id
+            AND o.driver_id != 0
             AND (o.driver_id = c.car_driver_id_a OR o.driver_id = c.car_driver_id_b)
             <if test="driverInfo != null">
                 <if test="driverInfo.driverName != null and driverInfo.driverName !=''">
-                    AND d.driver_name LIKE #{driverInfo.driverName,jdbcType=VARCHAR}
+                    AND d.driver_name LIKE "%"#{driverInfo.driverName,jdbcType=VARCHAR}"%"
                 </if>
             </if>
             <if test="passenger != null">
@@ -141,6 +142,7 @@
             1 = 1
             AND d.driver_id = o.driver_id
             AND p.passenger_id = o.passenger_id
+            AND o.driver_id != 0
             AND (o.driver_id = c.car_driver_id_a OR o.driver_id = c.car_driver_id_b)
             <if test="driverInfo != null">
                 <if test="driverInfo.driverName != null and driverInfo.driverName !=''">

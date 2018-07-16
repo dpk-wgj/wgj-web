@@ -24,4 +24,15 @@ public interface CarInfoService {
 
     public int findCarInfoByMultiConditionCount(CarInfoTableMessage carInfoTableMessage) throws Exception;
 
+    public List<CarInfo> getCarDriverIdInfo() throws  Exception;
+
+    public CarInfo getCarInfoNoCompatibleByCarNumber(String carNumber) throws Exception;
+
+    public CarInfo getCarInfoByDriverId(int driverId) throws  Exception;
+
+    public int updateCarInfoDriverIdByCarId(CarInfo carInfo) throws Exception;
+
+    public int updateDeleteCarCarInfoDriverIdByCarId(CarInfo carInfo) throws Exception;
+
+
 }

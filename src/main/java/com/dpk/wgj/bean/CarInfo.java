@@ -16,6 +16,10 @@ public class CarInfo implements Serializable {
 
     private int carSeat;
 
+    private int carDriverIdA;
+
+    private int carDriverIdB;
+
     public String getCarType() {
         return carType;
     }
@@ -47,6 +51,14 @@ public class CarInfo implements Serializable {
     public void setCarNumber(String carNumber) {
         this.carNumber = carNumber;
     }
+
+    public int getCarDriverIdA() { return carDriverIdA; }
+
+    public void setCarDriverIdA(int carDriverIdA) { this.carDriverIdA = carDriverIdA; }
+
+    public int getCarDriverIdB() { return carDriverIdB; }
+
+    public void setCarDriverIdB(int carDriverIdB) { this.carDriverIdB = carDriverIdB; }
 
     @Override
     public String toString() {
