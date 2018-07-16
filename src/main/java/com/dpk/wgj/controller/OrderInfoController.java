@@ -264,7 +264,7 @@ public class OrderInfoController {
      */
     @RequestMapping(value = "/api/passenger/updateOrderInfoByOrderId", method = RequestMethod.POST)
     @Transactional
-    public Message cancelOfOrderForPassenger (@RequestBody int orderInfoId){
+    public Message cancelOfOrderForPassenger (@RequestBody OrderInfo order){
         int upStatus = 0;
 
         // 防止恶意注入
@@ -272,7 +272,7 @@ public class OrderInfoController {
         int passengerId = userInfo.getUserId();
 
         try {
-            OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(orderInfoId);
+            OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(order.getOrderId());
 
             // 插入用户成为日志
             logInfoService.addLogInfo(new LogInfo("乘客端 >> 取消订单", 2, new Date(), orderInfo.getOrderId()));
