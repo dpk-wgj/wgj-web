@@ -140,10 +140,13 @@ public class DriverAndPassWebSocket {
                         /*2.给乘客发送信息  给司机发送信息*/
                         for (String k : sessionPool.keySet()) {
                             String[] a = k.split(",");
-                            if(a[0].equals("passenger")){
+                            if(a[0].equals("driver")){
 
-                                if(Integer.parseInt(a[1]) == order.getPassengerId()){
+                                if(Integer.parseInt(a[1]) == order.getDriverId()){
 
+                                    //将司机状态改为接客前
+                                    driverInfo.setFlag(1);
+                                    driverInfoService.updateApiDriverInfoByDriverId(driverInfo);
                                     //将订单状态改为接单状态
                                     order.setOrderId(orderId);
                                     order.setDriverId(this.userId);
@@ -151,9 +154,6 @@ public class DriverAndPassWebSocket {
                                     orderInfoService.updateOrderInfoByOrderId(order);
 
                                     Passenger pass = passengerService.getPassengerByPassengerId(order.getPassengerId());
-                                    //将乘客状态改为服务中
-                                    pass.setPassengerStatus(1);
-                                    passengerService.updatePassengerStatus(pass);
 
                                     JSONObject o = new JSONObject();
                                     order = orderInfoService.getOrderInfoByOrderId(orderId);
@@ -161,12 +161,13 @@ public class DriverAndPassWebSocket {
                                     sendMessage(1,"h成功拿到订单，请前往乘客 点",o, "driver,"+userId);
 
                                 }
-                            } else if(a[0].equals("driver")){
+                            } else if(a[0].equals("passenger")){
 
-                                if(Integer.parseInt(a[1]) == order.getDriverId()) {
-                                    //将司机状态改为接客前
-                                    driverInfo.setFlag(1);
-                                    driverInfoService.updateApiDriverInfoByDriverId(driverInfo);
+                                if(Integer.parseInt(a[1]) == order.getPassengerId()) {
+                                    Passenger pass = passengerService.getPassengerByPassengerId(order.getPassengerId());
+                                    //将乘客状态改为服务中
+                                    pass.setPassengerStatus(1);
+                                    passengerService.updatePassengerStatus(pass);
 
                                     CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
                                     CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfo);
@@ -230,13 +231,26 @@ public class DriverAndPassWebSocket {
                         p.setPassengerStatus(2);
                         passengerService.updatePassengerStatus(p);
                         sendMessage(2,"已经到达目的地，结束订单", null, "passenger,"+order.getPassengerId());
+                        break;
                     case "changeDriver"://司机端按下一键改派按钮
                         // TODO: 2018/7/14 还没做
-                        /*1.降低服务质量星级*/
+                        OrderInfo orderInfo1 = orderInfoService.getOrderInfoByOrderId(orderId);
+                        /*1.降低服务质量星级 更改司机状态*/
+                        DriverInfo driverInfo1 = driverInfoService.getDriverInfoByDriverId(orderInfo1.getDriverId());
+                        driverInfo1.setDriverLevelStar(driverInfo1.getDriverLevelStar()-1);
+                        driverInfo1.setFlag(0);
 
-                        /*2.向乘客发送消息更换司机*/
+                        /*2.更改乘客状态 向乘客发送消息更换司机*/
+                        orderInfo1.setDriverId(0);
+                        orderInfo1.setOrderStatus(0);
+                        orderInfoService.updateOrderInfoByOrderId(orderInfo1);
+                        Passenger passenger1 = passengerService.getPassengerByPassengerId(orderInfo1.getPassengerId());
+                        passenger1.setPassengerStatus(0);//呼车状态
+                        passengerService.updatePassengerStatus(passenger1);
+                        sendMessage(3,"司机取消本订单 即将为您自动分配其他司机", null, "passenger,"+orderInfo1.getPassengerId());
 
                         /*3.插入日志记录*/
+
 
                         break;
                 }
@@ -255,7 +269,7 @@ public class DriverAndPassWebSocket {
                         int driverId; //要接单的司机id
                         /*1.查询出所有可以接单的乘客列表  */
                         for (DriverInfo d: driverInfoList){
-                            // TODO: 2018/7/14    根据乘客下单位置 派送距离最近的司机的匹配算法还没写 
+                            // TODO: 2018/7/14    根据乘客下单位置 派送距离最近的司机的匹配算法还没写
 
                             // 可接单的   选择最高的司机星级
                             if(d.getFlag()==0){
@@ -274,7 +288,10 @@ public class DriverAndPassWebSocket {
                                                 order.setDriverId(driverId);
                                                 orderInfoService.updateOrderInfoByOrderId(order);
 
-                                                Passenger pass = passengerService.getPassengerByPassengerId((this.userId));
+                                                Passenger pass = passengerService.getPassengerByPassengerId(this.userId);
+                                                //将乘客改为服务中
+                                                pass.setPassengerStatus(1);
+                                                passengerService.updatePassengerStatus(pass);
                                                 JSONObject o = new JSONObject();
                                                 order = orderInfoService.getOrderInfoByOrderId(orderId);
                                                 o.put("order",order);o.put("passenger",pass);
@@ -282,7 +299,7 @@ public class DriverAndPassWebSocket {
 
                                                 CarInfo carInfo = carInfoService.getCarInfoByCarId(d.getCarId());
                                                 CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, d);
-                                                sendMessage(1, "已经有司机接单,请在原地等待司机接送", carInfoDTO, "passenger," + this.userId);
+                                                sendMessage(1, "已经有司机接单,请在原地等待司机接送", carInfoDTO, "passenger," + userId);
                                             }
                                         }
 //                                System.out.println("key= "+ key + " and value= " + sessionPool.get(key));
