@@ -135,10 +135,10 @@ public class CarInfoServiceImpl implements CarInfoService{
         return null;
     }
     @Override
-    public CarInfo getCarInfoNoCompatibleByCarId(int carId) {
+    public CarInfo getCarInfoNoCompatibleByCarNumber(String carNumber) {
         CarInfo carInfo;
         try {
-            carInfo = carInfoMapper.getCarInfoByCarId(carId);
+            carInfo = carInfoMapper.getCarInfoNoCompatibleByCarNumber(carNumber);
             return carInfo;
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -170,4 +170,17 @@ public class CarInfoServiceImpl implements CarInfoService{
         }
         return upStatus;
     }
+    @Override
+    public int updateDeleteCarCarInfoDriverIdByCarId(CarInfo carInfo) {
+        int upStatus = 0;
+
+        try {
+            upStatus = carInfoMapper.updateDeleteCarCarInfoDriverIdByCarId(carInfo);
+            return upStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return upStatus;
+    }
+
 }

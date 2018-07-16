@@ -136,10 +136,13 @@ public class OrderInfoController {
             if (orderInfos != null){
                 for (OrderInfo orderInfo : orderInfos){
                     DriverInfo driverInfo = new DriverInfo();
+                    CarInfo carInfo = new CarInfo();
                     OrderDTO dto = new OrderDTO();
                     driverInfo = driverInfoService.getDriverInfoByDriverId(orderInfo.getDriverId());
+                    carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
                     dto.setDriverInfo(driverInfo);
                     dto.setOrderInfo(orderInfo);
+                    dto.setCarInfo(carInfo);
                     orderDTOList.add(dto);
                 }
 //                System.out.println(orderDTOList.get(0).getOrderInfo().ges);
@@ -160,12 +163,9 @@ public class OrderInfoController {
      */
     @RequestMapping(value = "/api/driver/getOrderInfoByDriverId", method = RequestMethod.GET)
     public Message getOrderInfoByDriverId(){
-
         List<OrderInfo> orderInfos;
-
         UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int driverId = userInfo.getUserId();
-
         try {
             orderInfos = orderInfoService.getOrderInfoByDriverId(driverId);
             if (orderInfos != null){
@@ -264,7 +264,7 @@ public class OrderInfoController {
      */
     @RequestMapping(value = "/api/passenger/updateOrderInfoByOrderId", method = RequestMethod.POST)
     @Transactional
-    public Message cancelOfOrderForPassenger (@RequestBody int orderInfoId){
+    public Message cancelOfOrderForPassenger (@RequestBody OrderInfo order){
         int upStatus = 0;
 
         // 防止恶意注入
@@ -272,7 +272,7 @@ public class OrderInfoController {
         int passengerId = userInfo.getUserId();
 
         try {
-            OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(orderInfoId);
+            OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(order.getOrderId());
 
             // 插入用户成为日志
             logInfoService.addLogInfo(new LogInfo("乘客端 >> 取消订单", 2, new Date(), orderInfo.getOrderId()));

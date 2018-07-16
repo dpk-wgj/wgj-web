@@ -51,7 +51,7 @@ public class LogInfoController {
      * 查看用户日志详情
      * @return
      */
-    @RequestMapping(value = "/getLogInfoByLogId/{logInfoId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/getLogInfoByLogId", method = RequestMethod.POST)
     public Message getLogInfoByLogId(@RequestParam(value = "logInfoId") int logInfoId){
         LogInfo logInfo;
 

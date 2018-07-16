@@ -15,8 +15,8 @@
     </resultMap>
 
     <insert id="addCommentInfoByOrderId" parameterType="CommentInfo" useGeneratedKeys="true" keyProperty="commentId">
-        INSERT INTO comment_info (comment_content, is_clear, is_stable, is_know, is_good, order_id)
-        VALUES (#{commentContent}, #{isClear}, #{isStable}, #{isKnow}, #{isGood}, #{orderId})
+        INSERT INTO comment_info (comment_content, is_clear, is_stable, is_know, is_good, order_id, comment_point)
+        VALUES (#{commentContent}, #{isClear}, #{isStable}, #{isKnow}, #{isGood}, #{orderId}, #{commentPoint})
     </insert>
 
     <delete id="deleteCommentInfoByCommentId" parameterType="int">
@@ -24,7 +24,7 @@
     </delete>
 
     <select id="getCommendInfoByOrderId" resultMap="CommentInfoMap">
-        SELECT comment_id, comment_content, is_clear, is_stable, is_know, is_good, order_id  FROM comment_info
+        SELECT comment_id, comment_content, is_clear, is_stable, is_know, is_good, order_id, comment_point  FROM comment_info
         WHERE order_id = #{orderId}
     </select>
 

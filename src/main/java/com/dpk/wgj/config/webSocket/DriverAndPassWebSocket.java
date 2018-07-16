@@ -91,19 +91,20 @@ public class DriverAndPassWebSocket {
     }
 
     @OnMessage
-    public void onMessage(String message) throws IOException {
+    public void onMessage(String message,@PathParam(value="userId")String userId) throws IOException {
         try {
+            this.userId = Integer.parseInt(userId);
             String[] msgArr = message.split(",");//message为'role,message'的形式  例如driver,toWait
             role = msgArr[0];
 
-            System.out.println("后台ws收到的信息:"+message);
+            System.out.println("后台ws收到的信息:"+message+",用户id:"+this.userId);
             DriverInfo driverInfo = new DriverInfo();
             Passenger passenger = new Passenger();
             OrderInfoTableMessage tableMessage = new OrderInfoTableMessage();
             List<OrderInfo> orderInfos = null;
             if(role.equals("driver")){
 
-                driverInfo = driverInfoService.getDriverInfoByDriverId(userId);
+                driverInfo = driverInfoService.getDriverInfoByDriverId(this.userId);
                 OrderInfo order = new OrderInfo();
                 switch (msgArr[1]){
                     case "toWait":
@@ -132,27 +133,27 @@ public class DriverAndPassWebSocket {
                                         order = orderInfoService.getOrderInfoByOrderId(orderInfos.get(0).getOrderId());
                                     }
                                 }
-                            }else{ return; }
+                            }
 
                         }
 
                         /*2.给乘客发送信息  给司机发送信息*/
                         for (String k : sessionPool.keySet()) {
                             String[] a = k.split(",");
-                            if(a[0].equals("driver")){
+                            if(a[0].equals("passenger")){
 
-                                if(Integer.parseInt(a[1]) == order.getDriverId()){
+                                if(Integer.parseInt(a[1]) == order.getPassengerId()){
 
-                                    //将司机状态改为接客前
-                                    driverInfo.setFlag(1);
-                                    driverInfoService.updateApiDriverInfoByDriverId(driverInfo);
                                     //将订单状态改为接单状态
                                     order.setOrderId(orderId);
-                                    order.setDriverId(userId);
+                                    order.setDriverId(this.userId);
                                     order.setOrderStatus(1);
                                     orderInfoService.updateOrderInfoByOrderId(order);
 
                                     Passenger pass = passengerService.getPassengerByPassengerId(order.getPassengerId());
+                                    //将乘客状态改为服务中
+                                    pass.setPassengerStatus(1);
+                                    passengerService.updatePassengerStatus(pass);
 
                                     JSONObject o = new JSONObject();
                                     order = orderInfoService.getOrderInfoByOrderId(orderId);
@@ -160,13 +161,12 @@ public class DriverAndPassWebSocket {
                                     sendMessage(1,"h成功拿到订单，请前往乘客 点",o, "driver,"+userId);
 
                                 }
-                            } else if(a[0].equals("passenger")){
+                            } else if(a[0].equals("driver")){
 
-                                if(Integer.parseInt(a[1]) == order.getPassengerId()) {
-                                    Passenger pass = passengerService.getPassengerByPassengerId(order.getPassengerId());
-                                    //将乘客状态改为服务中
-                                    pass.setPassengerStatus(1);
-                                    passengerService.updatePassengerStatus(pass);
+                                if(Integer.parseInt(a[1]) == order.getDriverId()) {
+                                    //将司机状态改为接客前
+                                    driverInfo.setFlag(1);
+                                    driverInfoService.updateApiDriverInfoByDriverId(driverInfo);
 
                                     CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
                                     CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfo);
@@ -185,7 +185,7 @@ public class DriverAndPassWebSocket {
                         tableMessage.setLimit(1);tableMessage.setOffset(0);tableMessage.setOrder("desc");tableMessage.setSort("order_id");
                         OrderInfo orderInfo = new OrderInfo();
                         orderInfo.setOrderStatus(1);
-                        orderInfo.setDriverId(userId);
+                        orderInfo.setDriverId(this.userId);
                         tableMessage.setOrderInfo(orderInfo);
                         orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
 
@@ -211,7 +211,7 @@ public class DriverAndPassWebSocket {
                         tableMessage.setLimit(1);tableMessage.setOffset(0);tableMessage.setOrder("desc");tableMessage.setSort("order_id");
                         OrderInfo orderInfo2 = new OrderInfo();
                         orderInfo2.setOrderStatus(2);
-                        orderInfo2.setDriverId(userId);
+                        orderInfo2.setDriverId(this.userId);
                         tableMessage.setOrderInfo(orderInfo2);
                         orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
 
@@ -232,41 +232,25 @@ public class DriverAndPassWebSocket {
                         sendMessage(2,"已经到达目的地，结束订单", null, "passenger,"+order.getPassengerId());
                     case "changeDriver"://司机端按下一键改派按钮
                         // TODO: 2018/7/14 还没做
-                        OrderInfo orderInfo1 = orderInfoService.getOrderInfoByOrderId(orderId);
-                        /*1.降低服务质量星级 更改司机状态*/
-                        DriverInfo driverInfo1 = driverInfoService.getDriverInfoByDriverId(orderInfo1.getDriverId());
-                        driverInfo1.setDriverLevelStar(driverInfo1.getDriverLevelStar()-1);
-                        driverInfo1.setFlag(0);
+                        /*1.降低服务质量星级*/
 
-                        /*2.更改乘客状态 向乘客发送消息更换司机*/
-                        orderInfo1.setDriverId(0);
-                        orderInfo1.setOrderStatus(0);
-                        orderInfoService.updateOrderInfoByOrderId(orderInfo1);
-                        Passenger passenger1 = passengerService.getPassengerByPassengerId(orderInfo1.getPassengerId());
-                        passenger1.setPassengerStatus(0);//呼车状态
-                        passengerService.updatePassengerStatus(passenger1);
-                        sendMessage(3,"司机取消本订单 即将为您自动分配其他司机", null, "passenger,"+orderInfo1.getPassengerId());
+                        /*2.向乘客发送消息更换司机*/
 
                         /*3.插入日志记录*/
-
 
                         break;
                 }
 
             }else if(role.equals("passenger")){
-
                 OrderInfo order = new OrderInfo();
-
                 switch (msgArr[1]){
                     case "arriveDest":
                         break;
                     case "toWait":
-
 //                        for (String k: sessionPool.keySet()){
 //                            System.out.println("现在连接池中还有:"+k+",sessionId:"+sessionPool.get(k).getId());
 //                        }
                         System.out.println("订单Id："+","+orderId);
-
                         List<DriverInfo> driverInfoList = driverInfoService.getDriverInfoByDriverStatus(1);
                         int driverId; //要接单的司机id
                         /*1.查询出所有可以接单的乘客列表  */
@@ -290,10 +274,7 @@ public class DriverAndPassWebSocket {
                                                 order.setDriverId(driverId);
                                                 orderInfoService.updateOrderInfoByOrderId(order);
 
-                                                Passenger pass = passengerService.getPassengerByPassengerId((userId));
-                                                //将乘客改为服务中
-                                                pass.setPassengerStatus(1);
-                                                passengerService.updatePassengerStatus(pass);
+                                                Passenger pass = passengerService.getPassengerByPassengerId((this.userId));
                                                 JSONObject o = new JSONObject();
                                                 order = orderInfoService.getOrderInfoByOrderId(orderId);
                                                 o.put("order",order);o.put("passenger",pass);
@@ -301,7 +282,7 @@ public class DriverAndPassWebSocket {
 
                                                 CarInfo carInfo = carInfoService.getCarInfoByCarId(d.getCarId());
                                                 CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, d);
-                                                sendMessage(1, "已经有司机接单,请在原地等待司机接送", carInfoDTO, "passenger," + userId);
+                                                sendMessage(1, "已经有司机接单,请在原地等待司机接送", carInfoDTO, "passenger," + this.userId);
                                             }
                                         }
 //                                System.out.println("key= "+ key + " and value= " + sessionPool.get(key));
@@ -316,7 +297,7 @@ public class DriverAndPassWebSocket {
                         tableMessage.setLimit(1);tableMessage.setOffset(0);tableMessage.setOrder("desc");tableMessage.setSort("order_id");
                         OrderInfo orderInfo3 = new OrderInfo();
                         orderInfo3.setOrderStatus(1);
-                        orderInfo3.setDriverId(userId);
+                        orderInfo3.setDriverId(this.userId);
                         tableMessage.setOrderInfo(orderInfo3);
                         orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
 

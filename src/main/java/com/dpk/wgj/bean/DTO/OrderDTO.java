@@ -1,5 +1,6 @@
 package com.dpk.wgj.bean.DTO;
 
+import com.dpk.wgj.bean.CarInfo;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.OrderInfo;
 
@@ -12,6 +13,16 @@ public class OrderDTO {
     private OrderInfo orderInfo;
 
     private DriverInfo driverInfo;
+
+    private CarInfo carInfo;
+
+    public CarInfo getCarInfo() {
+        return carInfo;
+    }
+
+    public void setCarInfo(CarInfo carInfo) {
+        this.carInfo = carInfo;
+    }
 
     public OrderInfo getOrderInfo() {
         return orderInfo;
