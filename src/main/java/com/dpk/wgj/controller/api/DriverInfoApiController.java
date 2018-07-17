@@ -3,13 +3,16 @@ package com.dpk.wgj.controller.api;
 
 import com.dpk.wgj.bean.CarInfo;
 import com.dpk.wgj.bean.DTO.CarInfoDTO;
+import com.dpk.wgj.bean.DTO.UserDTO;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Driver;
 import java.util.List;
 
 @RestController
@@ -75,5 +78,30 @@ public class DriverInfoApiController {
         } catch (Exception e) {
             return new Message(Message.ERROR, "更新司机信息 >> 异常", e.getMessage());
         }
+    }
+
+    /**
+    * 司机端  绑定手机号
+     * @param driver
+     * @return
+    * */
+    @RequestMapping(value = "bingDriverPhoneNumber",method = RequestMethod.POST)
+    public Message bingDriverPhoneNumber(DriverInfo driver){
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        int driverId = userInfo.getUserId();
+
+        int upStatus = 0;
+        driver.setDriverId(driverId);
+        try{
+            upStatus = driverInfoApiService.updateDriverPhoneNumber(driver);
+            if (upStatus == 1){
+                return new Message(Message.SUCCESS, "司机绑定手机号 >> 成功", upStatus);
+            }
+            return new Message(Message.FAILURE, "司机绑定手机号 >> 失败", upStatus);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "司机绑定手机号 >> 异常", e.getMessage());
+        }
+
     }
 }

@@ -294,6 +294,19 @@ public class DriverInfoServiceImpl implements DriverInfoService {
         return upApiStatus;
     }
 
+    @Override
+    public int  updateDriverPhoneNumber(DriverInfo driverInfo){
+        int upApiStatus = 0;
+
+        try {
+            upApiStatus = driverInfoMapper.updateDriverPhoneNumber(driverInfo);
+            return upApiStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return upApiStatus;
+    }
+
     /**
      * Created by hlx on 2018/7/9.
      * 说明:用于查询所有司机信息
