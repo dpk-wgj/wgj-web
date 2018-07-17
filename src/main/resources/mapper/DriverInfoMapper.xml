@@ -189,11 +189,18 @@
         WHERE driver_status = 1
     </select>
 
-    <update id="updateDriverStatus" parameterType="DriverInfo">
+    <update id="updateFlag" parameterType="DriverInfo">
         update driver_info
         <set>
-            <if test="driverStatus != null">
-                driver_status = #{driverStatus,jdbcType=INTEGER},
+                flag = #{flag,jdbcType=INTEGER},
+        </set>
+        WHERE driver_id = #{driverId,jdbcType=INTEGER}
+    </update>
+    <update id="updateDriverPhoneNumber" parameterType="DriverInfo">
+        update driver_info
+        <set>
+            <if test="driverPhoneNumber != null and driverPhoneNumber !=''">
+                driver_phone_number = #{driverPhoneNumber,jdbcType = VARCHAR}
             </if>
         </set>
         WHERE driver_id = #{driverId,jdbcType=INTEGER}
