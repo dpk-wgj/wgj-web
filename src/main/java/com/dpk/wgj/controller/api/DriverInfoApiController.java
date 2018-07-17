@@ -86,7 +86,7 @@ public class DriverInfoApiController {
      * @return
     * */
     @RequestMapping(value = "bingDriverPhoneNumber",method = RequestMethod.POST)
-    public Message bingDriverPhoneNumber(DriverInfo driver){
+    public Message bingDriverPhoneNumber(@RequestBody DriverInfo driver){
         UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int driverId = userInfo.getUserId();
 
