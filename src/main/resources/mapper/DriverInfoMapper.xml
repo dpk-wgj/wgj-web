@@ -169,7 +169,7 @@
     </delete>
 
     <select id="getDriverInfoByWxId" resultMap="DriverInfoMap">
-        SELECT driver_wx_id, driver_id, user_group_id  FROM driver_info
+        SELECT driver_wx_id, driver_id, user_group_id,driver_phone_number FROM driver_info
         WHERE driver_wx_id = #{driverWxId}
     </select>
 
