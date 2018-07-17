@@ -205,6 +205,7 @@
                 driver_phone_number = #{driverPhoneNumber,jdbcType = VARCHAR}
             </if>
         </set>
+        WHERE driver_id = #{driverId,jdbcType=INTEGER}
     </update>
 
 </mapper>
