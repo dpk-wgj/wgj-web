@@ -44,4 +44,6 @@ public interface DriverInfoMapper {
     public DriverInfo getDriverInfoByDriverId(int DriverId) throws Exception;
 
     public int updateApiDriverInfoByDriverId(DriverInfo driverInfo) throws Exception;
+
+    public int updateDriverPhoneNumber(DriverInfo driverInfo) throws Exception;
 }

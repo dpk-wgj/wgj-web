@@ -192,11 +192,19 @@
     <update id="updateDriverStatus" parameterType="DriverInfo">
         update driver_info
         <set>
-            <if test="driverStatus != null">
+            <if test="driverStatus != null and driverStatus !=''">
                 driver_status = #{driverStatus,jdbcType=INTEGER},
             </if>
         </set>
         WHERE driver_id = #{driverId,jdbcType=INTEGER}
+    </update>
+    <update id="updateDriverPhoneNumber" parameterType="DriverInfo">
+        update driver_info
+        <set>
+            <if test="driverPhoneNumber != null and driverPhoneNumber !=''">
+                driver_phone_number = #{driverPhoneNumber,jdbcType = VARCHAR}
+            </if>
+        </set>
     </update>
 
 </mapper>

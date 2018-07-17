@@ -81,6 +81,8 @@ public interface DriverInfoService {
 
     public  int updateApiDriverInfoByDriverId(DriverInfo driverInfo) throws Exception;
 
+    public  int updateDriverPhoneNumber(DriverInfo driver)throws Exception;
+
 
 
 }
