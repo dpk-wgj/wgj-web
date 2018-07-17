@@ -10,6 +10,7 @@
         <result column="order_id" property="orderId"/>
         <result column="passenger_id" property="passengerId"/>
         <result column="complaint_feedback" property="complaintFeedback"/>
+        <result column="complaint_feedback" property="complaintFeedback"/>
         <result column="complaint_create_time" property="complaintCreateTime"/>
         <result column="complaint_feedback_time" property="complaintFeedbackTime"/>
     </resultMap>
