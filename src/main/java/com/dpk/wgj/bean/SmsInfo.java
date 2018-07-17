@@ -1,6 +1,8 @@
 package com.dpk.wgj.bean;
 
-public class SmsInfo {
+import java.io.Serializable;
+
+public class SmsInfo implements Serializable {
 
     private int userId;
 
@@ -25,11 +27,7 @@ public class SmsInfo {
     }
 
     public String getRandomNum() {
-        String randomNum = "";
-        for(int i = 0; i < 4;i ++){
-            int random = (int)(Math.random() * 10);
-            randomNum += random;
-        }
+
         return randomNum;
     }
 
