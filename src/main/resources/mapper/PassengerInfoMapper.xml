@@ -46,7 +46,7 @@
             </if>
         </set>
         WHERE passenger_id = #{passengerId,jdbcType=INTEGER}
-    </update>
+</update>
 
 
 </mapper>
