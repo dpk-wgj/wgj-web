@@ -100,11 +100,11 @@ public class DriverInfoServiceImpl implements DriverInfoService {
     }
 
     @Override
-    public int updateDriverStatus(DriverInfo driverInfo) {
+    public int updateFlag(DriverInfo driverInfo) {
         int upStatus = 0;
 
         try {
-            upStatus = driverInfoMapper.updateDriverStatus(driverInfo);
+            upStatus = driverInfoMapper.updateFlag(driverInfo);
             return upStatus;
         } catch (Exception e) {
             e.printStackTrace();

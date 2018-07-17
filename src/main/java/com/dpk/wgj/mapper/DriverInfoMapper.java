@@ -17,7 +17,7 @@ public interface DriverInfoMapper {
 
     public int addDriverInfo(DriverInfo driverInfo) throws Exception;
 
-    public int updateDriverStatus(DriverInfo driverInfo) throws Exception;
+    public int updateFlag(DriverInfo driverInfo) throws Exception;
 
     public DriverInfo getDriverInfoByDriverName(String driverName) throws Exception;
 
