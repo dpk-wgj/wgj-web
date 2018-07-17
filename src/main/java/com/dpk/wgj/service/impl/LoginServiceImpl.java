@@ -86,6 +86,7 @@ public class LoginServiceImpl implements LoginService {
         Passenger passenger = new Passenger();
         Passenger passenger1 = new Passenger();
         try {
+            //根据传进来的微信号去获取乘客的信息（如果乘客已经存在）
             passenger = passengerMapper.getPassengerByWxId(userInfo.getPassenger().getPassengerWxId());
 
             // 用户不存在则自动添加
