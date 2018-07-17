@@ -121,7 +121,7 @@ public class DriverInfoApiController {
     }
 
     /**
-     * 司机端  提交验证码 {"phoneNumber": "XXXX"}
+     * 司机端  提交验证码 {"randomNum": "XXXX"}
      */
     @RequestMapping(value = "/bindDriverPhoneNumber",method = RequestMethod.POST)
     public Message bindDriverPhoneNumber(@RequestBody SmsInfo smsInfo){
