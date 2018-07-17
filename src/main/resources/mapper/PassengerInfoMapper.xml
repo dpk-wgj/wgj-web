@@ -14,7 +14,7 @@
     </resultMap>
 
     <select id="getPassengerByWxId" resultMap="PassengerMap">
-        SELECT passenger_id, passenger_wx_id, user_group_id FROM passenger_info
+        SELECT passenger_id, passenger_wx_id, user_group_id,passenger_phone_number FROM passenger_info
         WHERE passenger_wx_id = #{passengerWxId}
     </select>
 
