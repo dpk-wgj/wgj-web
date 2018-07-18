@@ -93,17 +93,16 @@ public class DriverAndPassWebSocket {
     @OnMessage
     public void onMessage(String message,@PathParam(value="userId")String userId) throws IOException {
         try {
-            this.userId = Integer.parseInt(userId);
             String[] msgArr = message.split(",");//message为'role,message'的形式  例如driver,toWait
             role = msgArr[0];
 
-            System.out.println("后台ws收到的信息:"+message+",用户id:"+this.userId);
+            System.out.println("后台ws收到的信息:"+message+",用户id:"+userId);
             DriverInfo driverInfo = new DriverInfo();
             Passenger passenger = new Passenger();
             OrderInfoTableMessage tableMessage = new OrderInfoTableMessage();
             List<OrderInfo> orderInfos = null;
             if(role.equals("driver")){
-
+                this.userId = Integer.parseInt(userId);
                 driverInfo = driverInfoService.getDriverInfoByDriverId(this.userId);
                 OrderInfo order = new OrderInfo();
                 switch (msgArr[1]){
@@ -239,7 +238,6 @@ public class DriverAndPassWebSocket {
                         DriverInfo driverInfo1 = driverInfoService.getDriverInfoByDriverId(orderInfo1.getDriverId());
                         driverInfo1.setDriverLevelStar(driverInfo1.getDriverLevelStar()-1);
                         driverInfo1.setFlag(0);
-
                         /*2.更改乘客状态 向乘客发送消息更换司机*/
                         orderInfo1.setDriverId(0);
                         orderInfo1.setOrderStatus(0);
@@ -251,11 +249,11 @@ public class DriverAndPassWebSocket {
 
                         /*3.插入日志记录*/
 
-
                         break;
                 }
 
             }else if(role.equals("passenger")){
+                this.userId = Integer.parseInt(userId);
                 OrderInfo order = new OrderInfo();
                 switch (msgArr[1]){
                     case "arriveDest":
@@ -339,6 +337,7 @@ public class DriverAndPassWebSocket {
                         driverInfo = driverInfoService.getDriverInfoByDriverId(order.getDriverId());
                         driverInfo.setFlag(0);
                         driverInfoService.updateApiDriverInfoByDriverId(driverInfo);
+
 
                         sendMessage(3,"乘客取消了订单", null, "driver,"+order.getDriverId());
 
