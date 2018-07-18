@@ -113,7 +113,6 @@ public class CarInfoController {
         List<CarInfoDTO> carInfoDTOList = new ArrayList<>();
         int count = 0;
         Map<String, Object> map = new HashMap<>();
-        tableMessage.getCarInfo().setCarType("%" + tableMessage.getCarInfo().getCarType() + "%");
         try {
             carInfos = carInfoService.findCarInfoByMultiCondition(tableMessage);
             count = carInfoService.findCarInfoByMultiConditionCount(tableMessage);
