@@ -427,8 +427,6 @@ public class OrderInfoController {
                     DriverInfo driverInfo = driverInfoService.getDriverInfoByDriverId(driverId);
                     Passenger passenger = passengerService.getPassengerByPassengerId(passengerId);
                     CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
-                    // 判断车辆所有权 未完成
-
                     OrderInfoDTO orderInfoDTO = new OrderInfoDTO(orderInfo, carInfo, driverInfo, passenger);
                     infoDTOList.add(orderInfoDTO);
                 }

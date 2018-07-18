@@ -17,7 +17,13 @@ public interface ComplaintInfoService {
 
     public int updateComplaintInfoStatus(ComplaintInfo complaintInfo) throws Exception;
 
-    public List<ComplaintInfo> findOrderInfoByMultiCondition(ComplaintMessage complaintMessage) throws Exception;
+    /**
+     * 投诉多条件查询功能
+     */
+    public List<ComplaintInfo> findComplaintInfoByMultiCondition(ComplaintMessage tableMessage) throws Exception;
 
-    public int findOrderInfoByMultiConditionCount(ComplaintMessage complaintMessage) throws Exception;
+    /**
+     * 投诉多条件查询功能 -- 投诉总数
+     */
+    public int findComplaintInfoByMultiConditionCount(ComplaintMessage tableMessage) throws Exception;
 }

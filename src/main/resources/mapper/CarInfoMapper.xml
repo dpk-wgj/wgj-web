@@ -59,14 +59,14 @@
         where car_id = #{carId,jdbcType=INTEGER}
     </update>
 
-    <update id="updateDeleteCarCarInfoDriverIdByCarId" parameterType="CarInfo">
+    <update id="updateCarInfoDriverIdByCarId" parameterType="CarInfo">
         update car_info
         <set>
             <if test="carDriverIdA == 0">
-                car_driver_id_a = 0,
+                car_driver_id_a = #{carDriverIdA,jdbcType =INTEGER},
             </if>
             <if test="carDriverIdB == 0">
-                car_driver_id_b = 0,
+                car_driver_id_b = #{carDriverIdB,jdbcType =INTEGER},
             </if>
         </set>
         where car_id = #{carId,jdbcType=INTEGER}
@@ -117,16 +117,5 @@
         WHERE (car_driver_id_a = #{driverId} OR car_driver_id_b = #{driverId})
     </select>
 
-    <update id="updateCarInfoDriverIdByCarId" parameterType="CarInfo">
-        update car_info
-        <set>
-            <if test="carDriverIdA == 0">
-                car_driver_id_a = #{carDriverIdA,jdbcType =INTEGER},
-            </if>
-            <if test="carDriverIdB == 0">
-                car_driver_id_b = #{carDriverIdB,jdbcType =INTEGER},
-            </if>
-        </set>
-        where car_id = #{carId,jdbcType=INTEGER}
-    </update>
+
 </mapper>

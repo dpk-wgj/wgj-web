@@ -175,7 +175,7 @@ public class CarInfoServiceImpl implements CarInfoService{
         int upStatus = 0;
 
         try {
-            upStatus = carInfoMapper.updateDeleteCarCarInfoDriverIdByCarId(carInfo);
+            upStatus = carInfoMapper.updateCarInfoDriverIdByCarId(carInfo);
             return upStatus;
         } catch (Exception e) {
             e.printStackTrace();
