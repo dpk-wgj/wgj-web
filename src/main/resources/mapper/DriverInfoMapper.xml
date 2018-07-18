@@ -169,7 +169,7 @@
     </delete>
 
     <select id="getDriverInfoByWxId" resultMap="DriverInfoMap">
-        SELECT driver_wx_id, driver_id, user_group_id  FROM driver_info
+        SELECT driver_wx_id, driver_id, user_group_id,driver_phone_number FROM driver_info
         WHERE driver_wx_id = #{driverWxId}
     </select>
 
@@ -189,11 +189,18 @@
         WHERE driver_status = 1
     </select>
 
-    <update id="updateDriverStatus" parameterType="DriverInfo">
+    <update id="updateFlag" parameterType="DriverInfo">
         update driver_info
         <set>
-            <if test="driverStatus != null">
-                driver_status = #{driverStatus,jdbcType=INTEGER},
+                flag = #{flag,jdbcType=INTEGER},
+        </set>
+        WHERE driver_id = #{driverId,jdbcType=INTEGER}
+    </update>
+    <update id="updateDriverPhoneNumber" parameterType="DriverInfo">
+        update driver_info
+        <set>
+            <if test="driverPhoneNumber != null and driverPhoneNumber !=''">
+                driver_phone_number = #{driverPhoneNumber,jdbcType = VARCHAR}
             </if>
         </set>
         WHERE driver_id = #{driverId,jdbcType=INTEGER}

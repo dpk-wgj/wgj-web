@@ -67,7 +67,7 @@ public interface DriverInfoService {
 
     public int getDriverByMultiConditionCount(DriverInfoTableMessage carInfoTableMessage) throws Exception;
 
-    public int updateDriverStatus(DriverInfo driverInfo) throws Exception;
+    public int updateFlag(DriverInfo driverInfo) throws Exception;
 
     public int updateDriverInfoByDriverId(DriverInfo driverInfo) throws Exception;
 
@@ -80,6 +80,8 @@ public interface DriverInfoService {
     public DriverInfo getDriverInfoByDriverId(int driverId) throws Exception;
 
     public  int updateApiDriverInfoByDriverId(DriverInfo driverInfo) throws Exception;
+
+    public  int updateDriverPhoneNumber(DriverInfo driver)throws Exception;
 
 
 

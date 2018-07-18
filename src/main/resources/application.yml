@@ -12,6 +12,13 @@ spring:
     cache: false
     check-template: false
 
+  redis:
+    host: 47.106.99.73
+    port: 6379
+    database: 0                       #默认是索引为0的数据库
+    password:
+    timeout:
+
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.dpk.wgj.bean
