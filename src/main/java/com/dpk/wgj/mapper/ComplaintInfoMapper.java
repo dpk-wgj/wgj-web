@@ -19,8 +19,9 @@ public interface ComplaintInfoMapper {
 
     public int updateComplaintInfoStatus(ComplaintInfo complaintInfo) throws Exception;
 
-    public List<ComplaintInfo> findOrderInfoByMultiCondition(ComplaintMessage complaintMessage) throws Exception;
+    public List<ComplaintInfo> findComplaintInfoByMultiCondition(ComplaintMessage tableMessage) throws Exception;
 
-    public int findOrderInfoByMultiConditionCount(ComplaintMessage complaintMessage) throws Exception;
+    public int findComplaintInfoByMultiConditionCount(ComplaintMessage tableMessage) throws Exception;
+
 
 }
