@@ -6,6 +6,8 @@ import com.dpk.wgj.bean.Passenger;
 import com.dpk.wgj.bean.SmsInfo;
 import com.dpk.wgj.service.PassengerService;
 import com.dpk.wgj.service.SmsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -32,6 +34,8 @@ public class PassengerController {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    private final Logger logger  = LoggerFactory.getLogger(PassengerController.class);
+
     /**
      * 乘客端  绑定前调用{phoneNumber": "xxxxxx"}
      */
@@ -56,11 +60,10 @@ public class PassengerController {
 
     /**
      * 乘客端 提交验证码 {"randomNum": "XXXX"}
-     * @param passenger
-     * @return
+
      */
     @RequestMapping(value = "/bindPassengerPhoneNumber", method = RequestMethod.POST)
-    public Message bindPassengerPhoneNumber(@RequestBody Passenger passenger){
+    public Message bindPassengerPhoneNumber(@RequestBody SmsInfo smsInfo){
 
         UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int passengerId = userInfo.getUserId();
@@ -68,13 +71,24 @@ public class PassengerController {
         ValueOperations<String,SmsInfo> operations = redisTemplate.opsForValue();
 
          //从缓存中取出sms
-//        SmsInfo sms = operations.get("")
+        SmsInfo sms = operations.get("passenger_"+passengerId);
+        String code = sms.getRandomNum();
+        logger.info("code {}", code);
+
         int upStatus = 0;
+
+        Passenger passenger = new Passenger();
         passenger.setPassengerId(passengerId);
+        passenger.setPassengerPhoneNumber(sms.getPhoneNumber());
+        logger.info("random {}",sms.getRandomNum());
+        String randomNum = smsInfo.getRandomNum();
         try {
-            upStatus = passengerService.updatePassengerPhoneNumber(passenger);
-            if (upStatus == 1){
-                return new Message(Message.SUCCESS, "乘客绑定手机号 >> 成功", upStatus);
+            if(code.equals(randomNum)) {
+                //执行更新操作&&更新成功进行回调
+                upStatus = passengerService.updatePassengerPhoneNumber(passenger);
+                if (upStatus == 1) {
+                    return new Message(Message.SUCCESS, "乘客绑定手机号 >> 成功", upStatus);
+                }
             }
             return new Message(Message.FAILURE, "乘客绑定手机号 >> 失败", upStatus);
         } catch (Exception e) {
