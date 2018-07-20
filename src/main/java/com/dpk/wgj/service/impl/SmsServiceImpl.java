@@ -25,8 +25,8 @@ public class SmsServiceImpl implements SmsService {
     public int sendMsg(SmsInfo smsInfo) {
 
         // 从缓存中获取列表
-//        String key = "driver_" + smsInfo.getUserId();
-        String key = smsInfo.getUserId()+"";
+        String key = "driver_" + smsInfo.getUserId();
+
         ValueOperations<String, SmsInfo> operations = redisTemplate.opsForValue();
 
         // 设置随机4位验证码

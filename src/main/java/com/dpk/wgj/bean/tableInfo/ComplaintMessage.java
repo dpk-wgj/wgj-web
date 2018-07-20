@@ -9,6 +9,7 @@ import com.dpk.wgj.bean.Passenger;
  * 说明:
  */
 public class ComplaintMessage extends TableMessage {
+    private String startTime;
 
     private ComplaintInfo complaintInfo = new ComplaintInfo();
 
@@ -23,6 +24,13 @@ public class ComplaintMessage extends TableMessage {
 //    public Passenger getPassenger() { return passenger; }
 //
 //    public void setPassenger(Passenger passenger) { this.passenger = passenger; }
+public String getStartTime() {
+    return startTime;
+}
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
 
     public ComplaintInfo getComplaintInfo() {
         return complaintInfo;

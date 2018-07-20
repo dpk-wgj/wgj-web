@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by zhoulin on 2018/7/12.
@@ -71,7 +68,7 @@ public class PassengerController {
         ValueOperations<String,SmsInfo> operations = redisTemplate.opsForValue();
 
          //从缓存中取出sms
-        SmsInfo sms = operations.get("passenger_"+passengerId);
+        SmsInfo sms = operations.get("driver_"+passengerId);
         String code = sms.getRandomNum();
         logger.info("code {}", code);
 
@@ -94,6 +91,28 @@ public class PassengerController {
         } catch (Exception e) {
             e.printStackTrace();
             return new Message(Message.ERROR, "乘客绑定手机号 >> 异常", e.getMessage());
+        }
+
+    }
+    /**
+     * 乘客端 ，发送验证码或者（修改绑定手机号）调用{"phoneNumber": "xxxxxx"}
+     *               判断 手机号是否已经绑定了，防止一个手机号绑定多个乘客
+     */
+    @RequestMapping(value = "/getPassengerByPhoneNumber/{passengerPhoneNumber}", method = RequestMethod.GET)
+    public Message getPassengerByPhoneNumber(@PathVariable(value = "passengerPhoneNumber") String passengerPhoneNumber){
+        Passenger passenger ;
+        int status = 0;  //0是可以绑定 ，1是不能绑定
+        try {
+            //搜索绑定手机号为xxxxx的用户
+            passenger = passengerService.getPassengerByPhoneNumber(passengerPhoneNumber);
+
+            if (passenger != null){
+                status = 1;
+                return new Message(Message.SUCCESS, "查询到该号码已经绑定了乘客，不能再次绑定", status);
+            }
+            return new Message(Message.FAILURE, "查询到该号码未绑定乘客，可以绑定", status);
+        } catch (Exception e) {
+            return new Message(Message.ERROR, "查询司机信息 >> 异常", e.getMessage());
         }
 
     }
