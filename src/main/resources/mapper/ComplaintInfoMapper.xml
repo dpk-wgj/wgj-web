@@ -43,11 +43,11 @@
             <if test="complaintFeedback != null and complaintFeedback != ''">
                 complaint_feedback = #{complaintFeedback,jdbcType=VARCHAR},
             </if>
-            <if test="complaintFeedbackTime != null and complaintFeedbackTime != ''">
+            <if test="complaintFeedbackTime != null ">
                 complaint_feedback_time = #{complaintFeedbackTime,jdbcType=TIMESTAMP}
             </if>
-            WHERE order_id =  #{orderId,jdbcType=INTEGER}
         </set>
+        WHERE complaint_id = #{complaintId,jdbcType=INTEGER}
     </update>
 
     <select id="findComplaintInfoByMultiCondition" resultMap="ComplaintInfoMap">
@@ -55,9 +55,13 @@
         <where>
             1 = 1
             <if test="complaintInfo != null ">
+            <if test="complaintInfo.complaintStatus != null and complaintInfo.complaintStatus != ''">
                 AND complaint_status = #{complaintInfo.complaintStatus,jdbcType=INTEGER}
-            <if test="complaintInfo.complaintCreateTime != null and complaintInfo.complaintCreateTime != ''">
-                AND complaint_create_time = #{complaintInfo.complaintCreateTime,jdbcType=TIMESTAMP}
+            </if>
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                    AND complaint_create_time = #{startTime,jdbcType=TIMESTAMP}
+                     ]]>
             </if>
             <if test="complaintInfo.passengerId != null and complaintInfo.passengerId != ''">
                 AND passenger_id = #{complaintInfo.passengerId,jdbcType=INTEGER}
@@ -72,11 +76,13 @@
         <where>
             1 = 1
             <if test="complaintInfo != null ">
-
+            <if test="complaintInfo.complaintStatus != null and complaintInfo.complaintStatus != ''">
                     AND complaint_status = #{complaintInfo.complaintStatus,jdbcType=INTEGER}
-
-                <if test="complaintInfo.complaintCreateTime != null and complaintInfo.complaintCreateTime != ''">
-                    AND complaint_create_time = #{complaintInfo.complaintCreateTime,jdbcType=TIMESTAMP}
+            </if>
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                    AND complaint_create_time = #{startTime,jdbcType=TIMESTAMP}
+                     ]]>
                 </if>
                 <if test="complaintInfo.passengerId != null and complaintInfo.passengerId != ''">
                     AND passenger_id = #{complaintInfo.passengerId,jdbcType=INTEGER}

@@ -28,7 +28,18 @@ public class PassengerServiceImpl implements PassengerService {
         }
         return null;
     }
+    @Override
+    public Passenger getPassengerByPhoneNumber(String passengerPhoneNumber){
 
+        Passenger passenger;
+        try {
+            passenger = passengerMapper.getPassengerByPhoneNumber(passengerPhoneNumber);
+            return passenger;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     @Override
     public int addPassenger(Passenger passenger) {
 

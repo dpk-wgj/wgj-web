@@ -56,6 +56,7 @@ public class ComplaintInfoController {
 
         int addStatus = 0;
         complaintInfo.setPassengerId(passengerId);
+        complaintInfo.setComplaintStatus(1);  //设置投诉初始转态为1
         complaintInfo.setComplaintCreateTime(new Date());
 
         try {
@@ -219,9 +220,10 @@ public class ComplaintInfoController {
     public Message updateComplaintInfoByComplaintId(@RequestBody ComplaintInfo complaintInfo) {
         int upStatus = 0;
         int complaintStatus = complaintInfo.getComplaintStatus()+1;//反馈状态加1
+        System.out.println(complaintInfo.getComplaintId());
         try {
             complaintInfo.setComplaintStatus(complaintStatus);//设置新的反馈状态
-            if(complaintStatus == 2)
+            if(complaintStatus == 3)
             {
                 complaintInfo.setComplaintFeedbackTime(new Date());//设置反馈时间
             }

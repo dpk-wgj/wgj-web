@@ -6,6 +6,8 @@ public interface PassengerService {
 
     public Passenger getPassengerByWxId(String passengerWxId) throws Exception;
 
+     public Passenger getPassengerByPhoneNumber(String passengerPhoneNumber) throws Exception;
+
     public int addPassenger(Passenger passenger) throws Exception;
 
     public int updatePassengerStatus(Passenger passenger) throws Exception;
