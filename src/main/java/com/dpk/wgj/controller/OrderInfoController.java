@@ -178,7 +178,6 @@ public class OrderInfoController {
             e.printStackTrace();
             return new Message(Message.ERROR, "司机端 >> 获取订单列表 >> 异常", e.getMessage());
         }
-
     }
 
     /**
@@ -207,12 +206,12 @@ public class OrderInfoController {
 
                     DriverInfo driverInfo = new DriverInfo();
                     driverInfo.setDriverId(driverId);
-                    // 用时切换司机状态 至 服务前（接客前）
-                    //driverInfo.setDriverStatus(1);
-                    driverInfo.setFlag(1);
+                    // 用时切换司机状态 至 服务前（接单前）
+                    //driverInfo.setFlag(1);
+                    driverInfo.setFlag(0);
                     int upFlag = driverInfoService.updateFlag(driverInfo);
                     if(upFlag == 1){
-                        return new Message(Message.SUCCESS, "司机端 >> 申请改派 && 司机状态切换至 服务前（接客前） >> 成功", upStatus);
+                        return new Message(Message.SUCCESS, "司机端 >> 申请改派 && 司机状态切换至 服务前（接单前） >> 成功", upStatus);
                     }
                 }
             }
