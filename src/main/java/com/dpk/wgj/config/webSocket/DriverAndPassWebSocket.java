@@ -79,7 +79,7 @@ public class DriverAndPassWebSocket {
     }
 
     @OnClose
-    public void onClose() throws IOException{
+    public void onClose(@PathParam(value="userId")String userId) throws IOException{
 
         for (String k : sessionPool.keySet()) {
             System.out.println("要关闭的链接："+k);
@@ -193,14 +193,7 @@ public class DriverAndPassWebSocket {
                             System.out.println("查询到司机已经接到的订单："+orderInfos.get(0).getOrderId());
                             order = orderInfoService.getOrderInfoByOrderId(orderInfos.get(0).getOrderId());
                         }
-//                        orderInfo = new OrderInfo();
-//                        orderInfo.setOrderId(order.getOrderId());
-//                        orderInfo.setOrderStatus(2);//设置订单为派送状态
-//                        orderInfoService.updateOrderInfoByOrderId(orderInfo);
 
-                        //将司机状态改为服务中
-//                        driverInfo.setFlag(2);
-//                        driverInfoService.updateApiDriverInfoByDriverId(driverInfo);
                         sendMessage(1,"司机已经接到了我", null, "passenger,"+order.getPassengerId());
 
                         break;
@@ -219,17 +212,6 @@ public class DriverAndPassWebSocket {
                             System.out.println("查询到司机已经接到的订单："+orderInfos.get(0).getOrderId());
                             order = orderInfoService.getOrderInfoByOrderId(orderInfos.get(0).getOrderId());
                         }
-
-//                        orderInfo2 = new OrderInfo();
-//                        orderInfo2.setOrderId(order.getOrderId());
-//                        orderInfo2.setOrderStatus(3);//设置订单为派送状态
-//                        orderInfoService.updateOrderInfoByOrderId(orderInfo2);
-
-                        //将乘客状态改为服务后
-//                        Passenger p = new Passenger();
-//                        p.setPassengerId(order.getPassengerId());
-//                        p.setPassengerStatus(2);
-//                        passengerService.updatePassengerStatus(p);
 
                         sendMessage(2,"已经到达目的地，结束订单", null, "passenger,"+order.getPassengerId());
 
