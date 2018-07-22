@@ -282,6 +282,10 @@ public class OrderInfoController {
             int driverId = orderInfo.getDriverId();
             if (orderInfo != null && passengerId == orderInfo.getPassengerId()){
                 orderInfo.setOrderStatus(4);
+                String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//将时间格式转换成符合Timestamp要求的格式.
+                Timestamp newdate = Timestamp.valueOf(nowTime);//把时间转换
+
+                orderInfo.setEndTime(nowTime);
                 upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
                 if (upStatus == 1){
 
@@ -335,6 +339,10 @@ public class OrderInfoController {
             // 当司机当前位置 与 用户所定的目的位置 一致才能切换 订单状态
             if (orderInfo != null && driverId == orderInfo.getDriverId() && accessDriverDTO.getCurrentLocation().equals(accessDriverDTO.getTargetLocation())){
                 orderInfo.setOrderStatus(3);
+                String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//将时间格式转换成符合Timestamp要求的格式.
+                Timestamp newdate = Timestamp.valueOf(nowTime);//把时间转换
+
+                orderInfo.setEndTime(nowTime);
                 upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
                 if (upStatus == 1){
 
