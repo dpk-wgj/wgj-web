@@ -226,7 +226,6 @@ public class DriverAndPassWebSocket {
                         }
                         break;
                     case "changeDriver"://司机端按下一键改派按钮
-                        // TODO: 2018/7/14 还没做
                         OrderInfo orderInfo1 = orderInfoService.getOrderInfoByOrderId(orderId);
 
                         sendMessage(3,"司机取消本订单 即将为您自动分配其他司机", null, "passenger,"+orderInfo1.getPassengerId());
@@ -312,24 +311,8 @@ public class DriverAndPassWebSocket {
                             System.out.println("查询到乘客要进行取消的订单id："+orderInfos.get(0).getOrderId());
                             order = orderInfoService.getOrderInfoByOrderId(orderInfos.get(0).getOrderId());
                         }
-//
-//                        orderInfo3 = new OrderInfo();
-//                        orderInfo3.setOrderId(order.getOrderId());
-//                        orderInfo3.setOrderStatus(4);//设置订单为取消状态
-//                        orderInfoService.updateOrderInfoByOrderId(orderInfo3);
-//
-//                        //将乘客状态改为服务后
-//                        passenger = passengerService.getPassengerByPassengerId(orderInfo3.getPassengerId());
-//                        passenger.setPassengerStatus(2);
-//                        passengerService.updatePassengerStatus(passenger);
 
                         sendMessage(4,"乘客取消了订单", null, "passenger,"+order.getPassengerId());
-
-                        //将司机状态改为接单前
-//                        driverInfo = driverInfoService.getDriverInfoByDriverId(order.getDriverId());
-//                        driverInfo.setFlag(0);
-//                        driverInfoService.updateApiDriverInfoByDriverId(driverInfo);
-
 
                         sendMessage(4,"乘客取消了订单", null, "driver,"+order.getDriverId());
 
