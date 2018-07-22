@@ -36,7 +36,7 @@ public class MyDBSCAN {
             {12.0, 0.68}
     };
     private static int minpts = 6;
-    private static double radius = 1.3;
+    private static double radius = 1;
     private static List<List<double[]>> clusters;
     private static List<double[]> cores;
 
