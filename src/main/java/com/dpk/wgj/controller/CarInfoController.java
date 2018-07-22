@@ -155,6 +155,7 @@ public class CarInfoController {
             return new Message(Message.ERROR, "查询车辆信息 >> 异常", e.getMessage());
         }
     }
+
     /**
      * 根据carId查询未完全匹配车辆的信息
      * @param carNumber
