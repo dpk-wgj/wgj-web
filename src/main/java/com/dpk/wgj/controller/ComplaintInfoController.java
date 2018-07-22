@@ -1,10 +1,8 @@
 package com.dpk.wgj.controller;
 
-import com.dpk.wgj.bean.ComplaintInfo;
+import com.dpk.wgj.bean.*;
 import com.dpk.wgj.bean.DTO.UserDTO;
-import com.dpk.wgj.bean.LogInfo;
-import com.dpk.wgj.bean.Message;
-import com.dpk.wgj.bean.OrderInfo;
+import com.dpk.wgj.bean.tableInfo.ComplaintMessage;
 import com.dpk.wgj.service.ComplaintInfoService;
 import com.dpk.wgj.service.LogInfoService;
 import com.dpk.wgj.service.OrderInfoService;
@@ -22,23 +20,32 @@ import java.util.*;
 /**
  * Created by zhoulin on 2018/7/12.
  * 乘客端 >> 订单投诉信息
+ *
+ * Created by hlx on 2018/7/18
+ * 后台端 >> 订单投诉信息查询和反馈更新
  */
 @RestController
-@RequestMapping(value = "/api/passenger")
+//@RequestMapping(value = "/api/passenger")
 public class ComplaintInfoController {
 
     @Autowired
     private ComplaintInfoService complaintInfoService;
 
     @Autowired
+    private OrderInfoService orderInfoService;
+
+    @Autowired
     private LogInfoService logInfoService;
 
+    @Autowired
+    private PassengerService passengerService;
+
     /**
-     * 提交订单投诉
+     * 乘客端 >> 提交订单投诉
      * @param complaintInfo
      * @return
      */
-    @RequestMapping(value = "/addComplaintInfoByOrderId", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/passenger/addComplaintInfoByOrderId", method = RequestMethod.POST)
     @Transactional
     public Message addComplaintInfoByOrderId(@RequestBody ComplaintInfo complaintInfo){
 
@@ -49,6 +56,7 @@ public class ComplaintInfoController {
 
         int addStatus = 0;
         complaintInfo.setPassengerId(passengerId);
+        complaintInfo.setComplaintStatus(1);  //设置投诉初始转态为1
         complaintInfo.setComplaintCreateTime(new Date());
 
         try {
@@ -79,11 +87,11 @@ public class ComplaintInfoController {
     }
 
     /**
-     * 删除订单投诉
+     * 乘客端 >> 删除订单投诉
      * @param complaintInfo
      * @return
      */
-    @RequestMapping(value = "/deleteComplaintInfoByCommentId", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/passenger/deleteComplaintInfoByCommentId", method = RequestMethod.POST)
     @Transactional
     public Message deleteComplaintInfoByCommentId(@RequestBody ComplaintInfo complaintInfo){
         // 防止恶意提交投诉
@@ -121,11 +129,11 @@ public class ComplaintInfoController {
     }
 
     /**
-     * 查看订单投诉
+     * 乘客端 >> 查看订单投诉
      * @param complaintInfo
      * @return
      */
-    @RequestMapping(value = "/getComplaintInfoByOrderId", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/passenger/getComplaintInfoByOrderId", method = RequestMethod.GET)
     @Transactional
     public Message getComplaintInfoByOrderId(@RequestBody ComplaintInfo complaintInfo){
         // 防止恶意提交投诉
@@ -157,7 +165,7 @@ public class ComplaintInfoController {
         }
     }
 
-    @RequestMapping(value = "/getComplaintInfoByPassengerId", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/passenger/getComplaintInfoByPassengerId", method = RequestMethod.POST)
     @Transactional
     public Message getComplaintInfoByPassengerId(){
 
@@ -175,6 +183,60 @@ public class ComplaintInfoController {
         } catch (Exception e) {
             e.printStackTrace();
             return new Message(Message.FAILURE, "获取 >> 用户订单投诉列表 >> 异常", e.getMessage());
+        }
+    }
+
+    /***
+     * 后台端 >> 多条件查询投诉
+     *  @return
+     */
+    @RequestMapping(value = "/admin/complaintInfo/findComplaintInfoByMultiCondition", method = RequestMethod.POST)
+    @Transactional
+    public Message findComplaintInfoByMultiCondition(@RequestBody ComplaintMessage tableMessage){
+        List<ComplaintInfo> complaintInfos = new ArrayList<>(); //获取投诉数据列表
+        Map<String, Object> map = new HashMap<>();
+        try {
+            complaintInfos = complaintInfoService.findComplaintInfoByMultiCondition(tableMessage);
+            int count = complaintInfoService.findComplaintInfoByMultiConditionCount(tableMessage);
+            if (complaintInfos != null){
+                map.put("complaintInfos", complaintInfos);
+                map.put("count", count);
+                return new Message(Message.SUCCESS, "后台端 >> 多条件查询投诉订单 >> 成功", map);
+            }
+            return new Message(Message.FAILURE, "后台端 >> 多条件查询投诉订单 >> 成功", "无查询结果");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "后台端 >> 多条件查询投诉订单 >> 异常", "请求异常 ");
+        }
+    }
+
+
+    /**
+     * 后台端 >> 更新投诉信息
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/admin/complaintInfo/updateComplaintInfoByComplaintId",method = RequestMethod.POST)
+    public Message updateComplaintInfoByComplaintId(@RequestBody ComplaintInfo complaintInfo) {
+        int upStatus = 0;
+        int complaintStatus = complaintInfo.getComplaintStatus()+1;//反馈状态加1
+        System.out.println(complaintInfo.getComplaintId());
+        try {
+            complaintInfo.setComplaintStatus(complaintStatus);//设置新的反馈状态
+            if(complaintStatus == 3)
+            {
+                complaintInfo.setComplaintFeedbackTime(new Date());//设置反馈时间
+            }
+            upStatus = complaintInfoService.updateComplaintInfoStatus(complaintInfo);
+            if (upStatus == 1)
+            {
+                return new Message(Message.SUCCESS, "更新投诉信息 >> 成功", upStatus);
+            }
+            else
+                return new Message(Message.FAILURE, "更新投诉信息 >> 失败", "更新失败");
+
+        } catch (Exception e) {
+            return new Message(Message.ERROR, "更新投诉信息 >> 异常", e.getMessage());
         }
     }
 

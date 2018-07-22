@@ -43,42 +43,50 @@
             <if test="complaintFeedback != null and complaintFeedback != ''">
                 complaint_feedback = #{complaintFeedback,jdbcType=VARCHAR},
             </if>
-            <if test="complaintFeedbackTime != null and complaintFeedbackTime != ''">
+            <if test="complaintFeedbackTime != null ">
                 complaint_feedback_time = #{complaintFeedbackTime,jdbcType=TIMESTAMP}
             </if>
-            WHERE order_id =  #{orderId,jdbcType=INTEGER}
         </set>
+        WHERE complaint_id = #{complaintId,jdbcType=INTEGER}
     </update>
 
-    <select id="findOrderInfoByMultiCondition" resultMap="ComplaintInfoMap">
-        SELECT complaint_id, complaint_content, complaint_status, order_id, passenger_id, complaint_create_time, complaint_feedback, complaint_feedback_time FROM complaint_info
+    <select id="findComplaintInfoByMultiCondition" resultMap="ComplaintInfoMap">
+        SELECT * FROM complaint_info
         <where>
             1 = 1
-            <if test="complaintStatus != null and complaintStatus != ''">
-                AND complaint_status = #{complaintStatus,jdbcType=INTEGER}
+            <if test="complaintInfo != null ">
+            <if test="complaintInfo.complaintStatus != null and complaintInfo.complaintStatus != ''">
+                AND complaint_status = #{complaintInfo.complaintStatus,jdbcType=INTEGER}
             </if>
-            <if test="complaintCreateTime != null and complaintCreateTime != ''">
-                AND complaint_create_time = #{complaintCreateTime,jdbcType=TIMESTAMP}
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                    AND complaint_create_time = #{startTime,jdbcType=TIMESTAMP}
+                     ]]>
             </if>
-            <if test="complaintStatus != null and complaintStatus != ''">
-                AND complaint_status = #{complaintStatus,jdbcType=INTEGER}
+            <if test="complaintInfo.passengerId != null and complaintInfo.passengerId != ''">
+                AND passenger_id = #{complaintInfo.passengerId,jdbcType=INTEGER}
+            </if>
             </if>
         </where>
         ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
     </select>
 
-    <select id="findOrderInfoByMultiConditionCount" resultType="int">
+    <select id="findComplaintInfoByMultiConditionCount" resultType="int">
         SELECT COUNT(*) FROM complaint_info
         <where>
             1 = 1
-            <if test="complaintStatus != null and complaintStatus != ''">
-                AND complaint_status = #{complaintStatus,jdbcType=INTEGER}
+            <if test="complaintInfo != null ">
+            <if test="complaintInfo.complaintStatus != null and complaintInfo.complaintStatus != ''">
+                    AND complaint_status = #{complaintInfo.complaintStatus,jdbcType=INTEGER}
             </if>
-            <if test="complaintCreateTime != null and complaintCreateTime != ''">
-                AND complaint_create_time = #{complaintCreateTime,jdbcType=TIMESTAMP}
-            </if>
-            <if test="complaintStatus != null and complaintStatus != ''">
-                AND complaint_status = #{complaintStatus,jdbcType=INTEGER}
+                <if test="startTime != null and startTime != ''">
+                    <![CDATA[
+                    AND complaint_create_time = #{startTime,jdbcType=TIMESTAMP}
+                     ]]>
+                </if>
+                <if test="complaintInfo.passengerId != null and complaintInfo.passengerId != ''">
+                    AND passenger_id = #{complaintInfo.passengerId,jdbcType=INTEGER}
+                </if>
             </if>
         </where>
         ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}

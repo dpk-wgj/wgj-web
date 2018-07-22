@@ -85,11 +85,10 @@ public class ComplaintInfoServiceImpl implements ComplaintInfoService {
     }
 
     @Override
-    public List<ComplaintInfo> findOrderInfoByMultiCondition(ComplaintMessage complaintMessage) {
+    public List<ComplaintInfo> findComplaintInfoByMultiCondition(ComplaintMessage complaintMessage) {
         List<ComplaintInfo> complaintInfoList;
-
         try {
-            complaintInfoList = complaintInfoMapper.findOrderInfoByMultiCondition(complaintMessage);
+            complaintInfoList = complaintInfoMapper.findComplaintInfoByMultiCondition(complaintMessage);
             return complaintInfoList;
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,10 +97,19 @@ public class ComplaintInfoServiceImpl implements ComplaintInfoService {
     }
 
     @Override
-    public int findOrderInfoByMultiConditionCount(ComplaintMessage complaintMessage) {
+    public int findComplaintInfoByMultiConditionCount(ComplaintMessage complaintMessage) {
+        int count = 0;
+        try {
+            count = complaintInfoMapper.findComplaintInfoByMultiConditionCount(complaintMessage);
+            return count;
+        }catch (Exception e){
+            e.printStackTrace();
 
+        }
 
-
-        return 0;
+        return count;
     }
+
+
+
 }

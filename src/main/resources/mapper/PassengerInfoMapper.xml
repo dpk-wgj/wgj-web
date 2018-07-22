@@ -17,9 +17,13 @@
         SELECT passenger_id, passenger_wx_id, user_group_id,passenger_phone_number FROM passenger_info
         WHERE passenger_wx_id = #{passengerWxId}
     </select>
+    <select id="getPassengerByPhoneNumber" resultMap="PassengerMap">
+        SELECT passenger_id, passenger_wx_id, user_group_id,passenger_phone_number FROM passenger_info
+        WHERE passenger_phone_number = #{passengerPhoneNumber}
+    </select>
 
     <select id="getPassengerByPassengerId" resultMap="PassengerMap">
-        SELECT passenger_id, passenger_wx_id, user_group_id FROM passenger_info
+        SELECT passenger_id, passenger_wx_id, passenger_phone_number, user_group_id FROM passenger_info
         WHERE passenger_id = #{passengerId}
     </select>
 
