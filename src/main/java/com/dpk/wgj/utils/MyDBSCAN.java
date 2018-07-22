@@ -1,42 +1,45 @@
 package com.dpk.wgj.utils;
 
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 密度算法
  */
+@Component
 public class MyDBSCAN {
     private static final double[][] points = {
-            {3.0, 8.04},
-            {4.0, 7.95},
-            {4.4, 8.58},
-            {3.6, 8.81},
-            {5.0, 8.33},
-            {6.0, 6.96},
-            {17.0, 4.24},
-            {18.0, 4.26},
-            {16.0, 3.84},
-            {17.0, 4.82},
-            {15.0, 5.68},
-            {17.0, 5.68},
-            {11.0, 10.68},
-            {13.0, 9.68},
-            {11.8, 10.0},
-            {12.0, 11.18},
-            {8.0, 12.0},
-            {9.2, 9.68},
-            {8.8, 11.2},
-            {10.0, 11.4},
-            {7.0, 9.68},
-            {6.1, 10.68},
-            {5.70, 1.68},
-            {5.0, 2.68},
-            {12.0, 0.68}
+            {121.3273285,31.01315058},
+            {121.9273285,31.61315058},
+            {121.5389385,31.21515044},
+            {121.3273285,31.01315058},
+            {121.5273285,31.21515044},
+//            {6.0, 6.96},
+//            {17.0, 4.24},
+//            {18.0, 4.26},
+//            {16.0, 3.84},
+//            {17.0, 4.82},
+//            {15.0, 5.68},
+//            {17.0, 5.68},
+//            {11.0, 10.68},
+//            {13.0, 9.68},
+//            {11.8, 10.0},
+//            {12.0, 11.18},
+//            {8.0, 12.0},
+//            {9.2, 9.68},
+//            {8.8, 11.2},
+//            {10.0, 11.4},
+//            {7.0, 9.68},
+//            {6.1, 10.68},
+//            {5.70, 1.68},
+//            {5.0, 2.68},
+//            {12.0, 0.68}
     };
-    private static int minpts = 6;
-    private static double radius = 1;
+    private static int minpts = 3;
+    private static double radius = 0.01;
     private static List<List<double[]>> clusters;
     private static List<double[]> cores;
 
@@ -129,6 +132,7 @@ public class MyDBSCAN {
     }
 
     public static void main(String[] args) {
+//        System.out.println(points[0][0] + "!" +points[0][1] + "!" +points[1][0]);
         cores = findCores(points, minpts, radius);
         System.out.println("点的个数：" + points.length);
         System.out.println(cores.size() + " core points:");
