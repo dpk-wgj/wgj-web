@@ -450,4 +450,38 @@ public class OrderInfoController {
         }
     }
 
+    /**
+     * 司机端 >> 获得单个订单
+     * @param orderInfo
+     * @return
+     */
+    @RequestMapping(value = "/api/driver/getOrderByOrderId", method = RequestMethod.POST)
+    @Transactional
+    public Message getOrderByOrderId (@RequestBody OrderInfo orderInfo){
+        OrderInfo orderResult = new OrderInfo();
+        OrderInfoDTO infoDTO = new OrderInfoDTO();
+
+        Map<String, Object> map = new HashMap<>();
+
+        try {
+            orderResult = orderInfoService.getOrderInfoByOrderId(orderInfo.getOrderId());
+            if (orderResult != null){
+                int driverId = orderResult.getDriverId();
+                int passengerId = orderResult.getPassengerId();
+                DriverInfo driverInfo = driverInfoService.getDriverInfoByDriverId(driverId);
+                Passenger passenger = passengerService.getPassengerByPassengerId(passengerId);
+                CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
+                // 判断车辆所有权 未完成
+                OrderInfoDTO orderInfoDTO = new OrderInfoDTO(orderResult, carInfo, driverInfo, passenger);
+                map.put("order", orderInfoDTO);
+                return new Message(Message.SUCCESS, "司机端 >> 获得订单 >> 成功", map);
+            }
+
+            return new Message(Message.FAILURE, "司机端 >> 获得订单 >> 成功", "无查询结果");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "司机端 >> 获得订单 >> 异常", "请求异常 ");
+        }
+    }
+
 }
