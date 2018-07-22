@@ -228,26 +228,14 @@ public class DriverAndPassWebSocket {
                     case "changeDriver"://司机端按下一键改派按钮
                         // TODO: 2018/7/14 还没做
                         OrderInfo orderInfo1 = orderInfoService.getOrderInfoByOrderId(orderId);
-                        Integer tempDriverId  = orderInfo1.getDriverId();
-                        /*1.降低服务质量星级 更改司机状态*/
-//                        DriverInfo driverInfo1 = driverInfoService.getDriverInfoByDriverId(orderInfo1.getDriverId());
-//                        driverInfo1.setDriverLevelStar(driverInfo1.getDriverLevelStar()-1);
-//                        driverInfo1.setFlag(0);
-                        /*2.更改乘客状态 向乘客发送消息更换司机*/
-//                        orderInfo1.setDriverId(0);
-//                        orderInfo1.setOrderStatus(0);
-//                        orderInfoService.updateOrderInfoByOrderId(orderInfo1);
-//                        Passenger passenger1 = passengerService.getPassengerByPassengerId(orderInfo1.getPassengerId());
-//                        passenger1.setPassengerStatus(0);//呼车状态
-//                        passengerService.updatePassengerStatus(passenger1);
 
                         sendMessage(3,"司机取消本订单 即将为您自动分配其他司机", null, "passenger,"+orderInfo1.getPassengerId());
 
-                        sendMessage(3,"取消本订单 即将返回首页", null, "driver,"+tempDriverId);
+                        sendMessage(3,"取消本订单 即将返回首页", null, "driver,"+orderInfo1.getDriverId());
 
                         //将司机从池中删除
                         for (String key : sessionPool.keySet()) {
-                            if(key.equals("driver,"+tempDriverId)){
+                            if(key.equals("driver,"+orderInfo1.getDriverId())){
                                 sessionPool.remove(key);
                             }
                         }
@@ -335,16 +323,22 @@ public class DriverAndPassWebSocket {
 //                        passenger.setPassengerStatus(2);
 //                        passengerService.updatePassengerStatus(passenger);
 
-                        sendMessage(3,"乘客取消了订单", null, "passenger,"+order.getPassengerId());
+                        sendMessage(4,"乘客取消了订单", null, "passenger,"+order.getPassengerId());
 
                         //将司机状态改为接单前
-                        driverInfo = driverInfoService.getDriverInfoByDriverId(order.getDriverId());
-                        driverInfo.setFlag(0);
-                        driverInfoService.updateApiDriverInfoByDriverId(driverInfo);
+//                        driverInfo = driverInfoService.getDriverInfoByDriverId(order.getDriverId());
+//                        driverInfo.setFlag(0);
+//                        driverInfoService.updateApiDriverInfoByDriverId(driverInfo);
 
 
-                        sendMessage(3,"乘客取消了订单", null, "driver,"+order.getDriverId());
+                        sendMessage(4,"乘客取消了订单", null, "driver,"+order.getDriverId());
 
+                        //将乘客从池中删除
+                        for (String key : sessionPool.keySet()) {
+                            if(key.equals("passenger,"+order.getPassengerId())){
+                                sessionPool.remove(key);
+                            }
+                        }
                         break;
                 }
             }
