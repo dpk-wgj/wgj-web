@@ -17,7 +17,27 @@
     </select>
 
     <select id="getAllAdminInfo" resultMap="AdminInfoMap" >
-        SELECT username, password, user_group_id FROM admin_info
+        SELECT * FROM admin_info
+        <where>
+            1=1
+            <if test="adminInfo!=null">
+            <if test="adminInfo.username != null and adminInfo.username !=''">
+                AND username LIKE "%"#{adminInfo.username,jdbcType=VARCHAR}"%"
+            </if>
+            </if>
+        </where>
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
+    <select id="getAllAdminInfoCount" resultType="int" >
+        SELECT COUNT(*) FROM admin_info
+        <where>
+            1=1
+            <if test="adminInfo!=null">
+            <if test="adminInfo.username != null and adminInfo.username !=''">
+                AND username LIKE "%"#{adminInfo.username,jdbcType=VARCHAR}"%"
+            </if>
+            </if>
+        </where>
     </select>
 
     <select id="getUserInfoById" resultMap="AdminInfoMap" parameterType="int">
@@ -33,16 +53,16 @@
     <update id="updateAdminInfo" parameterType="AdminInfo">
         update admin_info
         <set>
-            <if test="username != null">
+            <if test="username != null and username != ''">
                 username = #{username,jdbcType=VARCHAR},
             </if>
-            <if test="password != null">
+            <if test="password != null and password != ''" >
                 password = #{password,jdbcType=VARCHAR},
             </if>
-            <if test="remark != null">
-                nickname = #{nickname,jdbcType=VARCHAR},
+            <if test="remark != null and remark != ''" >
+                remark = #{remark,jdbcType=VARCHAR},
             </if>
-            <if test="userGroupId != null">
+            <if test="userGroupId != null and userGroupId != ''">
                 user_group_id = #{userGroupId,jdbcType=INTEGER},
             </if>
         </set>
