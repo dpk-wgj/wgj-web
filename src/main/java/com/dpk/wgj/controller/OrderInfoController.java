@@ -193,7 +193,6 @@ public class OrderInfoController {
 
         try {
             OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(order.getOrderId());
-
             // 插入用户成为日志
             logInfoService.addLogInfo(new LogInfo("司机端 >> 申请改派", 1, new Date(), orderInfo.getOrderId()));
 

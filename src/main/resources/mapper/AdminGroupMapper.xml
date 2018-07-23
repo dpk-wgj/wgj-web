@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+       <mapper namespace="com.dpk.wgj.mapper.AdminGroupMapper">
+    <resultMap type="com.dpk.wgj.bean.AdminGroup" id="AdminGroupMap">
+        <id property="adminGroupId" column="user_group_id"/>
+        <result property="groupName" column="group_name"/>
+        <result property="permission" column="permission"/>
+    </resultMap>
+
+    <select id="getAdminGroupByName" resultMap="AdminGroupMap">
+        SELECT * FROM user_group
+        WHERE group_name like "%"#{groupName}"%"
+    </select>
+
+    <select id="getAllAdminGroup" resultMap="AdminGroupMap">
+        SELECT * FROM user_group
+        <where>
+            1=1
+            <if test="adminGroup!=null">
+                <if test="adminGroup.groupName != null and adminGroup.groupName !=''">
+                    AND group_name LIKE "%"#{adminGroup.groupName,jdbcType=VARCHAR}"%"
+                </if>
+            </if>
+        </where>
+        ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
+    </select>
+
+    <select id="getAllAdminGroupCount" resultType="int" >
+        SELECT COUNT(*) FROM admin_info
+        <where>
+            1=1
+            <if test="adminGroup!=null">
+                <if test="adminGroup.groupName != null and adminGroup.groupName !=''">
+                    AND group_name LIKE "%"#{adminGroup.groupName,jdbcType=VARCHAR}"%"
+                </if>
+            </if>
+        </where>
+    </select>
+
+    <select id="getAdminGroupById" resultMap="AdminGroupMap" >
+        SELECT * FROM user_group
+        WHERE user_group_id = #{arg0}
+    </select>
+
+    <insert id="addAdminGroup" parameterType="AdminGroup" keyProperty="user_group_id" useGeneratedKeys="true">
+        INSERT INTO user_group (user_group_id, group_name, permission) VALUES (#{adminGroupId}, #{groupName}, #{permission})
+    </insert>
+
+
+    <update id="updateAdminGroupById" parameterType="AdminGroup">
+    update user_group
+    <set>
+    <if test="groupName != null">
+        group_name = #{groupName,jdbcType=VARCHAR},
+    </if>
+    <if test="permission != null">
+        permission = #{permission,jdbcType=VARCHAR},
+    </if>
+</set>
+    where user_group_id = #{adminGroupId,jdbcType=INTEGER}
+</update>
+
+    <delete id="deleteAdminGroup" parameterType="int">
+        DELETE from user_group
+        WHERE user_group_id = #{adminGroupId}
+    </delete>
+
+</mapper>
