@@ -280,6 +280,10 @@ public class OrderInfoController {
             int driverId = orderInfo.getDriverId();
             if (orderInfo != null && passengerId == orderInfo.getPassengerId()){
                 orderInfo.setOrderStatus(4);
+                String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//将时间格式转换成符合Timestamp要求的格式.
+                Timestamp newdate = Timestamp.valueOf(nowTime);//把时间转换
+
+                orderInfo.setEndTime(nowTime);
                 upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
                 if (upStatus == 1){
 
@@ -333,6 +337,10 @@ public class OrderInfoController {
             // 当司机当前位置 与 用户所定的目的位置 一致才能切换 订单状态
             if (orderInfo != null && driverId == orderInfo.getDriverId() && accessDriverDTO.getCurrentLocation().equals(accessDriverDTO.getTargetLocation())){
                 orderInfo.setOrderStatus(3);
+                String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//将时间格式转换成符合Timestamp要求的格式.
+                Timestamp newdate = Timestamp.valueOf(nowTime);//把时间转换
+
+                orderInfo.setEndTime(nowTime);
                 upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
                 if (upStatus == 1){
 
@@ -437,6 +445,40 @@ public class OrderInfoController {
         } catch (Exception e) {
             e.printStackTrace();
             return new Message(Message.ERROR, "后台端 >> 多条件查询订单 >> 异常", "请求异常 ");
+        }
+    }
+
+    /**
+     * 司机端 >> 获得单个订单
+     * @param orderInfo
+     * @return
+     */
+    @RequestMapping(value = "/api/driver/getOrderByOrderId", method = RequestMethod.POST)
+    @Transactional
+    public Message getOrderByOrderId (@RequestBody OrderInfo orderInfo){
+        OrderInfo orderResult = new OrderInfo();
+        OrderInfoDTO infoDTO = new OrderInfoDTO();
+
+        Map<String, Object> map = new HashMap<>();
+
+        try {
+            orderResult = orderInfoService.getOrderInfoByOrderId(orderInfo.getOrderId());
+            if (orderResult != null){
+                int driverId = orderResult.getDriverId();
+                int passengerId = orderResult.getPassengerId();
+                DriverInfo driverInfo = driverInfoService.getDriverInfoByDriverId(driverId);
+                Passenger passenger = passengerService.getPassengerByPassengerId(passengerId);
+                CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
+                // 判断车辆所有权 未完成
+                OrderInfoDTO orderInfoDTO = new OrderInfoDTO(orderResult, carInfo, driverInfo, passenger);
+                map.put("order", orderInfoDTO);
+                return new Message(Message.SUCCESS, "司机端 >> 获得订单 >> 成功", map);
+            }
+
+            return new Message(Message.FAILURE, "司机端 >> 获得订单 >> 成功", "无查询结果");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "司机端 >> 获得订单 >> 异常", "请求异常 ");
         }
     }
 

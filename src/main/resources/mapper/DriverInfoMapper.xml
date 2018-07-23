@@ -19,7 +19,7 @@
     </resultMap>
 
     <select id="getAllDriverInfo" resultMap="DriverInfoMap">
-        SELECT driver_id,driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id,driver_image_url
+        SELECT driver_location,driver_id,driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id,driver_image_url
         FROM driver_info
     </select>
     <select id="getDriverInfoByDriverName" resultMap="DriverInfoMap">
@@ -196,6 +196,7 @@
         </set>
         WHERE driver_id = #{driverId,jdbcType=INTEGER}
     </update>
+
     <update id="updateDriverPhoneNumber" parameterType="DriverInfo">
         update driver_info
         <set>
