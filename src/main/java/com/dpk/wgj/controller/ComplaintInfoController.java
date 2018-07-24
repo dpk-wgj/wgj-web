@@ -198,9 +198,11 @@ public class ComplaintInfoController {
         try {
             complaintInfos = complaintInfoService.findComplaintInfoByMultiCondition(tableMessage);
             int count = complaintInfoService.findComplaintInfoByMultiConditionCount(tableMessage);
+            int count1 = complaintInfoService.findComplaintInfoCountByStatus();
             if (complaintInfos != null){
                 map.put("complaintInfos", complaintInfos);
                 map.put("count", count);
+                map.put("count1",count1);
                 return new Message(Message.SUCCESS, "后台端 >> 多条件查询投诉订单 >> 成功", map);
             }
             return new Message(Message.FAILURE, "后台端 >> 多条件查询投诉订单 >> 成功", "无查询结果");
