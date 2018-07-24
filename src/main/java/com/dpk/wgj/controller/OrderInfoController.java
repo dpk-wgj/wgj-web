@@ -243,12 +243,22 @@ public class OrderInfoController {
             // 插入用户成为日志
             logInfoService.addLogInfo(new LogInfo("司机端 >> 接到乘客", 1, new Date(), orderInfo.getOrderId()));
 
-            // 当司机当前位置 与 用户所定的起始位置 一致才能切换 订单状态
-            if (orderInfo != null && driverId == orderInfo.getDriverId() && accessDriverDTO.getCurrentLocation().equals(accessDriverDTO.getTargetLocation())){
-                orderInfo.setOrderStatus(2);
-                upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
-                if (upStatus == 1){
-                    return new Message(Message.SUCCESS, "司机端 >> 已接到乘客 >> 进入派送状态", upStatus);
+            String[] current = accessDriverDTO.getCurrentLocation().split(",");
+
+            String[] target = accessDriverDTO.getTargetLocation().split(",");
+
+            double x = Math.abs(Double.parseDouble(current[0]) - Double.parseDouble(target[0]));
+            double y = Math.abs(Double.parseDouble(current[1]) - Double.parseDouble(target[1]));
+
+            // 在一定范围才能 确定接到用户
+            if (x <= 0.016 && y <= 0.016){
+                // 当司机当前位置 与 用户所定的起始位置 一致才能切换 订单状态
+                if (orderInfo != null && driverId == orderInfo.getDriverId()){
+                    orderInfo.setOrderStatus(2);
+                    upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
+                    if (upStatus == 1){
+                        return new Message(Message.SUCCESS, "司机端 >> 已接到乘客 >> 进入派送状态", upStatus);
+                    }
                 }
             }
             return new Message(Message.FAILURE, "司机端 >> 未到目的地 ", "错误请求");
@@ -334,29 +344,38 @@ public class OrderInfoController {
 
             DriverInfo driverInfo = driverInfoService.getDriverInfoByWxId(driverWxId);
 
-            // 当司机当前位置 与 用户所定的目的位置 一致才能切换 订单状态
-            if (orderInfo != null && driverId == orderInfo.getDriverId() && accessDriverDTO.getCurrentLocation().equals(accessDriverDTO.getTargetLocation())){
-                orderInfo.setOrderStatus(3);
-                String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//将时间格式转换成符合Timestamp要求的格式.
-                Timestamp newdate = Timestamp.valueOf(nowTime);//把时间转换
+            String[] current = accessDriverDTO.getCurrentLocation().split(",");
 
-                orderInfo.setEndTime(nowTime);
-                upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
-                if (upStatus == 1){
+            String[] target = accessDriverDTO.getTargetLocation().split(",");
 
-                    //乘客状态切换至 服务后 同时也要修改司机服务状态为 接单前
-                    int passengerId = orderInfo.getPassengerId();
-                    Passenger passenger = new Passenger();
-                    passenger.setPassengerId(passengerId);
-                    passenger.setPassengerStatus(2);
-                   // driverInfo.setDriverStatus(0);
-                    driverInfo.setFlag(0);
+            double x = Math.abs(Double.parseDouble(current[0]) - Double.parseDouble(target[0]));
+            double y = Math.abs(Double.parseDouble(current[1]) - Double.parseDouble(target[1]));
 
-                    int upFlag = driverInfoService.updateFlag(driverInfo);
-                    int upPassengerStatus = passengerService.updatePassengerStatus(passenger);
+            if (x <= 0.016 && y <= 0.016) {
+                // 当司机当前位置 与 用户所定的目的位置 一致才能切换 订单状态
+                if (orderInfo != null && driverId == orderInfo.getDriverId()) {
+                    orderInfo.setOrderStatus(3);
+                    String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//将时间格式转换成符合Timestamp要求的格式.
+                    Timestamp newdate = Timestamp.valueOf(nowTime);//把时间转换
 
-                    if (upPassengerStatus == 1 && upFlag == 1){
-                        return new Message(Message.SUCCESS, "司机端 >> 完成订单 && 乘客/用户 状态切换 >> 成功", upStatus + upPassengerStatus);
+                    orderInfo.setEndTime(nowTime);
+                    upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
+                    if (upStatus == 1) {
+
+                        //乘客状态切换至 服务后 同时也要修改司机服务状态为 接单前
+                        int passengerId = orderInfo.getPassengerId();
+                        Passenger passenger = new Passenger();
+                        passenger.setPassengerId(passengerId);
+                        passenger.setPassengerStatus(2);
+                        // driverInfo.setDriverStatus(0);
+                        driverInfo.setFlag(0);
+
+                        int upFlag = driverInfoService.updateFlag(driverInfo);
+                        int upPassengerStatus = passengerService.updatePassengerStatus(passenger);
+
+                        if (upPassengerStatus == 1 && upFlag == 1) {
+                            return new Message(Message.SUCCESS, "司机端 >> 完成订单 && 乘客/用户 状态切换 >> 成功", upStatus + upPassengerStatus);
+                        }
                     }
                 }
             }
