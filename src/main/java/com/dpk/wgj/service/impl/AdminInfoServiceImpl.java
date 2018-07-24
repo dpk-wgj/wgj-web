@@ -1,6 +1,7 @@
 package com.dpk.wgj.service.impl;
 
 import com.dpk.wgj.bean.AdminInfo;
+import com.dpk.wgj.bean.tableInfo.AdminInfoMessage;
 import com.dpk.wgj.mapper.AdminInfoMapper;
 import com.dpk.wgj.service.AdminInfoService;
 import org.slf4j.Logger;
@@ -35,12 +36,12 @@ public class AdminInfoServiceImpl implements AdminInfoService {
     }
 
     @Override
-    public List<AdminInfo> getAllAdminInfo() {
+    public List<AdminInfo> getAllAdminInfo(AdminInfoMessage adminInfoMessage) {
 
         List<AdminInfo> adminInfos;
 
         try {
-            adminInfos = adminInfoMapper.getAllAdminInfo();
+            adminInfos = adminInfoMapper.getAllAdminInfo(adminInfoMessage);
             return adminInfos;
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,6 +49,17 @@ public class AdminInfoServiceImpl implements AdminInfoService {
 
         return null;
     }
+@Override
+public int getAllAdminInfoCount(AdminInfoMessage adminInfoMessage) {
+        int count  =0;
+        try{
+            count = adminInfoMapper.getAllAdminInfoCount(adminInfoMessage);
+            return count;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return count;
+}
 
     @Override
     public AdminInfo getUserInfoById(int userId) {

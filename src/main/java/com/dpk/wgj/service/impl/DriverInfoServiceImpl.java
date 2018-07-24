@@ -234,21 +234,40 @@ public class DriverInfoServiceImpl implements DriverInfoService {
                     if(row==null || row.getCell(0) == null){
                         continue;
                     }
+                    if(row.getCell(0)!=null ) {
+                        row.getCell(0).setCellType(Cell.CELL_TYPE_STRING);
+                        driverInfo.setDriverName(row.getCell(0).getStringCellValue());
+                    }
+                    else
+                        continue;
 
-                    row.getCell(0).setCellType(Cell.CELL_TYPE_STRING);
-                    driverInfo.setDriverName(row.getCell(0).getStringCellValue());
+                    if(row.getCell(1)!=null  ) {
+                        row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
+                        driverInfo.setDriverWxId(row.getCell(1).getStringCellValue());
+                    }
+                    else
+                        continue;
 
-                    row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
-                    driverInfo.setDriverWxId(row.getCell(1).getStringCellValue());
+                    if(row.getCell(2)!=null  ) {
+                        row.getCell(2).setCellType(Cell.CELL_TYPE_STRING);
+                        driverInfo.setDriverPhoneNumber(row.getCell(2).getStringCellValue());
+                    }
+                    else
+                        continue;
 
-                    row.getCell(2).setCellType(Cell.CELL_TYPE_STRING);
-                    driverInfo.setDriverPhoneNumber(row.getCell(2).getStringCellValue());
+                    if(row.getCell(3)!=null  ) {
+                        row.getCell(3).setCellType(Cell.CELL_TYPE_STRING);
+                        driverInfo.setDriverIdentity(row.getCell(3).getStringCellValue());
+                    }
+                    else
+                        continue;
 
-                    row.getCell(3).setCellType(Cell.CELL_TYPE_STRING);
-                    driverInfo.setDriverIdentity(row.getCell(3).getStringCellValue());
-
-                    row.getCell(4).setCellType(Cell.CELL_TYPE_STRING);
-                    driverInfo.setDriverLicence(row.getCell(4).getStringCellValue());
+                    if(row.getCell(4)!=null ) {
+                        row.getCell(4).setCellType(Cell.CELL_TYPE_STRING);
+                        driverInfo.setDriverLicence(row.getCell(4).getStringCellValue());
+                    }
+                    else
+                        continue;
                     //风险源
                     try {
                         //先查询是否存在，然后再添加
