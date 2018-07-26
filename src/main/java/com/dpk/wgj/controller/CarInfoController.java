@@ -140,12 +140,10 @@ public class CarInfoController {
      */
     @RequestMapping(value = "/getCarInfoByCarId/{carId}", method = RequestMethod.GET)
     public Message getCarInfoByCarId(@PathVariable(value = "carId") int carId){
-
         CarInfo carInfo;
         Map<String, Object> map = new HashMap<>();
         try {
             carInfo = carInfoService.getCarInfoByCarId(carId);
-
             if (carInfo != null){
                 map.put("carInfos", carInfo);
                 return new Message(Message.SUCCESS, "查询车辆信息 >> 成功", map);
@@ -157,23 +155,23 @@ public class CarInfoController {
     }
 
     /**
-     * 根据carId查询未完全匹配车辆的信息
+     * 根据车牌照查询车辆的信息
      * @param carNumber
      * @return
      */
     @RequestMapping(value = "/getCarInfoNoCompatibleByCarNumber/{carNumber}", method = RequestMethod.GET)
     public Message getCarInfoNoCompatibleByCarNumber(@PathVariable(value = "carNumber")  String carNumber){
         CarInfo carInfor;
-
+        DriverInfo  driverInfo;
         try {
             carInfor = carInfoService.getCarInfoNoCompatibleByCarNumber(carNumber);
             if (carInfor != null)
             {
-                if(carInfor.getCarDriverIdA() ==0 || carInfor.getCarDriverIdB()==0){
+//                if(carInfor.getCarDriverIdA() ==0 || carInfor.getCarDriverIdB()==0){
                 return new Message(Message.SUCCESS, "查询车辆信息 >> 成功", carInfor);
-                }
-                else
-                    return new Message(Message.FAILURE, "查询车辆信息 >> 失败"," 车牌号码为[" + carNumber + "] 的车辆已经绑定了两辆车");
+//                }
+//                else
+//                    return new Message(Message.FAILURE, "查询车辆信息 >> 失败"," 车牌号码为[" + carNumber + "] 的车辆已经绑定了两辆车");
             }
             return new Message(Message.FAILURE, "查询车辆信息 >> 失败", "未查询到车牌号码为[" + carNumber + "] 的信息");
         } catch (Exception e) {
