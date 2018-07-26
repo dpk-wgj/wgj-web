@@ -142,7 +142,7 @@ public class DriverInfoController {
         Map<String, Object> map = new HashMap<>();
         tableMessage.getDriverInfo().setDriverName("%" + tableMessage.getDriverInfo().getDriverName() + "%");
         try {
-            carInfoCarDriverId = carInfoService.getCarDriverIdInfo();    //获取car_driver_id_a和car_driver_id_b为空的车辆信息
+          //  carInfoCarDriverId = carInfoService.getCarDriverIdInfo();    //获取car_driver_id_a和car_driver_id_b为空的车辆信息
 
             driverInfo = driverInfoService.getDriverByMultiCondition(tableMessage);
             count = driverInfoService.getDriverByMultiConditionCount(tableMessage);
@@ -150,30 +150,30 @@ public class DriverInfoController {
             {
                 for (DriverInfo driverInfos : driverInfo)
                 {
-                        for (CarInfo carInfoCarDriverId1:carInfoCarDriverId)
-                        {
-                            if(driverInfos.getCarId()==0 )
-                            {
-                                if (carInfoCarDriverId1.getCarDriverIdA()==0)
-                                {
-                                    driverInfos.setCarId(carInfoCarDriverId1.getCarId());
-                                    carInfoCarDriverId1.setCarDriverIdA(driverInfos.getDriverId());
-                                    driverInfoService.updateDriverInfoByDriverId(driverInfos);
-                                    carInfoService.updateCarInfoByCarId(carInfoCarDriverId1);
-                                    break;
-                                }
-                                else if (carInfoCarDriverId1.getCarDriverIdB()==0)
-                                {
-                                    driverInfos.setCarId(carInfoCarDriverId1.getCarId());
-                                    carInfoCarDriverId1.setCarDriverIdB(driverInfos.getDriverId());
-                                    driverInfoService.updateDriverInfoByDriverId(driverInfos);
-                                    carInfoService.updateCarInfoByCarId(carInfoCarDriverId1);
-                                    break;
-                                }
-                            else
-                                continue;
-                            }
-                        }
+//                        for (CarInfo carInfoCarDriverId1:carInfoCarDriverId)
+//                        {
+//                            if(driverInfos.getCarId()==0 )
+//                            {
+//                                if (carInfoCarDriverId1.getCarDriverIdA()==0)
+//                                {
+//                                    driverInfos.setCarId(carInfoCarDriverId1.getCarId());
+//                                    carInfoCarDriverId1.setCarDriverIdA(driverInfos.getDriverId());
+//                                    driverInfoService.updateDriverInfoByDriverId(driverInfos);
+//                                    carInfoService.updateCarInfoByCarId(carInfoCarDriverId1);
+//                                    break;
+//                                }
+//                                else if (carInfoCarDriverId1.getCarDriverIdB()==0)
+//                                {
+//                                    driverInfos.setCarId(carInfoCarDriverId1.getCarId());
+//                                    carInfoCarDriverId1.setCarDriverIdB(driverInfos.getDriverId());
+//                                    driverInfoService.updateDriverInfoByDriverId(driverInfos);
+//                                    carInfoService.updateCarInfoByCarId(carInfoCarDriverId1);
+//                                    break;
+//                                }
+//                            else
+//                                continue;
+//                            }
+//                        }
                         carInfo = carInfoService.getCarInfoByCarId(driverInfos.getCarId());
                         CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfos);
                         carInfoDTOList.add(carInfoDTO);

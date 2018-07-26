@@ -23,5 +23,6 @@ public interface ComplaintInfoMapper {
 
     public int findComplaintInfoByMultiConditionCount(ComplaintMessage tableMessage) throws Exception;
 
+    public int  findComplaintInfoCountByStatus()throws Exception;
 
 }

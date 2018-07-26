@@ -26,4 +26,6 @@ public interface ComplaintInfoService {
      * 投诉多条件查询功能 -- 投诉总数
      */
     public int findComplaintInfoByMultiConditionCount(ComplaintMessage tableMessage) throws Exception;
+
+    public int  findComplaintInfoCountByStatus()throws Exception;
 }

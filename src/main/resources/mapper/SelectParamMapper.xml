@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dpk.wgj.mapper.SelectParamMapper">
+<resultMap id="OrderInfoMap" type="com.dpk.wgj.bean.OrderInfo">
+    <id column="order_id" property="orderId"/>
+    <result column="passenger_id" property="passengerId"/>
+    <result column="driver_id" property="driverId"/>
+    <result column="location_info" property="locationInfo"/>
+    <result column="order_status" property="orderStatus"/>
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+</resultMap>
+
+
+<select id="getOrderByYear"  resultType="int"  >
+    SELECT count(*) from order_info WHERE year(end_time)=#{year}
+    <!--<if test="yarr!=null" >-->
+    <!--&lt;!&ndash;WHERE year(end_time) in&ndash;&gt;-->
+    <!--&lt;!&ndash;<foreach collection="list" open="(" close=")" separator=",">&ndash;&gt;-->
+    <!--&lt;!&ndash;#{end_time}&ndash;&gt;-->
+    <!--&lt;!&ndash;</foreach>&ndash;&gt;-->
+    <!--</if>-->
+
+</select>
+
+<select id="getOrderByMonth" resultType="int">
+    SELECT count(end_time) FROM order_info WHERE MONTH(end_time) =#{month}
+</select>
+
+<!--<select id="getOrderByYear" resultMap="OrderInfoMap">-->
+<!--SELECT * FROM order_info-->
+<!--</select>-->
+
+<select id="getOrderByDriverId" resultMap="OrderInfoMap">
+    SELECT order_id,passenger_id, driver_id,location_info,order_status,
+    start_time,end_time FROM order_info WHERE driver_id =#{driver_id}
+</select>
+
+<select id="getAllOrderNum" resultMap="OrderInfoMap">
+    SELECT order_id,passenger_id, driver_id,location_info,order_status,
+    start_time,end_time FROM order_info
+</select>
+
+</mapper>

@@ -142,6 +142,9 @@
             <if test="driverLicence != null and driverLicence !=''">
                 driver_licence = #{driverLicence,jdbcType=VARCHAR},
             </if>
+            <if test="driverLocation != null and driverLocation !=''">
+                driver_location = #{driverLocation,jdbcType=VARCHAR},
+            </if>
             <if test="driverLevelStar !=null  and driverLevelStar !=''">
                 driver_level_star = #{driverLevelStar,jdbcType=INTEGER},
             </if>
