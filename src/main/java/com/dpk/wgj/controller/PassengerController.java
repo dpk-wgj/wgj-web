@@ -1,9 +1,10 @@
 package com.dpk.wgj.controller;
 
+import com.dpk.wgj.bean.*;
+import com.dpk.wgj.bean.DTO.CarInfoDTO;
 import com.dpk.wgj.bean.DTO.UserDTO;
-import com.dpk.wgj.bean.Message;
-import com.dpk.wgj.bean.Passenger;
-import com.dpk.wgj.bean.SmsInfo;
+import com.dpk.wgj.service.CarInfoService;
+import com.dpk.wgj.service.DriverInfoService;
 import com.dpk.wgj.service.PassengerService;
 import com.dpk.wgj.service.SmsService;
 import org.slf4j.Logger;
@@ -13,6 +14,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by zhoulin on 2018/7/12.
@@ -27,6 +31,12 @@ public class PassengerController {
 
     @Autowired
     private SmsService smsService;
+
+    @Autowired
+    private DriverInfoService driverInfoService;
+
+    @Autowired
+    private CarInfoService carInfoService;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -115,6 +125,32 @@ public class PassengerController {
             return new Message(Message.ERROR, "查询司机信息 >> 异常", e.getMessage());
         }
 
+    }
+    /**
+     * 获取所有当前上岗司机位置
+     * @return
+     */
+    @RequestMapping(value = "/getAllCarLocation", method = RequestMethod.GET)
+    public Message getAllCarLocation(){
+        List<DriverInfo> driverInfoList;
+
+        List<CarInfoDTO> carInfoDTOList = new ArrayList<>();
+
+        try {
+            driverInfoList = driverInfoService.getAllCarLocation();
+            if (driverInfoList != null){
+                for (DriverInfo driverInfo : driverInfoList) {
+                    CarInfo carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());
+
+                    CarInfoDTO carInfoDTO = new CarInfoDTO(carInfo, driverInfo);
+                    carInfoDTOList.add(carInfoDTO);
+                }
+                return new Message(Message.SUCCESS, "获取所有车辆位置 >> 成功", carInfoDTOList);
+            }
+            return new Message(Message.FAILURE, "获取所有车辆位置 >> 失败", "未查询到数据");
+        } catch (Exception e) {
+            return new Message(Message.ERROR, "获取所有车辆位置 >> 异常", e.getMessage());
+        }
     }
 
 }
