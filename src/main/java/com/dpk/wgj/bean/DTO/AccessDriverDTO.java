@@ -12,6 +12,12 @@ public class AccessDriverDTO {
 
     private String targetLocation;
 
+    private String locationInfo;
+
+    public String getLocationInfo() { return locationInfo; }
+
+    public void setLocationInfo(String locationInfo) { this.locationInfo = locationInfo; }
+
     public int getOrderId() {
         return orderId;
     }

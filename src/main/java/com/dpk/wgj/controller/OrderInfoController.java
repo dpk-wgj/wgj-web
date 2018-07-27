@@ -405,6 +405,8 @@ public class OrderInfoController {
                     Timestamp newdate = Timestamp.valueOf(nowTime);//把时间转换
 
                     orderInfo.setEndTime(nowTime);
+                    orderInfo.setLocationInfo(accessDriverDTO.getLocationInfo());//获取移动轨迹
+
                     upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
                     if (upStatus == 1) {
 
