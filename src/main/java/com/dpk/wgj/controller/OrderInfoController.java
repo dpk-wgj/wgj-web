@@ -128,10 +128,8 @@ public class OrderInfoController {
 
         List<OrderInfo> orderInfos;
         List<OrderDTO> orderDTOList = new ArrayList<>();
-
         UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int passengerId = userInfo.getUserId();
-
         try {
             orderInfos = orderInfoService.getOrderInfoByPassengerId(passengerId);
             if (orderInfos != null){
@@ -391,10 +389,10 @@ public class OrderInfoController {
             DriverInfo driverInfo = driverInfoService.getDriverInfoByWxId(driverWxId);
 
             String[] current = accessDriverDTO.getCurrentLocation().split(",");
-
             String[] target = accessDriverDTO.getTargetLocation().split(",");
 
             double x = Math.abs(Double.parseDouble(current[0]) - Double.parseDouble(target[0]));
+
             double y = Math.abs(Double.parseDouble(current[1]) - Double.parseDouble(target[1]));
 
             if (x <= 0.016 && y <= 0.016) {

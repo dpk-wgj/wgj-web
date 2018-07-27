@@ -8,7 +8,17 @@ public class SmsInfo implements Serializable {
 
     private String phoneNumber;
 
+    private String driverWxId;
+
     private String randomNum;
+
+    public String getDriverWxId() {
+        return driverWxId;
+    }
+
+    public void setDriverWxId(String driverWxId) {
+        this.driverWxId = driverWxId;
+    }
 
     public int getUserId() {
         return userId;
@@ -41,6 +51,7 @@ public class SmsInfo implements Serializable {
                 "userId=" + userId +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", randomNum='" + randomNum + '\'' +
+                ", driverWxId='" + driverWxId + '\'' +
                 '}';
     }
 }

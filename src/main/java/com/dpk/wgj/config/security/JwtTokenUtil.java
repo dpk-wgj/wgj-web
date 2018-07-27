@@ -83,7 +83,8 @@ public class JwtTokenUtil {
             username = userDTO.getDriverInfo().getDriverWxId();
             userId = userDTO.getDriverInfo().getDriverId();
             roles = userDTO.getRoles();
-        }else if(userDTO.getPassenger() != null) {
+        }
+        else if(userDTO.getPassenger() != null) {
             username = userDTO.getPassenger().getPassengerWxId();
             userId = userDTO.getPassenger().getPassengerId();
             roles = userDTO.getRoles();
