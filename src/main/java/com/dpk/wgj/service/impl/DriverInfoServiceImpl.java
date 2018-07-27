@@ -3,6 +3,7 @@ package com.dpk.wgj.service.impl;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.tableInfo.DriverInfoTableMessage;
 import com.dpk.wgj.mapper.DriverInfoMapper;
+import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -29,6 +30,9 @@ public class DriverInfoServiceImpl implements DriverInfoService {
 
     @Autowired
     private DriverInfoMapper driverInfoMapper;
+
+    @Autowired
+    private CarInfoService carInfoService;
 
     private final Logger logger = LoggerFactory.getLogger(DriverInfoServiceImpl.class);
 
@@ -266,6 +270,11 @@ public class DriverInfoServiceImpl implements DriverInfoService {
                         row.getCell(4).setCellType(Cell.CELL_TYPE_STRING);
                         driverInfo.setDriverLicence(row.getCell(4).getStringCellValue());
                     }
+                    if(row.getCell(5)!=null ) {
+                        row.getCell(5).setCellType(Cell.CELL_TYPE_STRING);
+                        int cardId = (carInfoService.getCarInfoByCarNumber(row.getCell(5).getStringCellValue())).getCarId();
+                        driverInfo.setCarId(cardId);
+                    }
                     else
                         continue;
                     //风险源
@@ -319,6 +328,17 @@ public class DriverInfoServiceImpl implements DriverInfoService {
 
         try {
             upApiStatus = driverInfoMapper.updateDriverPhoneNumber(driverInfo);
+            return upApiStatus;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return upApiStatus;
+    }
+    @Override
+    public int  updateCarId(DriverInfo driverInfo){
+        int upApiStatus = 0;
+        try {
+            upApiStatus = driverInfoMapper.updateCarId(driverInfo);
             return upApiStatus;
         } catch (Exception e) {
             e.printStackTrace();

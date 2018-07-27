@@ -91,5 +91,10 @@
         </where>
         ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
     </select>
+    <select id="findComplaintInfoCountByStatus" resultType="int">
+        SELECT COUNT(complaint_status) FROM complaint_info
+        WHERE  complaint_status = 1 OR complaint_status =2
+
+    </select>
 
 </mapper>

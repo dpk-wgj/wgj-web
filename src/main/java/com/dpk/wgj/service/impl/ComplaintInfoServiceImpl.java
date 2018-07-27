@@ -109,6 +109,19 @@ public class ComplaintInfoServiceImpl implements ComplaintInfoService {
 
         return count;
     }
+    @Override
+    public int findComplaintInfoCountByStatus() {
+        int count = 0;
+        try {
+            count = complaintInfoMapper.findComplaintInfoCountByStatus();
+            return count;
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+
+        return count;
+    }
 
 
 

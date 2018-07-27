@@ -268,9 +268,55 @@ public class OrderInfoController {
         }
 
     }
+    /**
+     * 乘客端 >> 取消订单（司机还未接单）
+     */
+    @RequestMapping(value = "/api/passenger/cancelOrderForPassenger", method = RequestMethod.POST)
+    @Transactional
+    public Message cancelOrderForPassenger (@RequestBody OrderInfo order){
+        int upStatus = 0;
+
+        // 防止恶意注入
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        int passengerId = userInfo.getUserId();
+
+        try {
+            OrderInfo orderInfo = orderInfoService.getOrderInfoByOrderId(order.getOrderId());
+
+            // 插入用户成为日志
+            logInfoService.addLogInfo(new LogInfo("乘客端 >> 取消订单", 2, new Date(), orderInfo.getOrderId()));
+
+            if (orderInfo != null && passengerId == orderInfo.getPassengerId()){
+                orderInfo.setOrderStatus(4);
+                String nowTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());//将时间格式转换成符合Timestamp要求的格式.
+                Timestamp newdate = Timestamp.valueOf(nowTime);//把时间转换
+
+                orderInfo.setEndTime(nowTime);
+                upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
+                if (upStatus == 1){
+//                    //乘客状态切换至 服务后
+                    Passenger passenger = new Passenger();
+                    passenger.setPassengerId(passengerId);
+                    passenger.setPassengerStatus(2);
+
+                    int upPassengerStatus = passengerService.updatePassengerStatus(passenger);
+                    //int upFlag = driverInfoService.updateFlag(driverInfo);
+                    if (upPassengerStatus == 1){
+                        return new Message(Message.SUCCESS, "乘客端 >> 取消订单 && 乘客状态切换 >> 成功", upStatus + upPassengerStatus );
+                    }
+                }
+            }
+            return new Message(Message.FAILURE, "乘客端 >> 取消订单 >> 失败", "错误请求");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "乘客端 >> 取消订单 >> 异常", e.getMessage());
+        }
+
+    }
+
 
     /**
-     * 乘客端 >> 取消订单
+     * 乘客端 >> 取消订单（司机已经接单）
      */
     @RequestMapping(value = "/api/passenger/updateOrderInfoByOrderId", method = RequestMethod.POST)
     @Transactional
@@ -359,6 +405,8 @@ public class OrderInfoController {
                     Timestamp newdate = Timestamp.valueOf(nowTime);//把时间转换
 
                     orderInfo.setEndTime(nowTime);
+                    orderInfo.setLocationInfo(accessDriverDTO.getLocationInfo());//获取移动轨迹
+
                     upStatus = orderInfoService.updateOrderInfoByOrderId(orderInfo);
                     if (upStatus == 1) {
 
