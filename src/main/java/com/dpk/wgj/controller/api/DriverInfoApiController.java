@@ -169,7 +169,6 @@ public class DriverInfoApiController {
         try {
             //搜索绑定手机号为xxxxx的用户
             driverInfo = driverInfoApiService.getDriverInfoByDriverPhoneNumber(driverPhoneNumber);
-
             if (driverInfo != null){
                status = 1;
                 return new Message(Message.SUCCESS, "查询到该号码已经绑定了司机，不能再次绑定", status);

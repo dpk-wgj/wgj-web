@@ -140,7 +140,6 @@ public class DriverAndPassWebSocket {
                         for (String k : sessionPool.keySet()) {
                             String[] a = k.split(",");
                             if(a[0].equals("driver")){
-
                                 if(Integer.parseInt(a[1]) == order.getDriverId()){
 
                                     //将司机状态改为接客前
@@ -256,7 +255,7 @@ public class DriverAndPassWebSocket {
                         System.out.println("订单Id："+","+orderId);
                         List<DriverInfo> driverInfoList = driverInfoService.getDriverInfoByDriverStatus(1);
                         int driverId; //要接单的司机id
-                        /*1.查询出所有可以接单的乘客列表  */
+                        /*1.查询出所有可以接单的司机列表  */
                         for (DriverInfo d: driverInfoList){
                             // TODO: 2018/7/14    根据乘客下单位置 派送距离最近的司机的匹配算法还没写
 

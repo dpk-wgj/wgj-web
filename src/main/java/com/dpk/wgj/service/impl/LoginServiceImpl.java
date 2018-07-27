@@ -42,12 +42,16 @@ public class LoginServiceImpl implements LoginService {
         try {
             driverInfo = driverInfoMapper.getDriverInfoByWxId(userInfo.getDriverInfo().getDriverWxId());
 
-            // 用户不存在则自动添加
             if (driverInfo == null){
+                UserDTO user1= new UserDTO();
+                //当查询为空不存在，需要去先去绑定，才能登陆（返回一个假user）
                 driverInfo1.setDriverWxId(userInfo.getDriverInfo().getDriverWxId());
-                driverInfo1.setUserGroupId(1);
-                driverInfoMapper.addDriverInfo(driverInfo1);
-                user.setDriverInfo(driverInfo1);
+//                driverInfo1.setUserGroupId(1);
+//               // driverInfoMapper.addDriverInfo(driverInfo1);
+                 user1.setDriverInfo(driverInfo1);
+                // response.addHeader("refresh",jwtTokenUtil.create(user1));
+                return new Message(Message.ERROR,"登陆失败 >> 司机，请先去绑定信息", user1);
+
             } else {
                 user.setDriverInfo(driverInfo);
             }
@@ -72,7 +76,7 @@ public class LoginServiceImpl implements LoginService {
                     return new Message(Message.ERROR,"密码错误",null);
                 }
             }else {
-                return new Message(Message.ERROR,"用户名不存在",null);
+                return new Message(Message.ERROR,"用户不存在或者未绑定",null);
             }
         } catch (Exception e) {
             e.printStackTrace();
