@@ -184,7 +184,7 @@ public class DriverAndPassWebSocket {
                         tableMessage = new OrderInfoTableMessage();
                         tableMessage.setLimit(1);tableMessage.setOffset(0);tableMessage.setOrder("desc");tableMessage.setSort("order_id");
                         OrderInfo orderInfo = new OrderInfo();
-                        orderInfo.setOrderStatus(2);
+                        orderInfo.setOrderStatus(1);
                         orderInfo.setDriverId(this.userId);
                         tableMessage.setOrderInfo(orderInfo);
                         orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
