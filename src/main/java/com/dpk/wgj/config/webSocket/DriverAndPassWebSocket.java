@@ -127,7 +127,7 @@ public class DriverAndPassWebSocket {
                                     tableMessage.setOrderInfo(orderInfo1);
                                     orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
 
-                                    if(orderInfos!=null){
+                                    if (orderInfos != null && orderInfos.size() != 0) {
                                         System.out.println("查询到乘客刚下的订单："+orderInfos.get(0).getOrderId());
                                         order = orderInfoService.getOrderInfoByOrderId(orderInfos.get(0).getOrderId());
                                     }
@@ -189,7 +189,7 @@ public class DriverAndPassWebSocket {
                         tableMessage.setOrderInfo(orderInfo);
                         orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
 
-                        if(orderInfos!=null){
+                        if (orderInfos != null && orderInfos.size() != 0) {
                             System.out.println("查询到司机已经接到的订单："+orderInfos.get(0).getOrderId());
                             order = orderInfoService.getOrderInfoByOrderId(orderInfos.get(0).getOrderId());
                         }
@@ -208,7 +208,7 @@ public class DriverAndPassWebSocket {
                         tableMessage.setOrderInfo(orderInfo2);
                         orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
 
-                        if(orderInfos!=null){
+                        if (orderInfos != null && orderInfos.size() != 0 ) {
                             System.out.println("查询到司机已经接到的订单："+orderInfos.get(0).getOrderId());
                             order = orderInfoService.getOrderInfoByOrderId(orderInfos.get(0).getOrderId());
                         }
@@ -307,7 +307,7 @@ public class DriverAndPassWebSocket {
                         tableMessage.setOrderInfo(orderInfo3);
                         orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
 
-                        if(orderInfos!=null){
+                        if(orderInfos != null && orderInfos.size() != 0){
                             System.out.println("查询到乘客要进行取消的订单id："+orderInfos.get(0).getOrderId());
                             order = orderInfoService.getOrderInfoByOrderId(orderInfos.get(0).getOrderId());
                         }
