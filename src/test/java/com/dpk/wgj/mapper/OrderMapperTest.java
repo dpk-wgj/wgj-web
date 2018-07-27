@@ -6,6 +6,7 @@ import com.dpk.wgj.bean.Passenger;
 import com.dpk.wgj.bean.tableInfo.LocationMessage;
 import com.dpk.wgj.bean.tableInfo.OrderInfoTableMessage;
 import com.dpk.wgj.service.OrderInfoService;
+import com.dpk.wgj.utils.BestPathUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,6 +24,16 @@ public class OrderMapperTest extends WgjApplicationTests {
 //    private OrderInfoMapper orderInfoMapper;
     private OrderInfoService orderInfoService;
 
+    @Autowired
+    private BestPathUtil bestPathUtil;
+
+    @Test
+    public void testGetDriverId() throws Exception{
+
+        System.out.println("driverId : "
+                + bestPathUtil.getBestDriver("121.3273285,31.01315058"));
+
+    }
 
     @Test
     public void testGetLocationInfoByDate() throws Exception {
