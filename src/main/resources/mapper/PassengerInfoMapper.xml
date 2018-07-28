@@ -23,7 +23,7 @@
     </select>
 
     <select id="getPassengerByPassengerId" resultMap="PassengerMap">
-        SELECT passenger_id, passenger_wx_id, passenger_location, passenger_phone_number, user_group_id FROM passenger_info
+        SELECT passenger_id, passenger_wx_id, passenger_location, passenger_phone_number, passenger_status, user_group_id FROM passenger_info
         WHERE passenger_id = #{passengerId}
     </select>
 
