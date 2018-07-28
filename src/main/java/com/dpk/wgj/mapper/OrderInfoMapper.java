@@ -29,5 +29,5 @@ public interface OrderInfoMapper {
 
     public int findOrderInfoByMultiConditionCount(OrderInfoTableMessage orderInfoTableMessage) throws Exception;
 
-
+    public List<OrderInfo> findOrderInfoByOrderStatus(int orderStatus) throws Exception;
 }
