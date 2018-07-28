@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd">
+       <mapper namespace="com.dpk.wgj.mapper.AdminGroupAuthorityMapper">
+    <resultMap type="com.dpk.wgj.bean.AdminGroupAuthority" id="AdminGroupAuthorityMap">
+        <id property="adminGroupId" column="admin_group_id"/>
+        <result property="adminGroupName" column="admin_group_name"/>
+        <result property="content" column="content"/>
+    </resultMap>
+
+    <sql id="baseColumn" >
+        admin_group_id, admin_group_name, content
+    </sql>
+
+    <select id="getAdminGroupAuthorityById" resultMap="AdminGroupAuthorityMap">
+        SELECT
+        <include refid="baseColumn" />
+        FROM admin_group_authority
+        <where>
+            admin_group_id = #{adminGroupId}
+        </where>
+    </select>
+
+
+</mapper>
