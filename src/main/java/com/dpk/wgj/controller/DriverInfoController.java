@@ -4,6 +4,7 @@ import com.dpk.wgj.POI.Excel;
 import com.dpk.wgj.bean.CarInfo;
 import com.dpk.wgj.bean.DTO.CarInfoDTO;
 import com.dpk.wgj.bean.DriverInfo;
+import com.dpk.wgj.bean.LogInfo;
 import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.bean.tableInfo.DriverInfoTableMessage;
 import com.dpk.wgj.service.CarInfoService;
@@ -17,10 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/admin/driver")
@@ -345,6 +343,7 @@ public class DriverInfoController {
                 upStatus2 = driverInfoService.updateDriverInfoByDriverId(driverInfo);   //更新司机所绑定车辆的Id
                 if (upStatus == 1 && upStatus1==1 && upStatus2 == 1)
                 {
+                    logInfoService.addLogInfo(new LogInfo("后台端 >>Id为"+driverInfo.getDriverId()+"的司机换成车牌号为"+carInfo.getCarNumber()+"的车", 1, new Date(), 0));
                     return new Message(Message.SUCCESS, "更新信息 >> 成功", upStatus);
                 }
                 else
@@ -364,6 +363,7 @@ public class DriverInfoController {
                 upStatus2 = driverInfoService.updateDriverInfoByDriverId(driverInfo);   //更新司机所绑定车辆的Id
                 if (upStatus2 == 1 && upStatus1==1)
                 {
+                    logInfoService.addLogInfo(new LogInfo("后台端 >>Id为"+driverInfo.getDriverId()+"的司机换成车牌号为"+carInfo.getCarNumber()+"的车", 1, new Date(), 0));
                     return new Message(Message.SUCCESS, "更新信息 >> 成功", upStatus);
                 }
                 else
@@ -401,6 +401,8 @@ public class DriverInfoController {
                 upStatus2 = driverInfoService.updateCarId(driverInfo);   //更新司机所绑定车辆的Id
                 if (upStatus == 1  && upStatus2 == 1)
                 {
+                    // 插入用户成为日志
+                    logInfoService.addLogInfo(new LogInfo("后台端 >>Id为"+driverInfo.getDriverId()+"的司机成功解绑车牌号为"+carInfo1.getCarNumber()+"的车", 1, new Date(), 0));
                     return new Message(Message.SUCCESS, "更新信息 >> 成功", upStatus);
                 }
                 else
