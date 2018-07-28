@@ -117,7 +117,7 @@
                     AND c.car_number LIKE "%"#{carInfo.carNumber,jdbcType=VARCHAR}"%"
                 </if>
             </if>
-            <if test="orderInfo != null">
+            <!--<if test="orderInfo != null">-->
                 <if test="orderInfo.passengerId != null and orderInfo.passengerId !=''">
                     AND o.passenger_id = #{orderInfo.passengerId,jdbcType=INTEGER}
                 </if>
@@ -134,7 +134,7 @@
                     AND o.end_time <= #{orderInfo.endTime,jdbcType=TIMESTAMP}
                     ]]>
                 </if>
-            </if>
+            <!--</if>-->
         </where>
         ORDER BY ${sort} ${order} LIMIT #{offset},#{limit}
     </select>
@@ -182,5 +182,7 @@
             </if>
         </where>
     </select>
-
+    <select id="findOrderInfoByOrderStatus" resultMap="OrderInfoMap">
+        SELECT * FROM order_info o WHERE order_status = #{arg0}
+    </select>
 </mapper>
