@@ -78,6 +78,7 @@ public class JwtTokenUtil {
     public String create(UserDTO userDTO) {
         String username = null;
         int userId = 0;
+        int authority = 0;
         List<String> roles = new ArrayList<>();
         if (userDTO.getDriverInfo() !=null ){
             username = userDTO.getDriverInfo().getDriverWxId();
@@ -92,10 +93,12 @@ public class JwtTokenUtil {
             username = userDTO.getAdminInfo().getUsername();
             userId = userDTO.getAdminInfo().getUserId();
             roles = userDTO.getRoles();
+            authority = userDTO.getAdminInfo().getAuthorityId();
         }else {
             username = userDTO.getUsername();
             userId = userDTO.getUserId();
             roles = userDTO.getRoles();
+            authority = userDTO.getAuthorityId();
         }
         return Jwts.builder()
                 .setExpiration(new Date(System.currentTimeMillis() + validityTime))
@@ -103,6 +106,7 @@ public class JwtTokenUtil {
                 .claim("username",username)
                 .claim("user_id", userId)
                 .claim("roles", userDTO.getRoles())
+                .claim("authority", authority)
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
@@ -119,7 +123,7 @@ public class JwtTokenUtil {
         userDTO.setUserId(claims.get("user_id",Integer.class));
         userDTO.setUsername(claims.get("username",String.class));
         userDTO.setRoles((List<String>) claims.get("roles"));
-//        userDTO.setGmtModified(claims.getIssuedAt());
+        userDTO.setAuthorityId(claims.get("authority",Integer.class));
         return userDTO;
     }
 

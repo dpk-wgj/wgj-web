@@ -148,6 +148,8 @@ public class LoginServiceImpl implements LoginService {
 
                     user.setUserGroup(userGroup);
 
+                    user.setAuthorityId(adminInfo.getAuthorityId());
+
                     List<String> roles = new ArrayList<>();
 
                     roles.add(userGroup.getPermission());
