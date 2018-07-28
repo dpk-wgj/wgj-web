@@ -21,6 +21,7 @@
     <select id="getAllDriverInfo" resultMap="DriverInfoMap">
         SELECT driver_location,driver_id,driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id,driver_image_url
         FROM driver_info
+        WHERE driver_status = 1
     </select>
     <select id="getDriverInfoByDriverName" resultMap="DriverInfoMap">
         SELECT driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id
