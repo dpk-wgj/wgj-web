@@ -118,6 +118,9 @@
                 </if>
             </if>
             <if test="orderInfo != null">
+                <if test="orderInfo.passengerId != null and orderInfo.passengerId !=''">
+                    AND o.passenger_id = #{orderInfo.passengerId,jdbcType=INTEGER}
+                </if>
                 <if test="orderInfo.orderStatus != null and orderInfo.orderStatus !=''">
                     AND o.order_status = #{orderInfo.orderStatus,jdbcType=INTEGER}
                 </if>
