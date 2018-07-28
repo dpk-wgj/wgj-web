@@ -18,6 +18,16 @@ public class AdminInfo implements Serializable {
 
     private int userGroupId;
 
+    private int authorityId;
+
+    public int getAuthorityId() {
+        return authorityId;
+    }
+
+    public void setAuthorityId(int authorityId) {
+        this.authorityId = authorityId;
+    }
+
     public int getUserId() {
         return userId;
     }

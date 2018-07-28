@@ -11,6 +11,7 @@ public class Message {
     public static int SUCCESS = 1;
     public static int FAILURE = 0;
     public static int ERROR = -1;
+    public static int NOT_LEGAL = -100;
     private int status;
     private String message;
     private Object result;

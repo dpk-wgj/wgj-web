@@ -25,6 +25,8 @@ public class UserDTO implements Serializable {
 
     private List<String> roles;
 
+    private int authorityId;
+
     private UserGroup userGroup;
 
     public UserGroup getUserGroup() {
@@ -49,6 +51,14 @@ public class UserDTO implements Serializable {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public int getAuthorityId() {
+        return authorityId;
+    }
+
+    public void setAuthorityId(int authorityId) {
+        this.authorityId = authorityId;
     }
 
     public String getUsername() {
