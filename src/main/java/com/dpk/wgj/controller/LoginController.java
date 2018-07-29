@@ -60,6 +60,7 @@ public class LoginController {
         }
         return message;
     }
+
     /**
      * 激活司机信息  绑定前调用 {"phoneNumber": "xxxxxx"}
      * 发送验证码

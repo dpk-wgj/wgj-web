@@ -245,33 +245,33 @@ public class DriverInfoServiceImpl implements DriverInfoService {
                     else
                         continue;
 
+//                    if(row.getCell(1)!=null  ) {
+//                        row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
+//                        driverInfo.setDriverWxId(row.getCell(1).getStringCellValue());
+//                    }
+//                    else
+//                        continue;
+
                     if(row.getCell(1)!=null  ) {
                         row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
-                        driverInfo.setDriverWxId(row.getCell(1).getStringCellValue());
+                        driverInfo.setDriverPhoneNumber(row.getCell(2).getStringCellValue());
                     }
                     else
                         continue;
 
                     if(row.getCell(2)!=null  ) {
                         row.getCell(2).setCellType(Cell.CELL_TYPE_STRING);
-                        driverInfo.setDriverPhoneNumber(row.getCell(2).getStringCellValue());
-                    }
-                    else
-                        continue;
-
-                    if(row.getCell(3)!=null  ) {
-                        row.getCell(3).setCellType(Cell.CELL_TYPE_STRING);
                         driverInfo.setDriverIdentity(row.getCell(3).getStringCellValue());
                     }
                     else
                         continue;
 
-                    if(row.getCell(4)!=null ) {
-                        row.getCell(4).setCellType(Cell.CELL_TYPE_STRING);
+                    if(row.getCell(3)!=null ) {
+                        row.getCell(3).setCellType(Cell.CELL_TYPE_STRING);
                         driverInfo.setDriverLicence(row.getCell(4).getStringCellValue());
                     }
-                    if(row.getCell(5)!=null ) {
-                        row.getCell(5).setCellType(Cell.CELL_TYPE_STRING);
+                    if(row.getCell(4)!=null ) {
+                        row.getCell(4).setCellType(Cell.CELL_TYPE_STRING);
                         int cardId = (carInfoService.getCarInfoByCarNumber(row.getCell(5).getStringCellValue())).getCarId();
                         driverInfo.setCarId(cardId);
                     }
