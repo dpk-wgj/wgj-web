@@ -27,6 +27,9 @@ public class OrderInfo implements Serializable {
 
     private String endTime;
 
+    public OrderInfo() {
+    }
+
     public int getOrderId() {
         return orderId;
     }

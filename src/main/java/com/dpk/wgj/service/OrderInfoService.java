@@ -60,5 +60,10 @@ public interface OrderInfoService {
      */
     public List<OrderInfo> findOrderInfoByOrderStatus(int orderStatus) throws Exception;
 
+    /**
+     * 根据订单信息查询订单
+     */
+    public List<OrderInfo> findOrderListByOrderInfo(OrderInfo orderInfo) throws Exception;
+
 
 }
