@@ -178,32 +178,30 @@ public class DriverAndPassWebSocket {
                     case "arriveToPassenger": //到乘客上车点（接到乘客）
                         System.out.println("到乘客上车点（接到乘客）");
                         // 查询出司机id=userId且status=1(已经接单)
-                        tableMessage = new OrderInfoTableMessage();
-                        tableMessage.setLimit(1);tableMessage.setOffset(0);tableMessage.setOrder("desc");tableMessage.setSort("order_id");
                         OrderInfo orderInfo = new OrderInfo();
                         orderInfo.setOrderStatus(1);
                         orderInfo.setDriverId(this.userId);
-                        tableMessage.setOrderInfo(orderInfo);
-                        orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
+                        orderInfos = orderInfoService.findOrderListByOrderInfo(orderInfo);
 
                         if (orderInfos != null && orderInfos.size() != 0) {
                             System.out.println("查询到司机已经接到的订单："+orderInfos.get(0).getOrderId());
                             order = orderInfoService.getOrderInfoByOrderId(orderInfos.get(0).getOrderId());
+                            DriverInfo d = new DriverInfo();
+                            d.setDriverId(order.getDriverId());
+                            //将司机状态改为服务中
+                            d.setFlag(2);
+                            driverInfoService.updateDriverInfoByDriverId(d);
+                            sendMessage(1,"司机已经接到了我", null, "passenger,"+order.getPassengerId());
                         }
-
-                        sendMessage(1,"司机已经接到了我", null, "passenger,"+order.getPassengerId());
 
                         break;
                     case "arriveToDest": //司机端按下到达目的地按钮
                         System.out.println("到达目的地");
                         // 查询出司机id=userId且status=2(派送中)
-                        tableMessage = new OrderInfoTableMessage();
-                        tableMessage.setLimit(1);tableMessage.setOffset(0);tableMessage.setOrder("desc");tableMessage.setSort("order_id");
                         OrderInfo orderInfo2 = new OrderInfo();
                         orderInfo2.setOrderStatus(3);
                         orderInfo2.setDriverId(this.userId);
-                        tableMessage.setOrderInfo(orderInfo2);
-                        orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
+                        orderInfos = orderInfoService.findOrderListByOrderInfo(orderInfo2);
 
                         if (orderInfos != null && orderInfos.size() != 0 ) {
                             System.out.println("查询到司机已经接到的订单："+orderInfos.get(0).getOrderId());
@@ -306,13 +304,10 @@ public class DriverAndPassWebSocket {
 
                         break;
                     case "cancelOrder":
-                        tableMessage = new OrderInfoTableMessage();
-                        tableMessage.setLimit(1);tableMessage.setOffset(0);tableMessage.setOrder("desc");tableMessage.setSort("order_id");
                         OrderInfo orderInfo3 = new OrderInfo();
                         orderInfo3.setOrderStatus(1);
                         orderInfo3.setDriverId(this.userId);
-                        tableMessage.setOrderInfo(orderInfo3);
-                        orderInfos = orderInfoService.findOrderInfoByMultiCondition(tableMessage);
+                        orderInfos = orderInfoService.findOrderListByOrderInfo(orderInfo3);
 
                         if (orderInfos != null && orderInfos.size() != 0) {
                             System.out.println("查询到乘客要进行取消的订单id："+orderInfos.get(0).getOrderId());
