@@ -167,7 +167,10 @@
             <if test="driverLocation != null  and driverLocation !=''">
                 driver_location = #{driverLocation,jdbcType=VARCHAR},
             </if>
-            <if test="driverStatus != null">
+            <if test="driverStatus == 0">
+                driver_status = #{driverStatus,jdbcType=INTEGER},
+            </if>
+            <if test="driverStatus == 1">
                 driver_status = #{driverStatus,jdbcType=INTEGER},
             </if>
         </set>
@@ -179,7 +182,7 @@
     </delete>
 
     <select id="getDriverInfoByWxId" resultMap="DriverInfoMap">
-        SELECT driver_wx_id, driver_id, user_group_id,driver_phone_number,driver_status FROM driver_info
+        SELECT driver_wx_id, driver_id, user_group_id,driver_phone_number,driver_status,car_Id FROM driver_info
         WHERE driver_wx_id = #{driverWxId}
     </select>
 

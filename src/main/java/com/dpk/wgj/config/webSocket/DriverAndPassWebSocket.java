@@ -127,7 +127,7 @@ public class DriverAndPassWebSocket {
 
                                 // TODO: 2018/7/28 司机与乘客距离匹配 还需要优化
                                 double[] disD = calMinDistace(driverLoc, passLoc);
-                                if (disD[0] < minDistance && disD[0] < minDistance) {
+                                if (disD[0] < minDistance && disD[1] < minDistance) {
                                     compareMap.put(p, disD);
                                     order = o;
                                     break;
@@ -261,7 +261,7 @@ public class DriverAndPassWebSocket {
                                                 if (Integer.parseInt(arr[1]) == d.getDriverId()) {
                                                     // TODO: 2018/7/28 司机与乘客距离匹配 还需要优化
                                                     double[] disD = calMinDistace(driverLoc, passLoc);
-                                                    if (disD[0] < minDistance && disD[0] < minDistance) {
+                                                    if (disD[0] < minDistance && disD[1] < minDistance) {
                                                         compareMap.put(d, disD);
                                                         break;
                                                     }
