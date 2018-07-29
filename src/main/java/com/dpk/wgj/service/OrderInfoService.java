@@ -55,4 +55,10 @@ public interface OrderInfoService {
      */
     public int findOrderInfoByMultiConditionCount(OrderInfoTableMessage orderInfoTableMessage) throws Exception;
 
+    /**
+     * 根据状态查询订单
+     */
+    public List<OrderInfo> findOrderInfoByOrderStatus(int orderStatus) throws Exception;
+
+
 }
