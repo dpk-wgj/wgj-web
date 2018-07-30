@@ -13,13 +13,13 @@ import java.io.Serializable;
  */
 public class OrderInfoTableMessage extends TableMessage implements Serializable{
 
-    private OrderInfo orderInfo = new OrderInfo();
+    private OrderInfo orderInfo;
 
-    private CarInfo carInfo = new CarInfo();
+    private CarInfo carInfo;
 
-    private DriverInfo driverInfo = new DriverInfo();
+    private DriverInfo driverInfo;
 
-    private Passenger passenger = new Passenger();
+    private Passenger passenger;
 
     public OrderInfo getOrderInfo() {
         return orderInfo;

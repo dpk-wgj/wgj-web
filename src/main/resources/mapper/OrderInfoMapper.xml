@@ -118,6 +118,9 @@
                 </if>
             </if>
             <if test="orderInfo != null">
+                <if test="orderInfo.passengerId != null and orderInfo.passengerId !=''">
+                    AND o.passenger_id = #{orderInfo.passengerId,jdbcType=INTEGER}
+                </if>
                 <if test="orderInfo.orderStatus != null and orderInfo.orderStatus !=''">
                     AND o.order_status = #{orderInfo.orderStatus,jdbcType=INTEGER}
                 </if>
@@ -179,5 +182,33 @@
             </if>
         </where>
     </select>
+    <select id="findOrderInfoByOrderStatus" resultMap="OrderInfoMap">
+        SELECT * FROM order_info o WHERE order_status = #{arg0}
+    </select>
 
+    <select id="findOrderListByOrderInfo" resultMap="OrderInfoMap">
+        SELECT * FROM order_info o
+        <where>
+            1 = 1
+            <if test="passengerId != null and passengerId !=''">
+                AND o.passenger_id = #{orderInfo.passengerId,jdbcType=INTEGER}
+            </if>
+            <if test="driverId != null and driverId !=''">
+                AND o.driver_id = #{driverId,jdbcType=INTEGER}
+            </if>
+            <if test="orderStatus != null and orderStatus !=''">
+                AND o.order_status = #{orderStatus,jdbcType=INTEGER}
+            </if>
+            <if test="startTime != null and startTime !=''">
+                <![CDATA[
+                AND o.start_time >= #{startTime,jdbcType=TIMESTAMP}
+                ]]>
+            </if>
+            <if test="endTime != null and endTime !=''">
+                <![CDATA[
+                AND o.end_time <= #{endTime,jdbcType=TIMESTAMP}
+                ]]>
+            </if>
+        </where>
+    </select>
 </mapper>

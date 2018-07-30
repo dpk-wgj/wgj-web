@@ -83,14 +83,38 @@ public class DriverInfoApiController {
      * 根据Id更新司机位置信息
      */
     @RequestMapping(value = "/updateApiDriverInfoByDriverId",method = RequestMethod.POST)
-    public Message updateApiDriverInfoByDriverId(@RequestBody DriverInfo driverInfo) {
+    public Message updateApiDriverInfoByDriverId(@RequestBody DriverInfo driverInfo)  {
         int upApiStatus = 0;
+        int carId = driverInfo.getCarId();
         try {
-            upApiStatus = driverInfoApiService.updateApiDriverInfoByDriverId(driverInfo);
-            if (upApiStatus == 1) {
-                return new Message(Message.SUCCESS, "更新司机信息 >> 成功", upApiStatus);
+                if (carId != 0) {               //司机状态：登录成功阶段，获取到车辆Id
+                    if(driverInfo.getDriverStatus()==1) {   //登录司机要切换为 上岗 状态
+                       DriverInfo driverInfos = driverInfoApiService.getDriverInfoByCarId(carId);  //获取车辆Id为carId的上岗司机
+                        if (driverInfos == null) {    //没有司机上岗
+                        upApiStatus = driverInfoApiService.updateApiDriverInfoByDriverId(driverInfo);
+                        if (upApiStatus == 1) {
+                                return new Message(Message.SUCCESS, "更新司机上岗状态 >> 成功", upApiStatus);
+                            }
+                            return new Message(Message.ERROR, "更新司机上岗状态 >> 失败", upApiStatus);
+                    }
+                    else
+                            return new Message(Message.FAILURE, "已有司机上岗，更新司机上岗状态 >> 失败", upApiStatus);
+                }
+                else{   //切换为 下岗 状态
+                        upApiStatus = driverInfoApiService.updateApiDriverInfoByDriverId(driverInfo);
+                        if (upApiStatus == 1) {
+                            return new Message(Message.SUCCESS, "更新司机下岗状态 >> 成功", upApiStatus);
+                        }
+                        return new Message(Message.ERROR, "更新司机下岗状态 >> 失败", upApiStatus);
+                    }
             }
-            return new Message(Message.FAILURE, "更新司机信息 >> 失败", upApiStatus);
+        else {    //司机状态：激活阶段
+                upApiStatus = driverInfoApiService.updateApiDriverInfoByDriverId(driverInfo);
+                if (upApiStatus == 1) {
+                    return new Message(Message.SUCCESS, "更新司机信息 >> 成功", upApiStatus);
+                }
+                return new Message(Message.FAILURE, "更新司机信息 >> 失败", upApiStatus);
+            }
         } catch (Exception e) {
             return new Message(Message.ERROR, "更新司机信息 >> 异常", e.getMessage());
         }

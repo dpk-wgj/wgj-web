@@ -21,6 +21,7 @@
     <select id="getAllDriverInfo" resultMap="DriverInfoMap">
         SELECT driver_location,driver_id,driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id,driver_image_url
         FROM driver_info
+        WHERE driver_status = 1
     </select>
     <select id="getDriverInfoByDriverName" resultMap="DriverInfoMap">
         SELECT driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id
@@ -28,7 +29,7 @@
         WHERE driver_name = #{driverName}
     </select>
     <select id="getDriverInfoByDriverStatus" resultMap="DriverInfoMap">
-        SELECT driver_id,driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id
+        SELECT driver_id,driver_name,driver_wx_id, driver_phone_number,driver_location, driver_identity, driver_level_star,driver_licence, driver_status, flag, car_id
         FROM driver_info
         WHERE driver_status = #{driverStatus}
     </select>
@@ -148,6 +149,12 @@
             <if test="driverLevelStar !=null  and driverLevelStar !=''">
                 driver_level_star = #{driverLevelStar,jdbcType=INTEGER},
             </if>
+            <if test="driverStatus !=null and driverStatus !=''" >
+                driver_status = #{driverStatus ,jdbcType = INTEGER},
+            </if>
+            <if test="flag !=null and flag !=''" >
+                flag = #{flag ,jdbcType = INTEGER},
+            </if>
             <if test="carId !=null and carId !=''" >
                 car_id = #{carId ,jdbcType = INTEGER},
             </if>
@@ -160,7 +167,10 @@
             <if test="driverLocation != null  and driverLocation !=''">
                 driver_location = #{driverLocation,jdbcType=VARCHAR},
             </if>
-            <if test="driverStatus != null">
+            <if test="driverStatus == 0">
+                driver_status = #{driverStatus,jdbcType=INTEGER},
+            </if>
+            <if test="driverStatus == 1">
                 driver_status = #{driverStatus,jdbcType=INTEGER},
             </if>
         </set>
@@ -172,7 +182,7 @@
     </delete>
 
     <select id="getDriverInfoByWxId" resultMap="DriverInfoMap">
-        SELECT driver_wx_id, driver_id, user_group_id,driver_phone_number,driver_status FROM driver_info
+        SELECT driver_wx_id, driver_id, user_group_id,driver_phone_number,driver_status,car_Id FROM driver_info
         WHERE driver_wx_id = #{driverWxId}
     </select>
 

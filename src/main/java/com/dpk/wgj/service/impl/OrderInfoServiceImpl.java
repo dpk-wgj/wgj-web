@@ -142,4 +142,29 @@ public class OrderInfoServiceImpl implements OrderInfoService{
         }
         return count;
     }
+
+    @Override
+    public List<OrderInfo> findOrderInfoByOrderStatus(int orderStatus) throws Exception {
+        List<OrderInfo> orderInfos = new ArrayList<>();
+        try {
+            orderInfos = orderInfoMapper.findOrderInfoByOrderStatus(orderStatus);
+            return orderInfos;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<OrderInfo> findOrderListByOrderInfo(OrderInfo orderInfo) throws Exception {
+        List<OrderInfo> orderInfos = new ArrayList<>();
+        try {
+            orderInfos = orderInfoMapper.findOrderListByOrderInfo(orderInfo);
+            return orderInfos;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
