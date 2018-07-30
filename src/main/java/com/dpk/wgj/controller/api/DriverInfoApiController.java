@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Driver;
@@ -182,6 +183,7 @@ public class DriverInfoApiController {
         }
 
     }
+
     /**
      * 司机端 ，发送验证码或者（修改绑定手机号）调用{"phoneNumber": "xxxxxx"}
      *               判断 手机号是否已经绑定了，防止一个手机号绑定多个司机
@@ -203,4 +205,74 @@ public class DriverInfoApiController {
         }
 
     }
+
+    /**
+     *  司机端  上下岗切换
+     */
+    @RequestMapping(value = "/changeDriverStatus", method = RequestMethod.POST)
+    @Transactional(rollbackFor = Exception.class)
+    public Message changeDriverStatus(){
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        int partDriverId = 0;
+
+        DriverInfo partDriver = null;
+        try {
+            DriverInfo targetDriver = driverInfoApiService.getDriverInfoByDriverId(userInfo.getUserId());
+
+            CarInfo carInfo = carInfoService.getCarInfoByCarId(targetDriver.getCarId());
+
+            // 判断车辆所有权是否为该司机
+            if (carInfo != null && (carInfo.getCarDriverIdA() == userInfo.getUserId()
+                    || carInfo.getCarDriverIdB() == userInfo.getUserId())){
+                // 判断司机当前状态
+                if (targetDriver.getDriverStatus() == 0){
+                    // 得到第二个司机id
+                    if (carInfo.getCarDriverIdB() == userInfo.getUserId()){
+                        partDriverId = carInfo.getCarDriverIdA();
+                    }else if (carInfo.getCarDriverIdA() == userInfo.getUserId()){
+                        partDriverId = carInfo.getCarDriverIdB();
+                    }
+                    // 得到第二个司机状态
+                    if (partDriverId != 0){
+                        partDriver = driverInfoApiService.getDriverInfoByDriverId(partDriverId);
+                        if (partDriver != null){
+
+                                if (partDriver.getDriverStatus() == 1){
+                                    partDriver.setDriverStatus(0);
+                                    targetDriver.setDriverStatus(1);
+                                    int upTarStatus = driverInfoApiService.updateDriverInfoByDriverId(targetDriver);
+                                    int upPartStatus = driverInfoApiService.updateDriverInfoByDriverId(partDriver);
+                                    if (upTarStatus == 1 && upPartStatus == 1){
+                                        return new Message(Message.SUCCESS, "司机状态切换 >> 成功",
+                                                1);
+                                    }
+                                }
+                                int upPartStatus = driverInfoApiService.updateDriverInfoByDriverId(partDriver);
+                                return new Message(Message.SUCCESS, "司机状态切换 >> 成功",
+                                        1);
+                            }
+
+                    }
+                    targetDriver.setDriverStatus(1);
+                    int upTarStatus = driverInfoApiService.updateDriverInfoByDriverId(targetDriver);
+                    return new Message(Message.SUCCESS, "司机状态切换 >> 成功",
+                            1);
+                }
+                return new Message(Message.SUCCESS, "司机状态处于上岗状态",
+                        2);
+
+            }
+
+            return new Message(Message.FAILURE, "未授权操作！",
+                    -1);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message(Message.ERROR, "异常请求！",
+                    -2);
+        }
+
+    }
+
+
 }
