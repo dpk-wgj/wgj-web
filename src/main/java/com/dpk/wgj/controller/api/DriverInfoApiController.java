@@ -208,8 +208,6 @@ public class DriverInfoApiController {
 
     /**
      *  司机端  上下岗切换
-     *  {
-     *      "driverId": XX,*  }
      */
     @RequestMapping(value = "/changeDriverStatus", method = RequestMethod.POST)
     @Transactional(rollbackFor = Exception.class)
