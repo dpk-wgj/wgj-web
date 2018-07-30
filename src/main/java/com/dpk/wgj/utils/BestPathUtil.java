@@ -34,8 +34,8 @@ public class BestPathUtil {
             for (int i = 0;i < 3;i ++){
                 for (DriverInfo driverInfo : list) {
                     String[] locations = driverInfo.getDriverLocation().split(",");
-                    if (Math.abs(Double.valueOf(locations[0]) - pPoints[0]) <= 0.035
-                            && Math.abs(Double.valueOf(locations[1]) - pPoints[1]) <= 0.035);
+                    if (Math.abs(Double.valueOf(locations[0]) - pPoints[0]) <= (0.035 + 0.002*i)
+                            && Math.abs(Double.valueOf(locations[1]) - pPoints[1]) <= (0.035 + 0.002*i));
                     driverId = driverInfo.getDriverId();
                     break;
                 }
