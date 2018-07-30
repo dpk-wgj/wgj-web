@@ -38,9 +38,9 @@ public class OrderMapperTest extends WgjApplicationTests {
 
     @Test
     public void testGetDriverId() throws Exception{
-
+        driverInfoService.getAllDriverInfo();
         System.out.println("driverId : "
-                + bestPathUtil.getBestDriver("121.3273285,31.01315058"));
+                + driverInfoService.getAllDriverInfo());
 
     }
 

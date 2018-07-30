@@ -39,8 +39,6 @@
         WHERE driver_id = #{driverId}
     </select>
 
-
-
     <select id="getDriverInfoByDriverPhoneNumber" resultMap="DriverInfoMap">
         SELECT driver_id,driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id
         FROM driver_info
@@ -209,6 +207,7 @@
         </set>
         WHERE driver_id = #{driverId,jdbcType=INTEGER}
     </update>
+
     <update id="updateCarId" parameterType="DriverInfo">
         update driver_info
         <set>
@@ -216,6 +215,7 @@
         </set>
         WHERE driver_id = #{driverId,jdbcType=INTEGER}
     </update>
+
     <update id="updateDriverPhoneNumber" parameterType="DriverInfo">
         update driver_info
         <set>
