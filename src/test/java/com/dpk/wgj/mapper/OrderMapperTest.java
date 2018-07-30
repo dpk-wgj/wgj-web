@@ -1,10 +1,12 @@
 package com.dpk.wgj.mapper;
 
 import com.dpk.wgj.WgjApplicationTests;
+import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.OrderInfo;
 import com.dpk.wgj.bean.Passenger;
 import com.dpk.wgj.bean.tableInfo.LocationMessage;
 import com.dpk.wgj.bean.tableInfo.OrderInfoTableMessage;
+import com.dpk.wgj.service.DriverInfoService;
 import com.dpk.wgj.service.OrderInfoService;
 import com.dpk.wgj.utils.BestPathUtil;
 import org.junit.Test;
@@ -12,7 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by zhoulin on 2018/7/9.
@@ -26,6 +32,9 @@ public class OrderMapperTest extends WgjApplicationTests {
 
     @Autowired
     private BestPathUtil bestPathUtil;
+
+    @Autowired
+    private DriverInfoService driverInfoService;
 
     @Test
     public void testGetDriverId() throws Exception{
@@ -55,6 +64,17 @@ public class OrderMapperTest extends WgjApplicationTests {
 
         List<OrderInfo> list = orderInfoService.findOrderInfoByMultiCondition(orderInfoTableMessage);
         System.out.println(list.toString());
+    }
+
+    @Test
+    public void testJavaDo() throws Exception{
+        Map<Integer, String> driverId2driverName = new HashMap<>();
+        List<DriverInfo> driverInfos = driverInfoService.getAllDriverInfo();
+        Map<Integer, String> map  = driverInfos.stream().collect(Collectors.toMap(DriverInfo::getDriverId, DriverInfo::getDriverName));
+        driverId2driverName.putAll(map);
+        System.out.println(map);
+
+//         System.out.println(map1);
     }
 
 }
