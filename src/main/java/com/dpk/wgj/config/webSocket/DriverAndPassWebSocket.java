@@ -306,7 +306,8 @@ public class DriverAndPassWebSocket {
                     case "cancelOrder":
                         OrderInfo orderInfo3 = new OrderInfo();
                         orderInfo3.setOrderStatus(1);
-                        orderInfo3.setDriverId(this.userId);
+//                        orderInfo3.setDriverId(this.userId);
+                        orderInfo3.setPassengerId(this.userId);//this.useId是乘客的Id
                         orderInfos = orderInfoService.findOrderListByOrderInfo(orderInfo3);
 
                         if (orderInfos != null && orderInfos.size() != 0) {
