@@ -208,10 +208,12 @@ public class DriverInfoApiController {
 
     /**
      *  司机端  上下岗切换
+     *  二维码提供 carId
+     *  实现二维码差异
      */
-    @RequestMapping(value = "/changeDriverStatus", method = RequestMethod.POST)
+    @RequestMapping(value = "/changeDriverStatus/{carId}", method = RequestMethod.PUT)
     @Transactional(rollbackFor = Exception.class)
-    public Message changeDriverStatus(){
+    public Message changeDriverStatus(@PathVariable(value = "carId") int carId){
         UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int partDriverId = 0;
 
@@ -222,7 +224,7 @@ public class DriverInfoApiController {
             CarInfo carInfo = carInfoService.getCarInfoByCarId(targetDriver.getCarId());
 
             // 判断车辆所有权是否为该司机
-            if (carInfo != null && (carInfo.getCarDriverIdA() == userInfo.getUserId()
+            if (carInfo != null && carId == targetDriver.getCarId() && (carInfo.getCarDriverIdA() == userInfo.getUserId()
                     || carInfo.getCarDriverIdB() == userInfo.getUserId())){
                 // 判断司机当前状态
                 if (targetDriver.getDriverStatus() == 0){
