@@ -102,7 +102,6 @@ public class DriverAndPassWebSocket {
             System.out.println("后台ws收到的信息:"+message+",用户id:"+userId);
             DriverInfo driverInfo = new DriverInfo();
             Passenger passenger = new Passenger();
-            OrderInfoTableMessage tableMessage = new OrderInfoTableMessage();
             List<OrderInfo> orderInfos = null;
             if(role.equals("driver")){
                 this.userId = Integer.parseInt(userId);
@@ -215,14 +214,21 @@ public class DriverAndPassWebSocket {
 
                         break;
                     case "changeDriver"://司机端按下一键改派按钮
-                        OrderInfo orderInfo1 = orderInfoService.getOrderInfoByOrderId(orderId);
+                        OrderInfo orderInfo3 = new OrderInfo();
+                        orderInfo3.setDriverId(driverInfo.getDriverId());
+                        orderInfo3.setOrderStatus(1);
+                        orderInfos = orderInfoService.findOrderListByOrderInfo(orderInfo3);
+                        if (orderInfos != null && orderInfos.size() != 0 ) {
+                            order = orderInfoService.getOrderInfoByOrderId(orderInfos.get(0).getOrderId());
+                        }
+//                        OrderInfo orderInfo1 = orderInfoService.getOrderInfoByOrderId(orderId);
 
-                        sendMessage(3,"司机取消本订单 即将为您自动分配其他司机", null, "passenger,"+orderInfo1.getPassengerId());
+                        sendMessage(3,"司机取消本订单 即将为您自动分配其他司机", null, "passenger," + order.getPassengerId());
 
-                        sendMessage(3,"取消本订单 即将返回首页", null, "driver,"+orderInfo1.getDriverId());
+                        sendMessage(3,"取消本订单 即将返回首页", null, "driver," + order.getDriverId());
 
                         //将司机从池中删除
-                        removeFromPool(sessionPool, 0, orderInfo1.getDriverId());
+                        removeFromPool(sessionPool, 0, order.getDriverId());
                         /*3.插入日志记录*/
 
                         break;
