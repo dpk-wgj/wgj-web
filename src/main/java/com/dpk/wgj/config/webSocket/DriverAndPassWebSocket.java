@@ -223,6 +223,7 @@ public class DriverAndPassWebSocket {
 
                         //将司机从池中删除
                         removeFromPool(sessionPool, 0, orderInfo1.getDriverId());
+
                         /*3.插入日志记录*/
 
                         break;
