@@ -1,7 +1,9 @@
 package com.dpk.wgj.service.impl;
 
+import com.dpk.wgj.bean.CarInfo;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.tableInfo.DriverInfoTableMessage;
+import com.dpk.wgj.mapper.CarInfoMapper;
 import com.dpk.wgj.mapper.DriverInfoMapper;
 import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
@@ -30,6 +32,9 @@ public class DriverInfoServiceImpl implements DriverInfoService {
 
     @Autowired
     private DriverInfoMapper driverInfoMapper;
+
+    @Autowired
+    private CarInfoMapper carInfoInfoMapper;
 
     @Autowired
     private CarInfoService carInfoService;
@@ -229,7 +234,7 @@ public class DriverInfoServiceImpl implements DriverInfoService {
             Sheet sheet=workbook.getSheetAt(0);
             //3、读取行
             System.out.println(sheet.getPhysicalNumberOfRows());
-            if(sheet.getPhysicalNumberOfRows()>1){
+            if(sheet.getPhysicalNumberOfRows()>1) {
                 DriverInfo driverInfo= null;
                 for (int i = 2; i < sheet.getPhysicalNumberOfRows(); i++) {
                     //4、读取单元格
@@ -254,34 +259,36 @@ public class DriverInfoServiceImpl implements DriverInfoService {
 
                     if(row.getCell(1)!=null  ) {
                         row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
-                        driverInfo.setDriverPhoneNumber(row.getCell(2).getStringCellValue());
+                        driverInfo.setDriverPhoneNumber(row.getCell(1).getStringCellValue());
                     }
                     else
                         continue;
 
                     if(row.getCell(2)!=null  ) {
                         row.getCell(2).setCellType(Cell.CELL_TYPE_STRING);
-                        driverInfo.setDriverIdentity(row.getCell(3).getStringCellValue());
+                        driverInfo.setDriverIdentity(row.getCell(2).getStringCellValue());
                     }
                     else
                         continue;
 
+//                    if(row.getCell(3)!=null ) {
+//                        row.getCell(3).setCellType(Cell.CELL_TYPE_STRING);
+//                        driverInfo.setDriverLicence(row.getCell(4).getStringCellValue());
+//                    }
                     if(row.getCell(3)!=null ) {
                         row.getCell(3).setCellType(Cell.CELL_TYPE_STRING);
-                        driverInfo.setDriverLicence(row.getCell(4).getStringCellValue());
-                    }
-                    if(row.getCell(4)!=null ) {
-                        row.getCell(4).setCellType(Cell.CELL_TYPE_STRING);
-                        int cardId = (carInfoService.getCarInfoByCarNumber(row.getCell(5).getStringCellValue())).getCarId();
+                        int cardId = (carInfoService.getCarInfoByCarNumber(row.getCell(3).getStringCellValue())).getCarId();
                         driverInfo.setCarId(cardId);
                     }
                     else
                         continue;
+
                     //风险源
                     try {
-                        //先查询是否存在，然后再添加
+                        //先查询是否存在，然后再添加 System.out.println("52353543");
                         DriverInfo temp = driverInfoMapper.getDriveInfoByDriverIdentity(driverInfo.getDriverIdentity());
                         if(temp == null){
+                            System.out.println("45244");
                             driverInfoMapper.insertDriverInfo(driverInfo);
                             res++;
                         }
@@ -289,6 +296,7 @@ public class DriverInfoServiceImpl implements DriverInfoService {
                         logger.error(e.getMessage());
 
                     }
+
                 }
             }
             fileInputStream.close();

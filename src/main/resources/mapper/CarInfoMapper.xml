@@ -28,8 +28,8 @@
 
 
     <insert id="addCarInfo" parameterType="CarInfo" useGeneratedKeys="true" keyProperty="carId">
-        INSERT INTO car_info (car_number, car_type, car_seat)
-        VALUES (#{carNumber}, #{carType}, #{carSeat})
+        INSERT INTO car_info (car_number, car_type, car_seat,car_driver_id_a)
+        VALUES (#{carNumber}, #{carType}, #{carSeat},#{carDriverIdA})
     </insert>
 
     <delete id="deleteCarInfoByCarId" parameterType="int">
