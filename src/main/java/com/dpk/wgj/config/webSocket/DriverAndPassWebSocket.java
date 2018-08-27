@@ -132,9 +132,7 @@ public class DriverAndPassWebSocket {
                                     break;
                                 }
                             }
-
                         }
-
                         if (compareMap.size() != 0) {
                             order.setDriverId(driverInfo.getDriverId());
                             //将订单状态改为接单状态

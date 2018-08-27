@@ -14,7 +14,7 @@ spring:
 
   redis:
     host: 120.79.251.229
-    port: 6379
+    port: 9999
     database: 0                       #默认是索引为0的数据库
     password:
     timeout:

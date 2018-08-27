@@ -118,8 +118,8 @@
     </select>
 
     <insert id="insertDriverInfo" parameterType="DriverInfo" >
-        INSERT INTO driver_info (driver_name,driver_wx_id, driver_phone_number,driver_identity,driver_licence)
-        VALUES (#{driverName}, #{driverWxId}, #{driverPhoneNumber},#{driverIdentity},#{driverLicence})
+        INSERT INTO driver_info (driver_name,driver_wx_id, driver_phone_number,driver_identity,driver_licence,car_id)
+        VALUES (#{driverName}, #{driverWxId}, #{driverPhoneNumber},#{driverIdentity},#{driverLicence},#{carId})
     </insert>
 
 
