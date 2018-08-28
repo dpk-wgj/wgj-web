@@ -23,6 +23,10 @@
         FROM driver_info
         WHERE driver_status = 1
     </select>
+    <select id="getPutDriverInfo" resultMap="DriverInfoMap">
+        SELECT driver_id,driver_name, driver_phone_number,driver_identity,car_id
+        FROM driver_info
+    </select>
     <select id="getDriverInfoByDriverName" resultMap="DriverInfoMap">
         SELECT driver_name,driver_wx_id, driver_phone_number,driver_identity, driver_level_star,driver_licence, driver_status,car_id
         FROM driver_info

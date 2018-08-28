@@ -3,16 +3,19 @@ package com.dpk.wgj.controller;
 import com.dpk.wgj.POI.Excel;
 import com.dpk.wgj.bean.CarInfo;
 import com.dpk.wgj.bean.DTO.CarInfoDTO;
+import com.dpk.wgj.bean.DTO.UserDTO;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.LogInfo;
 import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.bean.tableInfo.DriverInfoTableMessage;
+import com.dpk.wgj.mapper.AdminGroupAuthorityMapper;
 import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
 import com.dpk.wgj.service.LogInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,6 +38,9 @@ public class DriverInfoController {
 
     @Autowired
     private Excel excel;
+
+    @Autowired
+    private AdminGroupAuthorityMapper adminGroupAuthorityMapper;
 
     private final Logger logger = LoggerFactory.getLogger(DriverInfoController.class);
 
@@ -190,8 +196,10 @@ public class DriverInfoController {
      */
     @RequestMapping(value = "/updateDriverInfoByDriverId",method = RequestMethod.POST)
     public Message updateDriverInfoByDriverId(@RequestBody DriverInfo driverInfo) {
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int upStatus = 0;
-        try {
+        try { String authorityContent = adminGroupAuthorityMapper.getAdminGroupAuthorityById(userInfo.getAuthorityId()).getAdminGroupName();
+            if ( authorityContent.equals("高级管理员") || authorityContent.equals("超级管理员")) {
                 upStatus = driverInfoService.updateDriverInfoByDriverId(driverInfo);//更新司机所绑定的车辆的Id
                 if (upStatus == 1)
                 {
@@ -199,7 +207,8 @@ public class DriverInfoController {
                 }
                 else
                     return new Message(Message.FAILURE, "更新司机信息 >> 失败", "更新失败");
-
+            }
+            return new Message(Message.NOT_LEGAL, "权限不合法",  "您是"+authorityContent+",权限不足，无法进行修改处理！");
         } catch (Exception e) {
             return new Message(Message.ERROR, "更新司机信息 >> 异常", e.getMessage());
         }
@@ -211,10 +220,13 @@ public class DriverInfoController {
      */
     @RequestMapping(value = "/deleteDriverInfoByDriverId", method = RequestMethod.POST)
     public Message deleteDriverInfoByDriverId(@RequestParam(value = "driverId") int driverId){
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int delStatus = 0;
         int delStatus1 = 0;
         CarInfo carInfo;
         try {
+            String authorityContent = adminGroupAuthorityMapper.getAdminGroupAuthorityById(userInfo.getAuthorityId()).getAdminGroupName();
+            if (authorityContent.equals("高级管理员") || authorityContent.equals("超级管理员")) {
             carInfo = carInfoService.getCarInfoByDriverId(driverId);//获取要删除司机的车辆信息
             if(carInfo.getCarDriverIdA() == driverId)    //获取车辆中哪个carDriverId绑定了司机Id
             {
@@ -233,6 +245,8 @@ public class DriverInfoController {
                 return new Message(Message.SUCCESS, "删除司机信息 >> 成功", delStatus);
             }
             return new Message(Message.FAILURE, "删除司机信息 >> 失败", delStatus);
+            }
+            return new Message(Message.NOT_LEGAL, "权限不合法",  "您是"+authorityContent+",权限不足，无法进行删除处理！");
         } catch (Exception e) {
             return new Message(Message.ERROR, "删除司机信息 >> 异常",  e.getMessage());
         }
@@ -244,7 +258,10 @@ public class DriverInfoController {
     @RequestMapping(value="/importExcel", method=RequestMethod.POST)
     @ResponseBody
     public Message importExcel(@RequestParam(value = "file", required = false) MultipartFile sourceRiskFile,
-                               HttpServletRequest request, Model model) {
+                               HttpServletRequest request, Model model) throws Exception {
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        String authorityContent = adminGroupAuthorityMapper.getAdminGroupAuthorityById(userInfo.getAuthorityId()).getAdminGroupName();
+        if ( authorityContent.equals("超级管理员")){
         String fileName = sourceRiskFile.getOriginalFilename();
         logger.info(fileName);
         //判断文件是否为空
@@ -262,8 +279,10 @@ public class DriverInfoController {
                 return  new Message(Message.FAILURE,"导入信息 >> 失败","添加失败，请检查文件是否为Excel文件");
             }
         }
-        return null;
 
+        return null;
+    }
+        return new Message(Message.NOT_LEGAL, "权限不合法",  "您是"+authorityContent+",权限不足，无法进行导入处理！");
     }
     /**
      * 导出司机信息到Excel表
@@ -272,7 +291,7 @@ public class DriverInfoController {
     @ResponseBody
     public Message makeExcel(){
         try{
-            excel.pushExcel(driverInfoService.getAllDriverInfo());
+            excel.pushExcel(driverInfoService.getPutDriverInfo());
             return new Message(1,"导出成功,文件位置存放在D盘根目录下",null);
         } catch (Exception e) {
             e.printStackTrace();
@@ -312,12 +331,15 @@ public class DriverInfoController {
      */
     @RequestMapping(value = "/changCar",method = RequestMethod.POST)
     public Message changCar(@RequestBody DriverInfo driverInfo) {
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int upStatus = 0;
         int upStatus1 = 0;
         int upStatus2 = 0;
         CarInfo carInfo; //司机换车之后所绑定的车辆
         CarInfo carInfo1;//司机原本所绑定的车辆
         try {
+            String authorityContent = adminGroupAuthorityMapper.getAdminGroupAuthorityById(userInfo.getAuthorityId()).getAdminGroupName();
+            if (authorityContent.equals("中级管理员") || authorityContent.equals("高级管理员") || authorityContent.equals("超级管理员")) {
             carInfo1 = carInfoService.getCarInfoByDriverId(driverInfo.getDriverId());//获取要换车司机的原本的车辆信息
             carInfo = carInfoService.getCarInfoByCarId(driverInfo.getCarId());//获取换车的车辆信息
             if(carInfo!=null && carInfo1 !=null)  //设置新车的CarDriverId为司机的Id
@@ -371,6 +393,8 @@ public class DriverInfoController {
             }
             else
             return new Message(Message.FAILURE, "更新信息 >> 失败", "所选车辆信息为为空");
+            }
+            return new Message(Message.NOT_LEGAL, "权限不合法",  "您是"+authorityContent+",权限不足，无法进行换车操作处理！");
         } catch (Exception e) {
             return new Message(Message.ERROR, "更新信息 >> 异常", e.getMessage());
         }
@@ -380,11 +404,14 @@ public class DriverInfoController {
      */
     @RequestMapping(value = "/getCarOff",method = RequestMethod.POST)
     public Message getCarOff(@RequestBody DriverInfo driverInfo) {
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int upStatus = 0;
         int upStatus1 = 0;
         int upStatus2 = 0;
         CarInfo carInfo1;//司机原本所绑定的车辆
         try {
+            String authorityContent = adminGroupAuthorityMapper.getAdminGroupAuthorityById(userInfo.getAuthorityId()).getAdminGroupName();
+            if (authorityContent.equals("中级管理员") || authorityContent.equals("高级管理员") || authorityContent.equals("超级管理员")) {
             carInfo1 = carInfoService.getCarInfoByDriverId(driverInfo.getDriverId());//获取要解绑司机的原本的车辆信息
             if(carInfo1 !=null)
             {
@@ -410,6 +437,8 @@ public class DriverInfoController {
             }
             else
                 return new Message(Message.FAILURE, "更新信息 >> 失败", "所选车辆信息为为空");
+            }
+            return new Message(Message.NOT_LEGAL, "权限不合法",  "您是"+authorityContent+",权限不足，无法进行解绑处理！");
         } catch (Exception e) {
             return new Message(Message.ERROR, "更新信息 >> 异常", e.getMessage());
         }
