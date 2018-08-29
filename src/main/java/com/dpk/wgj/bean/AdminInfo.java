@@ -12,9 +12,11 @@ public class AdminInfo implements Serializable {
 
     private String username;
 
+    private String realname;
+
     private String password;
 
-    private String remark;
+    private String phonenumber;
 
     private int userGroupId;
 
@@ -44,6 +46,10 @@ public class AdminInfo implements Serializable {
         this.username = username;
     }
 
+    public String getPhonenumber() { return phonenumber; }
+
+    public void setPhonenumber(String phonenumber) { this.phonenumber = phonenumber; }
+
     public String getPassword() {
         return password;
     }
@@ -52,13 +58,9 @@ public class AdminInfo implements Serializable {
         this.password = password;
     }
 
-    public String getRemark() {
-        return remark;
-    }
+    public String getRealname() { return realname; }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
+    public void setRealname(String realname) { this.realname = realname; }
 
     public int getUserGroupId() {
         return userGroupId;
@@ -68,13 +70,16 @@ public class AdminInfo implements Serializable {
         this.userGroupId = userGroupId;
     }
 
+
+
     @Override
     public String toString() {
         return "AdminInfo{" +
                 "userId=" + userId +
+                ", realname='" + realname + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", remark='" + remark + '\'' +
+                ", phonenumber='" + phonenumber + '\'' +
                 ", userGroupId=" + userGroupId +
                 '}';
     }
