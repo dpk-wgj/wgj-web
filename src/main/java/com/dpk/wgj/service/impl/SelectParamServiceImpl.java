@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -23,12 +24,13 @@ public class SelectParamServiceImpl implements SelectParamService {
 
     @Override
     public int[] getOrderByYear(Param yarr) throws Exception {
-        int[] numByYear=new int[5];
+        int[] numByYear=new int[12];
         for (int i=0;i<yarr.getParamNum().length;i++) {
             int year=yarr.getParamNum()[i];
             numByYear[i]= selectParamMapper.getOrderByYear(year);
-        }
 
+        }
+        System.out.println(Arrays.toString(numByYear));
         return numByYear;
     }
     @Override

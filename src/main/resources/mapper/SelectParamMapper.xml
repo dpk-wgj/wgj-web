@@ -14,14 +14,24 @@
 </resultMap>
 
 
-<select id="getOrderByYear"  resultType="int"  >
-    SELECT count(*) from order_info WHERE year(end_time)=#{year}
-    <!--<if test="yarr!=null" >-->
-    <!--&lt;!&ndash;WHERE year(end_time) in&ndash;&gt;-->
-    <!--&lt;!&ndash;<foreach collection="list" open="(" close=")" separator=",">&ndash;&gt;-->
-    <!--&lt;!&ndash;#{end_time}&ndash;&gt;-->
-    <!--&lt;!&ndash;</foreach>&ndash;&gt;-->
-    <!--</if>-->
+<select id="getOrderByYear"  resultType="com.dpk.wgj.bean.OrderInfo"  >
+    select
+    sum(case month(order_info.end_time) when '1' then 1 else 0 end) as 一月份,
+    sum(case month(order_info.end_time) when '2' then 1 else 0 end) as 二月份,
+    sum(case month(order_info.end_time) when '3' then 1 else 0 end) as 三月份,
+    sum(case month(order_info.end_time) when '4' then 1 else 0 end) as 四月份,
+    sum(case month(order_info.end_time) when '5' then 1 else 0 end) as 五月份,
+    sum(case month(order_info.end_time) when '6' then 1 else 0 end) as 六月份,
+    sum(case month(order_info.end_time) when '7' then 1 else 0 end) as 七月份,
+    sum(case month(order_info.end_time) when '8' then 1 else 0 end) as 八月份,
+    sum(case month(order_info.end_time) when '9' then 1 else 0 end) as 九月份,
+    sum(case month(order_info.end_time) when '10' then 1 else 0 end) as 十月份,
+    sum(case month(order_info.end_time) when '11' then 1 else 0 end) as 十一月份,
+    sum(case month(order_info.end_time) when '12' then 1 else 0 end) as 十二月份
+    from (order_info)
+
+    where year(order_info.end_time)='2018';
+
 
 </select>
 

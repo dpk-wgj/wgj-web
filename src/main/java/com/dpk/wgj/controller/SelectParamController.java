@@ -10,10 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.dpk.wgj.bean.Message.*;
 
@@ -27,7 +24,7 @@ import static com.dpk.wgj.bean.Message.*;
 
  */
 @RestController
-@RequestMapping(value = "/admin/count")
+@RequestMapping(value = "/public/count")
 public class SelectParamController {
     @Autowired
     private SelectParamService selectParamService;
@@ -36,6 +33,7 @@ public class SelectParamController {
     @RequestMapping(value = "/getOrderByYear", method = RequestMethod.POST)
     public Message getOrderByYear(@RequestBody Param year){
         int[] endtime;
+        System.out.println(Arrays.toString(year.getParamNum()));
         try {
             endtime =  selectParamService.getOrderByYear(year);
             if (endtime!=null){
