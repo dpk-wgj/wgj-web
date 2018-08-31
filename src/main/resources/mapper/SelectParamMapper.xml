@@ -14,25 +14,22 @@
 </resultMap>
 
 
-<select id="getOrderByYear"  resultType="com.dpk.wgj.bean.OrderInfo"  >
+<select id="getMonthOrderInfoByYear"  parameterType="int" resultType="com.dpk.wgj.bean.MonthInfo"  >
     select
-    sum(case month(order_info.end_time) when '1' then 1 else 0 end) as 一月份,
-    sum(case month(order_info.end_time) when '2' then 1 else 0 end) as 二月份,
-    sum(case month(order_info.end_time) when '3' then 1 else 0 end) as 三月份,
-    sum(case month(order_info.end_time) when '4' then 1 else 0 end) as 四月份,
-    sum(case month(order_info.end_time) when '5' then 1 else 0 end) as 五月份,
-    sum(case month(order_info.end_time) when '6' then 1 else 0 end) as 六月份,
-    sum(case month(order_info.end_time) when '7' then 1 else 0 end) as 七月份,
-    sum(case month(order_info.end_time) when '8' then 1 else 0 end) as 八月份,
-    sum(case month(order_info.end_time) when '9' then 1 else 0 end) as 九月份,
-    sum(case month(order_info.end_time) when '10' then 1 else 0 end) as 十月份,
-    sum(case month(order_info.end_time) when '11' then 1 else 0 end) as 十一月份,
-    sum(case month(order_info.end_time) when '12' then 1 else 0 end) as 十二月份
+    sum(case month(order_info.end_time) when '1' then 1 else 0 end) as January,
+    sum(case month(order_info.end_time) when '2' then 1 else 0 end) as February,
+    sum(case month(order_info.end_time) when '3' then 1 else 0 end) as March,
+    sum(case month(order_info.end_time) when '4' then 1 else 0 end) as April,
+    sum(case month(order_info.end_time) when '5' then 1 else 0 end) as May,
+    sum(case month(order_info.end_time) when '6' then 1 else 0 end) as June,
+    sum(case month(order_info.end_time) when '7' then 1 else 0 end) as July,
+    sum(case month(order_info.end_time) when '8' then 1 else 0 end) as August,
+    sum(case month(order_info.end_time) when '9' then 1 else 0 end) as September,
+    sum(case month(order_info.end_time) when '10' then 1 else 0 end) as October,
+    sum(case month(order_info.end_time) when '11' then 1 else 0 end) as November,
+    sum(case month(order_info.end_time) when '12' then 1 else 0 end) as December
     from (order_info)
-
-    where year(order_info.end_time)='2018';
-
-
+    where year(order_info.end_time)=#{year,jdbcType=INTEGER};
 </select>
 
 <select id="getOrderByMonth" resultType="int">

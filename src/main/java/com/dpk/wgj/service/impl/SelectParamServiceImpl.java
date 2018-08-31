@@ -1,5 +1,6 @@
 package com.dpk.wgj.service.impl;
 
+import com.dpk.wgj.bean.MonthInfo;
 import com.dpk.wgj.bean.OrderInfo;
 import com.dpk.wgj.bean.Param;
 import com.dpk.wgj.mapper.SelectParamMapper;
@@ -23,15 +24,15 @@ public class SelectParamServiceImpl implements SelectParamService {
     private final Logger logger = LoggerFactory.getLogger(SelectParamServiceImpl.class);
 
     @Override
-    public int[] getOrderByYear(Param yarr) throws Exception {
-        int[] numByYear=new int[12];
-        for (int i=0;i<yarr.getParamNum().length;i++) {
-            int year=yarr.getParamNum()[i];
-            numByYear[i]= selectParamMapper.getOrderByYear(year);
-
+    public MonthInfo getMonthOrderInfoByYear(int year) throws Exception {
+        MonthInfo count =null ;
+        try {
+                count= selectParamMapper.getMonthOrderInfoByYear(year);
+            return count;
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
-        System.out.println(Arrays.toString(numByYear));
-        return numByYear;
+        return null;
     }
     @Override
     public int[] getOrderByMonth(Param monarr) throws Exception {
@@ -92,14 +93,6 @@ public class SelectParamServiceImpl implements SelectParamService {
 
     }
 
-//    @Override
-//    public List<OrderInfo> findOrderInfoByMultiCondition(MultiCondition multiCondition) throws Exception {
-//        List<OrderInfo> orderInfo;
-//        int carId=multiCondition.getCarid();
-//        int driverId=multiCondition.getDriverid();
-//        orderInfo= selectParamMapper.findCarInfoByMultiCondition(carId,driverId);
-//        return orderInfo;
-//
-//    }
+
 
 }
