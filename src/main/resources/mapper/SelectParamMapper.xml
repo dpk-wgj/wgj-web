@@ -32,22 +32,22 @@
     where year(order_info.end_time)=#{year,jdbcType=INTEGER};
 </select>
 
-<select id="getOrderByMonth" resultType="int">
-    SELECT count(end_time) FROM order_info WHERE MONTH(end_time) =#{month}
-</select>
-
-<!--<select id="getOrderByYear" resultMap="OrderInfoMap">-->
-<!--SELECT * FROM order_info-->
+<!--<select id="getOrderByMonth" resultType="int">-->
+    <!--SELECT count(end_time) FROM order_info WHERE MONTH(end_time) =#{month}-->
 <!--</select>-->
 
-<select id="getOrderByDriverId" resultMap="OrderInfoMap">
-    SELECT order_id,passenger_id, driver_id,location_info,order_status,
-    start_time,end_time FROM order_info WHERE driver_id =#{driver_id}
-</select>
+<!--&lt;!&ndash;<select id="getOrderByYear" resultMap="OrderInfoMap">&ndash;&gt;-->
+<!--&lt;!&ndash;SELECT * FROM order_info&ndash;&gt;-->
+<!--&lt;!&ndash;</select>&ndash;&gt;-->
 
-<select id="getAllOrderNum" resultMap="OrderInfoMap">
-    SELECT order_id,passenger_id, driver_id,location_info,order_status,
-    start_time,end_time FROM order_info
-</select>
+<!--<select id="getOrderByDriverId" resultMap="OrderInfoMap">-->
+    <!--SELECT order_id,passenger_id, driver_id,location_info,order_status,-->
+    <!--start_time,end_time FROM order_info WHERE driver_id =#{driver_id}-->
+<!--</select>-->
+
+<!--<select id="getAllOrderNum" resultMap="OrderInfoMap">-->
+    <!--SELECT order_id,passenger_id, driver_id,location_info,order_status,-->
+    <!--start_time,end_time FROM order_info-->
+<!--</select>-->
 
 </mapper>

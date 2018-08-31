@@ -34,64 +34,64 @@ public class SelectParamServiceImpl implements SelectParamService {
         }
         return null;
     }
-    @Override
-    public int[] getOrderByMonth(Param monarr) throws Exception {
-        int[] numByMonth=new int[12];
-        for (int i=0;i<monarr.getParamNum().length;i++) {
-            int month=monarr.getParamNum()[i];
-            numByMonth[i]= selectParamMapper.getOrderByMonth(month);
-        }
-        return numByMonth;
-    }
-
-    @Override
-    public List<OrderInfo> getOrderByDriverId(int driverId) throws Exception {
-
-        List<OrderInfo> orderInfo;
-        orderInfo= selectParamMapper.getOrderByDriverId(driverId);
-        return orderInfo;
-    }
-
-    @Override
-    public List<OrderInfo> getOrderBycarNumber(int carId) throws Exception {
-
-        List<OrderInfo> orderInfo;
-        orderInfo= selectParamMapper.getOrderBycarNumber(carId);
-        return orderInfo;
-    }
-
-    @Override
-    public List<OrderInfo> getAllOrderNum() throws Exception {
-        List<OrderInfo> orderInfo;
-        orderInfo= selectParamMapper.getAllOrderNum();
-//        for(OrderInfo oiob:orderInfo){
-//            Date sdate =oiob.getStartTime();
-//            Date edate =oiob.getEndTime();
-//            if(sdate!=null&&edate!=null){
-//                oiob.setStartTime(format(sdate));
-//                oiob.setEndTime(format(edate));
-//            }else {
-//
-//            }
-//
+//    @Override
+//    public int[] getOrderByMonth(Param monarr) throws Exception {
+//        int[] numByMonth=new int[12];
+//        for (int i=0;i<monarr.getParamNum().length;i++) {
+//            int month=monarr.getParamNum()[i];
+//            numByMonth[i]= selectParamMapper.getOrderByMonth(month);
 //        }
-        return orderInfo;
-
-    }/**
-
-     * @Description:    格式化日期函数
-
-     * @Author:      iauhsoaix
-
-     * @CreateDate:     2018/7/13 14:57
-
-     */
-    public  Date format(Date date) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");//注意格式化的表达式
-        String timetemp=format.format(date);
-        return format.parse(timetemp);
-
-    }
+//        return numByMonth;
+//    }
+//
+//    @Override
+//    public List<OrderInfo> getOrderByDriverId(int driverId) throws Exception {
+//
+//        List<OrderInfo> orderInfo;
+//        orderInfo= selectParamMapper.getOrderByDriverId(driverId);
+//        return orderInfo;
+//    }
+//
+//    @Override
+//    public List<OrderInfo> getOrderBycarNumber(int carId) throws Exception {
+//
+//        List<OrderInfo> orderInfo;
+//        orderInfo= selectParamMapper.getOrderBycarNumber(carId);
+//        return orderInfo;
+//    }
+//
+//    @Override
+//    public List<OrderInfo> getAllOrderNum() throws Exception {
+//        List<OrderInfo> orderInfo;
+//        orderInfo= selectParamMapper.getAllOrderNum();
+////        for(OrderInfo oiob:orderInfo){
+////            Date sdate =oiob.getStartTime();
+////            Date edate =oiob.getEndTime();
+////            if(sdate!=null&&edate!=null){
+////                oiob.setStartTime(format(sdate));
+////                oiob.setEndTime(format(edate));
+////            }else {
+////
+////            }
+////
+////        }
+//        return orderInfo;
+//
+//    }/**
+//
+//     * @Description:    格式化日期函数
+//
+//     * @Author:      iauhsoaix
+//
+//     * @CreateDate:     2018/7/13 14:57
+//
+//     */
+//    public  Date format(Date date) throws ParseException {
+//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");//注意格式化的表达式
+//        String timetemp=format.format(date);
+//        return format.parse(timetemp);
+//
+//    }
 
 
 
