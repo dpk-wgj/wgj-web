@@ -31,6 +31,8 @@ public interface DriverInfoMapper {
 
     public List<DriverInfo> getAllDriverInfo() throws Exception;
 
+    public List<DriverInfo> getPutDriverInfo() throws Exception;
+
     public List<DriverInfo> getDriverByMultiCondition(DriverInfoTableMessage carInfoTableMessage) throws Exception;
 
     public int getDriverByMultiConditionCount(DriverInfoTableMessage carInfoTableMessage) throws Exception;

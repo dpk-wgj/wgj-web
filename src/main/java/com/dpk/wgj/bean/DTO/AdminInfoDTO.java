@@ -1,6 +1,7 @@
 package com.dpk.wgj.bean.DTO;
 
 import com.dpk.wgj.bean.AdminGroup;
+import com.dpk.wgj.bean.AdminGroupAuthority;
 import com.dpk.wgj.bean.AdminInfo;
 
 public class AdminInfoDTO {
@@ -8,11 +9,14 @@ public class AdminInfoDTO {
 
     private AdminGroup adminGroup;
 
+    private AdminGroupAuthority adminGroupAuthority;
+
     public AdminInfoDTO(){}
 
-    public AdminInfoDTO(AdminInfo adminInfo,AdminGroup adminGroup){
+    public AdminInfoDTO(AdminInfo adminInfo,AdminGroup adminGroup,AdminGroupAuthority adminGroupAuthority){
         this.adminInfo = adminInfo;
         this.adminGroup = adminGroup;
+        this.adminGroupAuthority = adminGroupAuthority;
     }
 
     public AdminInfo getAdminInfo() {
@@ -29,5 +33,13 @@ public class AdminInfoDTO {
 
     public void setAdminGroup(AdminGroup adminGroup) {
         this.adminGroup = adminGroup;
+    }
+
+    public AdminGroupAuthority getAdminGroupAuthority() {
+        return adminGroupAuthority;
+    }
+
+    public void setAdminGroupAuthority(AdminGroupAuthority adminGroupAuthority) {
+        this.adminGroupAuthority = adminGroupAuthority;
     }
 }

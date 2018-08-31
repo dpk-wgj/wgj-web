@@ -6,14 +6,15 @@
     <resultMap id="AdminInfoMap" type="com.dpk.wgj.bean.AdminInfo">
         <id column="user_id" property="userId"/>
         <result column="username" property="username"/>
+        <result column="realname" property="realname"/>
         <result column="password" property="password"/>
-        <result column="remark" property="remark"/>
+        <result column="phonenumber " property="phonenumber "/>
         <result column="authority_id" property="authorityId"/>
         <result column="user_group_id" property="userGroupId"/>
     </resultMap>
 
     <select id="getAdminByUsername" resultMap="AdminInfoMap">
-        SELECT username, password, user_group_id, authority_id FROM admin_info
+        SELECT realname,username, password,phonenumber, user_group_id, authority_id FROM admin_info
         WHERE username = #{username}
     </select>
 
@@ -47,8 +48,8 @@
     </select>
 
     <insert id="addAdminInfo" parameterType="AdminInfo" useGeneratedKeys="true" keyProperty="userId">
-        INSERT INTO admin_info (username, password, remark, user_group_id, authority_id)
-        VALUES (#{username}, #{password}, #{remark}, #{userGroupId}, #{authorityId})
+        INSERT INTO admin_info (username,realname,phonenumber, password, authority_id)
+        VALUES (#{username},#{realname} ,#{phonenumber}, #{password},  #{authorityId})
     </insert>
 
     <update id="updateAdminInfo" parameterType="AdminInfo">
@@ -60,11 +61,11 @@
             <if test="password != null and password != ''" >
                 password = #{password,jdbcType=VARCHAR},
             </if>
-            <if test="remark != null and remark != ''" >
-                remark = #{remark,jdbcType=VARCHAR},
+            <if test="phonenumber != null and phonenumber != ''" >
+                phonenumber = #{phonenumber,jdbcType=VARCHAR},
             </if>
-            <if test="userGroupId != null and userGroupId != ''">
-                user_group_id = #{userGroupId,jdbcType=INTEGER},
+            <if test="realname != null and realname != ''">
+                realname = #{realname,jdbcType=INTEGER},
             </if>
             <if test="authorityId != null and authorityId != ''">
                 authority_id = #{authorityId,jdbcType=INTEGER},

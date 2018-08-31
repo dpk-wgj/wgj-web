@@ -23,8 +23,8 @@ public class Excel {
         sheet.setColumnWidth(1,200*15);
         sheet.setColumnWidth(2,500*15);
         sheet.setColumnWidth(3,500*15);
-        sheet.setColumnWidth(4,500*15);
-        sheet.setColumnWidth(5,500*15);
+//        sheet.setColumnWidth(4,500*15);
+//        sheet.setColumnWidth(5,500*15);
 
 
         HSSFFont hssfFont2 = workBook.createFont();
@@ -71,19 +71,19 @@ public class Excel {
         setBorder4.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
         // Region region = new Region(0,0,0,10);
         //合并单元格
-        sheet.addMergedRegion(new CellRangeAddress(0,0,0,5));
+        sheet.addMergedRegion(new CellRangeAddress(0,0,0,3));
 
 
 
         //创建第一行
         HSSFRow row = sheet.createRow(0);
         row.setHeight((short)(35*15));
-        for(int i=0;i<=5;i++){
+        for(int i=0;i<=3;i++){
             row.createCell(i, CellType.STRING).setCellStyle(setBorder);}
 
         HSSFRow row1 = sheet.createRow(1);
         row1.setHeight((short)(35*15));
-        for(int i=0;i<=5;i++){
+        for(int i=0;i<=3;i++){
             row1.createCell(i, CellType.STRING).setCellStyle(setBorder);
         }
 
@@ -98,27 +98,27 @@ public class Excel {
         cell2.setCellValue("姓名");
         cell2.setCellStyle(setBorder3);
 
-        HSSFCell cell3 = row1.createCell(2, CellType.STRING);
-        cell3.setCellValue("微信号");
-        cell3.setCellStyle(setBorder3);
+//        HSSFCell cell3 = row1.createCell(2, CellType.STRING);
+//        cell3.setCellValue("微信号");
+//        cell3.setCellStyle(setBorder3);
 
-        HSSFCell cell4 = row1.createCell(3, CellType.STRING);
+        HSSFCell cell4 = row1.createCell(2, CellType.STRING);
         cell4.setCellValue("手机号");
         cell4.setCellStyle(setBorder3);
 
-        HSSFCell cell5 = row1.createCell(4, CellType.STRING);
+        HSSFCell cell5 = row1.createCell(3, CellType.STRING);
         cell5.setCellValue("身份证号");
         cell5.setCellStyle(setBorder3);
 
-        HSSFCell cell6 = row1.createCell(5, CellType.STRING);
-        cell6.setCellValue("驾驶证号");
-        cell6.setCellStyle(setBorder3);
+//        HSSFCell cell6 = row1.createCell(5, CellType.STRING);
+//        cell6.setCellValue("驾驶证号");
+//        cell6.setCellStyle(setBorder3);
 
         for (int i =0;i<driverInfo.size();i++){
             DriverInfo b = driverInfo.get(i);
             HSSFRow rowz = sheet.createRow(i+2);
             rowz.setHeight((short)(35*15));
-            for(int j=0;j<=5;j++){
+            for(int j=0;j<=3;j++){
                 rowz.createCell(j, CellType.STRING).setCellStyle(setBorder);
             }
 
@@ -131,21 +131,21 @@ public class Excel {
             cell2_2.setCellValue(b.getDriverName());
             cell2_2.setCellStyle(setBorder3);
 
-            HSSFCell cell3_3 = rowz.createCell(2, CellType.STRING);
-            cell3_3.setCellValue(b.getDriverWxId());
-            cell3_3.setCellStyle(setBorder3);
+//            HSSFCell cell3_3 = rowz.createCell(2, CellType.STRING);
+//            cell3_3.setCellValue(b.getDriverWxId());
+//            cell3_3.setCellStyle(setBorder3);
 
-            HSSFCell cell4_4 = rowz.createCell(3, CellType.STRING);
+            HSSFCell cell4_4 = rowz.createCell(2, CellType.STRING);
             cell4_4.setCellValue(b.getDriverPhoneNumber());
             cell4_4.setCellStyle(setBorder3);
 
-            HSSFCell cell5_5 = rowz.createCell(4, CellType.STRING);
+            HSSFCell cell5_5 = rowz.createCell(3, CellType.STRING);
             cell5_5.setCellValue(b.getDriverIdentity());
             cell5_5.setCellStyle(setBorder3);
 
-            HSSFCell cell6_6 = rowz.createCell(5, CellType.STRING);
-            cell6_6.setCellValue(b.getDriverLicence());
-            cell6_6.setCellStyle(setBorder3);
+//            HSSFCell cell6_6 = rowz.createCell(5, CellType.STRING);
+//            cell6_6.setCellValue(b.getDriverLicence());
+//            cell6_6.setCellStyle(setBorder3);
 
         }
         String strPath = "d:\\微公交系统\\司机个人信息报表\\";

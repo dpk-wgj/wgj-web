@@ -34,13 +34,13 @@ public class PointAdminController {
     @RequestMapping(value = "/getTrafficSituation", method = RequestMethod.POST)
     public Message getTrafficSituation(){
 
-        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
+     //   UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
 
         try {
             // 判断权限
-            String authorityContent = adminGroupAuthorityMapper.getAdminGroupAuthorityById(userInfo.getAuthorityId()).getAdminGroupName();
+            //String authorityContent = adminGroupAuthorityMapper.getAdminGroupAuthorityById(userInfo.getAuthorityId()).getAdminGroupName();
 
-            if (authorityContent.equals("高级管理员") || authorityContent.equals("超级管理员")) {
+            //if (authorityContent.equals("高级管理员") || authorityContent.equals("超级管理员")) {
                 List<DriverInfo> list = driverInfoService.getAllDriverInfo();
                 //121.5273285,31.21515044
                 double[][] points = new double[list.size()][2];
@@ -51,10 +51,10 @@ public class PointAdminController {
                 }
 
                 PointDTO point = pointService.findPoint(points, 0.01, 3);
-                return new Message(Message.SUCCESS, authorityContent + ": 交通情况 >> 获取成功", point);
-            }
+                return new Message(Message.SUCCESS, "交通情况 >> 获取成功", point);
+         //   }
 
-            return new Message(Message.NOT_LEGAL, "权限不合法", authorityContent + ": 权限不足");
+          //  return new Message(Message.NOT_LEGAL, "权限不合法", authorityContent + ": 权限不足");
 
         } catch (Exception e) {
             e.printStackTrace();

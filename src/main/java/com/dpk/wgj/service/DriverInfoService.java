@@ -60,8 +60,8 @@ public interface DriverInfoService {
      * Excel表导入数据库
      * @return
      */
-
     public int importExcel(MultipartFile file, String fileName)throws Exception;
+    public List<DriverInfo> getPutDriverInfo() throws Exception;
 
     public List<DriverInfo> getDriverByMultiCondition(DriverInfoTableMessage carInfoTableMessage) throws Exception;
 

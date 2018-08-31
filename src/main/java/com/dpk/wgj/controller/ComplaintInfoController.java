@@ -3,6 +3,7 @@ package com.dpk.wgj.controller;
 import com.dpk.wgj.bean.*;
 import com.dpk.wgj.bean.DTO.UserDTO;
 import com.dpk.wgj.bean.tableInfo.ComplaintMessage;
+import com.dpk.wgj.mapper.AdminGroupAuthorityMapper;
 import com.dpk.wgj.service.ComplaintInfoService;
 import com.dpk.wgj.service.LogInfoService;
 import com.dpk.wgj.service.OrderInfoService;
@@ -39,6 +40,11 @@ public class ComplaintInfoController {
 
     @Autowired
     private PassengerService passengerService;
+
+
+    @Autowired
+    private AdminGroupAuthorityMapper adminGroupAuthorityMapper;
+
 
     /**
      * 乘客端 >> 提交订单投诉
@@ -220,23 +226,24 @@ public class ComplaintInfoController {
      */
     @RequestMapping(value = "/admin/complaintInfo/updateComplaintInfoByComplaintId",method = RequestMethod.POST)
     public Message updateComplaintInfoByComplaintId(@RequestBody ComplaintInfo complaintInfo) {
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int upStatus = 0;
         int complaintStatus = complaintInfo.getComplaintStatus()+1;//反馈状态加1
         System.out.println(complaintInfo.getComplaintId());
         try {
-            complaintInfo.setComplaintStatus(complaintStatus);//设置新的反馈状态
-            if(complaintStatus == 3)
-            {
-                complaintInfo.setComplaintFeedbackTime(new Date());//设置反馈时间
+            String authorityContent = adminGroupAuthorityMapper.getAdminGroupAuthorityById(userInfo.getAuthorityId()).getAdminGroupName();
+            if (authorityContent.equals("中级管理员") || authorityContent.equals("高级管理员") || authorityContent.equals("超级管理员")) {
+                complaintInfo.setComplaintStatus(complaintStatus);//设置新的反馈状态
+                if (complaintStatus == 3) {
+                    complaintInfo.setComplaintFeedbackTime(new Date());//设置反馈时间
+                }
+                upStatus = complaintInfoService.updateComplaintInfoStatus(complaintInfo);
+                if (upStatus == 1) {
+                    return new Message(Message.SUCCESS, "更新投诉信息 >> 成功", upStatus);
+                } else
+                    return new Message(Message.FAILURE, "更新投诉信息 >> 失败", "投诉信息更新失败");
             }
-            upStatus = complaintInfoService.updateComplaintInfoStatus(complaintInfo);
-            if (upStatus == 1)
-            {
-                return new Message(Message.SUCCESS, "更新投诉信息 >> 成功", upStatus);
-            }
-            else
-                return new Message(Message.FAILURE, "更新投诉信息 >> 失败", "更新失败");
-
+            return new Message(Message.NOT_LEGAL, "权限不合法",  "您是"+authorityContent+",权限不足，无法进行投诉处理！");
         } catch (Exception e) {
             return new Message(Message.ERROR, "更新投诉信息 >> 异常", e.getMessage());
         }

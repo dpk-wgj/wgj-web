@@ -2,13 +2,16 @@ package com.dpk.wgj.controller;
 
 import com.dpk.wgj.bean.CarInfo;
 import com.dpk.wgj.bean.DTO.CarInfoDTO;
+import com.dpk.wgj.bean.DTO.UserDTO;
 import com.dpk.wgj.bean.DriverInfo;
 import com.dpk.wgj.bean.Message;
 import com.dpk.wgj.bean.tableInfo.CarInfoTableMessage;
 import com.dpk.wgj.bean.tableInfo.TableMessage;
+import com.dpk.wgj.mapper.AdminGroupAuthorityMapper;
 import com.dpk.wgj.service.CarInfoService;
 import com.dpk.wgj.service.DriverInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +30,8 @@ public class CarInfoController {
     @Autowired
     private DriverInfoService driverInfoService;
 
+    @Autowired
+    private AdminGroupAuthorityMapper adminGroupAuthorityMapper;
     /**
      * 根据车牌查找车辆信息(关联司机信息)
      */
@@ -70,13 +75,18 @@ public class CarInfoController {
      */
     @RequestMapping(value = "/deleteCarInfoByCarId", method = RequestMethod.POST)
     public Message deleteCarInfoByCarId(@RequestParam(value = "carId") int carId){
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int delStatus = 0;
         try {
+            String authorityContent = adminGroupAuthorityMapper.getAdminGroupAuthorityById(userInfo.getAuthorityId()).getAdminGroupName();
+            if ( authorityContent.equals("高级管理员") || authorityContent.equals("超级管理员")) {
             delStatus = carInfoService.deleteCarInfoByCarId(carId);
             if (delStatus == 1){
                 return new Message(Message.SUCCESS, "删除车辆信息 >> 成功", delStatus);
             }
             return new Message(Message.FAILURE, "删除车辆信息 >> 失败", delStatus);
+            }
+            return new Message(Message.NOT_LEGAL, "权限不合法",  "您是"+authorityContent+",权限不足，无法进行删除处理！");
         } catch (Exception e) {
             return new Message(Message.ERROR, "删除车辆信息 >> 异常",  e.getMessage());
         }
@@ -88,13 +98,18 @@ public class CarInfoController {
      */
     @RequestMapping(value = "/updateCarInfoByCarId", method = RequestMethod.POST)
     public Message updateCarInfoByCarId(@RequestBody CarInfo carInfo){
+        UserDTO userInfo = (UserDTO) SecurityContextHolder.getContext().getAuthentication().getDetails();
         int upStatus = 0;
         try {
+            String authorityContent = adminGroupAuthorityMapper.getAdminGroupAuthorityById(userInfo.getAuthorityId()).getAdminGroupName();
+            if ( authorityContent.equals("高级管理员") || authorityContent.equals("超级管理员")) {
             upStatus = carInfoService.updateCarInfoByCarId(carInfo);
             if (upStatus == 1){
                 return new Message(Message.SUCCESS, "更新车辆信息 >> 成功", upStatus);
             }
             return new Message(Message.FAILURE, "更新车辆信息 >> 失败", upStatus);
+            }
+            return new Message(Message.NOT_LEGAL, "权限不合法",  "您是"+authorityContent+",权限不足，无法进行修改操作！");
         } catch (Exception e) {
             return new Message(Message.ERROR, "更新车辆信息 >> 异常",  e.getMessage());
         }
